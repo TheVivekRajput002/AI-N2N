@@ -8,8 +8,94 @@ datasource db {
 }
 
 model user {
-  id      String @id @unique @default(uuid())
-  clerkId String @unique
-  name    String
-  email   String @unique
+  id         String      @id @unique @default(uuid())
+  clerkId    String      @unique
+  name       String
+  email      String      @unique
+  workspaces workspace[]
+  executions execution[]
+  apiKeys    apiKey[]
+}
+
+model workspace {
+  id        String     @id @unique @default(uuid())
+  name      String
+  ownerId   String
+  createdAt DateTime   @default(now())
+  user      user       @relation(fields: [ownerId], references: [id])
+  workflows workflow[]
+}
+
+model workflow {
+  id               String      @id @default(uuid())
+  name             String
+  description      String
+  isEnabled        Boolean     @default(true)
+  currentVersionId String     @unique
+  workspaceId      String
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  executions       execution[]
+   versions workflowVersion[] @relation("workflowVersion")
+
+  workflowVersion  workflowVersion  @relation("currentVersion", fields: [currentVersionId], references: [id])
+  workspace        workspace         @relation(fields: [workspaceId], references: [id])
+}
+
+model workflowVersion {
+  id            String      @id @default(uuid())
+  versionNumber Int
+  workflowId    String
+  graph         Json
+  createdAt     DateTime    @default(now())
+  executions    execution[]
+  currentOf workflow? @relation("currentVersion")
+
+  workflow workflow  @relation("workflowVersion", fields: [workflowId], references: [id])
+}
+
+enum ExecutionStatus {
+  PENDING
+  RUNNING
+  SUCCESS
+  FAILED
+}
+
+model execution {
+  id            String          @id @default(uuid())
+  workflowId    String
+  versionId     String
+  status        ExecutionStatus @default(PENDING)
+  triggeredBy   String
+  totalDuration Int?
+  startedAt     DateTime        @default(now())
+  finishedAt    DateTime?
+
+  user            user            @relation(fields: [triggeredBy], references: [id])
+  workflowVersion workflowVersion @relation(fields: [versionId], references: [id])
+  workflow        workflow        @relation(fields: [workflowId], references: [id])
+  nodeExecutions  nodeExecution[]
+}
+
+model nodeExecution {
+  id          String          @id @default(uuid())
+  executionId String
+  nodeId      String
+  nodeType    String
+  status      ExecutionStatus
+  input       Json
+  Output      Json?
+  error       String?
+  startedAt   DateTime        @default(now())
+  finishedAt  DateTime?
+  execution   execution       @relation(fields: [executionId], references: [id])
+}
+
+model apiKey {
+  id        String   @id @default(uuid())
+  hashedKey String   @unique
+  userId    String
+  label     String
+  user      user     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
 }

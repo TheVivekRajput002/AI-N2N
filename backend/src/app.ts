@@ -2,6 +2,8 @@ import express, { urlencoded } from 'express'
 import dotenv from 'dotenv'
 import cors from 'cors'
 import authRouter from './routes/auth.router'
+import workflowRouter from './routes/workflow.router'
+import workspaceRouter from './routes/workspace.router'
 import { clerkMiddleware } from '@clerk/express'
 import { config } from './config/config'
 
@@ -29,6 +31,8 @@ app.get('/', (req, res) => {
 })
 
 app.use('/auth', authRouter)
+app.use('/workspaces', workspaceRouter)
+app.use('/workflows', workflowRouter)
 
 export default app
 
