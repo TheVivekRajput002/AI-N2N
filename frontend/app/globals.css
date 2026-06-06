@@ -1,26 +1,64 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+
+  --app-bg-color: hsl(210, 40%, 98%)
+
+  --navbar-bg-color: hsl(0, 0%, 100%);
+
+  /* Topbar Styles */
+  --topbar-bg: hsl(0, 0%, 100%);
+  --topbar-border: hsl(220, 13%, 91%);
+  --topbar-text: hsl(222, 47%, 11%);
+  --topbar-text-muted: hsl(215, 16%, 47%);
+  --topbar-pill-bg: hsl(210, 40%, 96.1%);
+  --topbar-pill-border: hsl(220, 13%, 91%);
+  --topbar-share-btn-bg: hsl(221, 83%, 53%);
+  --topbar-share-btn-hover: hsl(221, 83%, 45%);
+  --topbar-icon-color: hsl(215, 16%, 47%);
+  --topbar-icon-hover-color: hsl(222, 47%, 11%);
+  --topbar-icon-hover-bg: hsl(210, 40%, 96.1%);
+
+    /* Draggble Node Color */
+    --draggable-node-bg-color: hsl(122, 60%, 90%);
+
+  /* Flow Canvas Background Grid */
+  --flow-grid-color: hsl(0, 0%, 67%);
+
+  /* MiniMap Styles */
+  --minimap-bg-color: hsl(122, 60%, 90%); 
+  --minimap-border-color: hsl(250, 6%, 79%);
+  --minimap-mask-color: hsla(0, 0%, 100%, 0.1);
+  --minimap-node-color: hsl(227, 23%, 15%);
+
+  /* React Flow Handle (Connection Points) */
+  --handle-bg-color: hsl(221, 39%, 11%);
+  --handle-border-color: hsl(0, 0%, 100%);
+  --handle-shadow-color: hsla(0, 0%, 0%, 0.05);
+
+  /* BaseNode UI Colors */
+  --node-bg-color: hsl(0, 0%, 100%);
+  --node-border-color: hsl(220, 13%, 91%); /* gray-200 equivalent */
+  --header-border-color: hsla(220, 13%, 91%, 0.6); /* gray-200/60 equivalent */
+  
+  --icon-bg-color: hsl(149, 80%, 90%); /* emerald-100 equivalent */
+  --icon-text-color: hsl(163, 94%, 24%); /* emerald-700 equivalent */
+  
+  --header-text-color: hsl(222, 47%, 11%); /* slate-900 equivalent */
+  --text-muted-color: hsl(218, 11%, 65%); /* gray-400 equivalent */
+  --text-muted-hover-color: hsl(221, 39%, 11%); /* gray-900 equivalent */
+  
+  --input-bg-color: hsl(210, 20%, 98%); /* gray-50 equivalent */
+  --input-border-color: hsl(220, 13%, 91%); /* gray-200 equivalent */
+  --input-text-color: hsl(215, 25%, 27%); /* slate-700 equivalent */
+  --input-focus-border-color: hsl(213, 94%, 68%); /* blue-400 equivalent */
+  --input-focus-bg-color: hsl(0, 0%, 100%); /* white equivalent */
+
+  --footer-bg-color: hsla(152, 81%, 96%, 0.4); /* emerald-50/40 equivalent */
+  --footer-border-color: hsla(220, 14%, 96%, 0.6); /* gray-100/60 equivalent */
+  --footer-accent-color: hsl(161, 94%, 30%); /* emerald-600 equivalent */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
+
