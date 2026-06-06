@@ -1,5 +1,5 @@
 import express from 'express'
-import authController from '../controllers/auth.controller'
+import {kuch} from '../controllers/auth.controller'
 const router = express.Router()
 
 router.get('/hi', (req,res)=>{
@@ -8,6 +8,6 @@ router.get('/hi', (req,res)=>{
     })
 })
 
-router.get('/', authController.kuch)
+router.get('/', kuch)
 
 export default router

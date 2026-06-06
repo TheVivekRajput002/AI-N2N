@@ -4,6 +4,24 @@
 
   --app-bg-color: hsl(210, 40%, 98%);
 
+  /* iOS Theme Variables */
+  --ios-blue: 210, 100%, 50%;
+  --ios-green: 138, 56%, 49%;
+  --ios-purple: 280, 68%, 60%;
+  --ios-orange: 35, 100%, 50%;
+  --ios-red: 355, 100%, 60%;
+  --ios-pink: 348, 100%, 59%;
+  --ios-indigo: 241, 62%, 59%;
+  --ios-teal: 188, 61%, 48%;
+
+  --ios-card-bg: rgba(255, 255, 255, 0.65);
+  --ios-card-border: rgba(0, 0, 0, 0.05);
+  --ios-bg-blur: 20px;
+  --ios-text-primary: hsl(210, 11%, 15%);
+  --ios-text-muted: hsl(210, 11%, 50%);
+  --ios-card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.03), 0 1px 2px 0 rgba(0, 0, 0, 0.02);
+  --ios-input-bg: rgba(0, 0, 0, 0.03);
+
   --navbar-bg-color: hsl(0, 0%, 100%);
 
   /* Topbar Styles */
@@ -120,6 +138,23 @@
   --app-bg-color: hsl(222, 47%, 9%);
   --navbar-bg-color: hsl(222, 47%, 11%);
 
+  /* iOS Theme Variables */
+  --ios-blue: 210, 100%, 52%;
+  --ios-green: 138, 62%, 50%;
+  --ios-purple: 280, 75%, 65%;
+  --ios-orange: 35, 100%, 52%;
+  --ios-red: 355, 100%, 62%;
+  --ios-pink: 348, 100%, 62%;
+  --ios-indigo: 241, 68%, 63%;
+  --ios-teal: 188, 65%, 52%;
+
+  --ios-card-bg: rgba(22, 22, 23, 0.6);
+  --ios-card-border: rgba(255, 255, 255, 0.07);
+  --ios-text-primary: hsl(210, 11%, 96%);
+  --ios-text-muted: hsl(210, 11%, 60%);
+  --ios-card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 rgba(0, 0, 0, 0.15);
+  --ios-input-bg: rgba(255, 255, 255, 0.05);
+
   /* Topbar Styles */
   --topbar-bg: hsl(222, 47%, 11%);
   --topbar-border: hsl(222, 47%, 18%);
@@ -232,4 +267,30 @@
 
 
 
+}
+
+/* iOS Animations */
+@keyframes iosFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes iosSlideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@media (min-width: 640px) {
+  @keyframes iosSlideUp {
+    from { transform: scale(0.95) translateY(20px); opacity: 0; }
+    to { transform: scale(1) translateY(0); opacity: 1; }
+  }
+}
+
+.animate-fade-in {
+  animation: iosFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-up {
+  animation: iosSlideUp 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }

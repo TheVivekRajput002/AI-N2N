@@ -3,7 +3,7 @@ import { clerkClient } from "@clerk/express";
 import { getAuth } from '@clerk/express'
 
 
-async function kuch(req: any, res: any) {
+export async function kuch(req: any, res: any) {
 
     try {
         const { userId } = getAuth(req)
@@ -23,8 +23,7 @@ async function kuch(req: any, res: any) {
 
 }
 
-async function getOrCreateUser(clerkId: string) {
-
+export async function getOrCreateUser(clerkId: string) {
 
     let user = await prisma.user.findUnique(
         {
@@ -53,4 +52,3 @@ async function getOrCreateUser(clerkId: string) {
 
 }
 
-export default { getOrCreateUser, kuch }

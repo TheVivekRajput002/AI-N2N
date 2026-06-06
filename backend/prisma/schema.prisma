@@ -18,28 +18,30 @@ model user {
 }
 
 model workspace {
-  id        String     @id @unique @default(uuid())
-  name      String
-  ownerId   String
-  createdAt DateTime   @default(now())
-  user      user       @relation(fields: [ownerId], references: [id])
-  workflows workflow[]
+  id          String     @id @unique @default(uuid())
+  name        String
+  description String
+  color       String
+  ownerId     String
+  createdAt   DateTime   @default(now())
+  user        user       @relation(fields: [ownerId], references: [id])
+  workflows   workflow[]
 }
 
 model workflow {
-  id               String      @id @default(uuid())
+  id               String            @id @default(uuid())
   name             String
   description      String
-  isEnabled        Boolean     @default(true)
-  currentVersionId String     @unique
+  isEnabled        Boolean           @default(true)
+  currentVersionId String            @unique
   workspaceId      String
-  createdAt        DateTime    @default(now())
-  updatedAt        DateTime    @updatedAt
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
   executions       execution[]
-   versions workflowVersion[] @relation("workflowVersion")
+  versions         workflowVersion[] @relation("workflowVersion")
 
-  workflowVersion  workflowVersion  @relation("currentVersion", fields: [currentVersionId], references: [id])
-  workspace        workspace         @relation(fields: [workspaceId], references: [id])
+  workflowVersion workflowVersion @relation("currentVersion", fields: [currentVersionId], references: [id])
+  workspace       workspace       @relation(fields: [workspaceId], references: [id])
 }
 
 model workflowVersion {
@@ -49,9 +51,9 @@ model workflowVersion {
   graph         Json
   createdAt     DateTime    @default(now())
   executions    execution[]
-  currentOf workflow? @relation("currentVersion")
+  currentOf     workflow?   @relation("currentVersion")
 
-  workflow workflow  @relation("workflowVersion", fields: [workflowId], references: [id])
+  workflow workflow @relation("workflowVersion", fields: [workflowId], references: [id])
 }
 
 enum ExecutionStatus {
