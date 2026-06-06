@@ -1,9 +1,9 @@
 // src/hooks/useFlowState.js
 import { useCallback } from 'react'
-import { useNodesState, useEdgesState, addEdge, type Connection, type ReactFlowInstance, type Viewport } from '@xyflow/react'
+import { type Node, useNodesState, useEdgesState, addEdge, type Connection, type ReactFlowInstance, type Viewport } from '@xyflow/react'
 
 export function useFlowState() {
-  const [nodes, setNodes, onNodesChange] = useNodesState([])
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([])
   const [edges, setEdges, onEdgesChange] = useEdgesState([])
 
   // called when user draws a new connection between two handles
@@ -19,7 +19,7 @@ export function useFlowState() {
     position?: { x: number, y: number }
   ) => {
 
-    const newNode = {
+    const newNode:Node = {
       id: String(crypto.randomUUID()),
       type: nodeType || 'default',
       position: position || { x: Math.random() * 400, y: Math.random() * 400 },
