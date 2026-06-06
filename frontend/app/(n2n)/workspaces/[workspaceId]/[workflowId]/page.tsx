@@ -1,7 +1,8 @@
 
 import Topbar from '@/components/Topbar';
-import { PipelineUI } from '@/components/ui';
 import { SubmitButton } from '@/components/Submit';
+import { ReactFlowProvider } from '@xyflow/react'
+import Flow from '@/components/Flow'
 
 function App() {
     return (
@@ -9,8 +10,11 @@ function App() {
             <div className='absolute top-1 right-0 z-50'>
                 <Topbar />
             </div>
-            <PipelineUI />
-            <SubmitButton />
+            <div style={{ width: '100vw', height: '100vh' }}>
+                <ReactFlowProvider>
+                    <Flow />
+                </ReactFlowProvider>
+            </div>
         </div>
     );
 }

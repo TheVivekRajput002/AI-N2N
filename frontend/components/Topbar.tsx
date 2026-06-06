@@ -1,4 +1,6 @@
 
+"use client"
+
 import {
   FiSave,
   FiFolder,
@@ -49,24 +51,24 @@ const MagicWandIcon = ({ size = 18, ...props }) => (
 );
 
 const Topbar = ({
-  onSave,
-  onOpenFolder,
-  onUndo,
-  onRedo,
-  onShare,
-  onDeploy,
-  onCleanCanvas,
-  onMoreActions
+  onSave = () => {},
+  onOpenFolder = () => {},
+  onUndo = () => {},
+  onRedo = () => {},
+  onShare = () => {},
+  onDeploy = () => {},
+  onCleanCanvas = () => {},
+  onMoreActions = () => {}
 }: {
-  onSave: () => {},
-  onOpenFolder: () => {},
-  onUndo: () => {},
-  onRedo: () => {},
-  onShare: () => {},
-  onDeploy: () => {},
-  onCleanCanvas: () => {},
-  onMoreActions: () => {}
-}) => {
+  onSave?: () => void;
+  onOpenFolder?: () => void;
+  onUndo?: () => void;
+  onRedo?: () => void;
+  onShare?: () => void;
+  onDeploy?: () => void;
+  onCleanCanvas?: () => void;
+  onMoreActions?: () => void;
+} = {}) => {
   return (
     <header className="w-[calc(100vw-88px)] mx-2 flex items-center justify-between px-6 py-2 h-12 bg-[var(--topbar-bg)] border border-[var(--topbar-border)] rounded-xl shadow-sm select-none z-50">
 

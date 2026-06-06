@@ -4,6 +4,7 @@ import { FiGitBranch, FiHome, FiSettings, FiBell, FiHelpCircle, FiUser } from 'r
 import { MdOutlineSpaceDashboard } from "react-icons/md";
 import { CiUser } from "react-icons/ci";
 import Link from 'next/link'
+import toggleTheme from '@/hooks/toggleTheme';
 
 export const Navbar = () => {
     const [activeItem, setActiveItem] = useState('flow');
@@ -22,13 +23,13 @@ export const Navbar = () => {
     ];
 
     return (
-        <div className="flex flex-col justify-between py-2 z-50 items-center bg-[var(--navbar-bg-color)] h-[100vh] bg-white border-r border-gray-200 shadow-sm select-none w-16 " >
+        <div className="flex flex-col justify-between py-2 z-50 items-center bg-[var(--navbar-bg-color)] h-[100vh] border-r border-[var(--navbar-border-color)] shadow-sm select-none w-16 " >
 
             {/* ================= Logo Section =========================*/}
 
             <div className=" flex items-center justify-center mb-6 relative group" >
                 VS
-                < span className="vs-tooltip absolute left-[80px] bg-slate-900 text-white text-xs px-2.5 py-1 rounded shadow-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50" >
+                < span className="vs-tooltip absolute left-[80px] bg-[var(--navbar-tooltip-bg)] text-[var(--navbar-tooltip-text)] text-xs px-2.5 py-1 rounded shadow-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50" >
                     VectorShift
                 </span>
             </div>
@@ -46,18 +47,18 @@ export const Navbar = () => {
                                 key={item.id}
                                 onClick={() => setActiveItem(item.id)}
                                 className={`vs-nav-item relative flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 group ${isActive
-                                    ? 'active bg-slate-100 text-slate-900 font-semibold'
-                                    : 'text-gray-400 hover:bg-slate-50 hover:text-slate-700'
+                                    ? 'active bg-[var(--navbar-item-active-bg)] text-[var(--navbar-item-active-text)] font-semibold'
+                                    : 'text-[var(--navbar-item-text)] hover:bg-[var(--navbar-item-hover-bg)] hover:text-[var(--navbar-item-hover-text)]'
                                     }`}
                             >
                                 <Icon size={19} />
-                                < span className="vs-tooltip absolute left-[60px] bg-slate-900 text-white text-xs px-2.5 py-1 rounded shadow-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50" >
+                                < span className="vs-tooltip absolute left-[60px] bg-[var(--navbar-tooltip-bg)] text-[var(--navbar-tooltip-text)] text-xs px-2.5 py-1 rounded shadow-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50" >
                                     {item.label}
                                 </span>
 
                                 {
                                     isActive && (
-                                        <div className="vs-active-indicator absolute left-[-8px] top-1/4 bottom-1/4 w-[3px] bg-slate-900 rounded-r" />
+                                        <div className="vs-active-indicator absolute left-[-8px] top-1/4 bottom-1/4 w-[3px] bg-[var(--navbar-item-active-text)] rounded-r" />
                                     )
                                 }
                             </Link>
@@ -73,16 +74,16 @@ export const Navbar = () => {
                         const Icon = item.icon;
                         return (
                             <button
+                                onClick={item.id == 'help' ? () => { toggleTheme() } : () => { }}
                                 key={item.id}
-                                className="vs-nav-item relative flex items-center justify-center w-11 h-11 rounded-xl text-gray-400 hover:bg-slate-50 hover:text-slate-700 transition-all duration-200 group"
+                                className="vs-nav-item relative flex items-center justify-center w-11 h-11 rounded-xl text-[var(--navbar-item-text)] hover:bg-[var(--navbar-item-hover-bg)] hover:text-[var(--navbar-item-hover-text)] transition-all duration-200 group"
                             >
                                 {
                                     <Icon size={19} />
-
                                 }
 
 
-                                < span className="absolute left-[60px] bg-slate-900 text-white text-xs px-2.5 py-1 rounded shadow-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50" >
+                                < span className="absolute left-[60px] bg-[var(--navbar-tooltip-bg)] text-[var(--navbar-tooltip-text)] text-xs px-2.5 py-1 rounded shadow-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50" >
                                     {item.label}
                                 </span>
                             </button>
@@ -90,10 +91,10 @@ export const Navbar = () => {
                     })}
 
                 {/* User Profile Avatar */}
-                <button className=" relative flex items-center justify-center w-9 h-9 rounded-full bg-slate-100 text-slate-700 border border-slate-200 mt-2 mb-2 hover:bg-slate-200 transition-colors duration-200 group" >
+                <button className=" relative flex items-center justify-center w-9 h-9 rounded-full bg-[var(--navbar-avatar-bg)] text-[var(--navbar-avatar-text)] border border-[var(--navbar-avatar-border)] mt-2 mb-2 hover:bg-[var(--navbar-avatar-hover-bg)] transition-colors duration-200 group" >
                     <FiUser size={16} />
                     {/* Tooltip */}
-                    < span className=" absolute left-[60px] bg-slate-900 text-white text-xs px-2.5 py-1 rounded shadow-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50" >
+                    < span className=" absolute left-[60px] bg-[var(--navbar-tooltip-bg)] text-[var(--navbar-tooltip-text)] text-xs px-2.5 py-1 rounded shadow-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50" >
                         Profile
                     </span>
                 </button>

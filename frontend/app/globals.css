@@ -2,7 +2,7 @@
 
 :root {
 
-  --app-bg-color: hsl(210, 40%, 98%)
+  --app-bg-color: hsl(210, 40%, 98%);
 
   --navbar-bg-color: hsl(0, 0%, 100%);
 
@@ -57,8 +57,179 @@
   --footer-bg-color: hsla(152, 81%, 96%, 0.4); /* emerald-50/40 equivalent */
   --footer-border-color: hsla(220, 14%, 96%, 0.6); /* gray-100/60 equivalent */
   --footer-accent-color: hsl(161, 94%, 30%); /* emerald-600 equivalent */
+
+  /* Navbar Styles */
+  --navbar-border-color: hsl(220, 13%, 91%);
+  --navbar-tooltip-bg: hsl(222, 47%, 11%);
+  --navbar-tooltip-text: hsl(0, 0%, 100%);
+  --navbar-item-active-bg: hsl(210, 40%, 96.1%);
+  --navbar-item-active-text: hsl(222, 47%, 11%);
+  --navbar-item-text: hsl(218, 11%, 65%);
+  --navbar-item-hover-bg: hsl(210, 40%, 98%);
+  --navbar-item-hover-text: hsl(215, 25%, 27%);
+  --navbar-avatar-bg: hsl(210, 40%, 96.1%);
+  --navbar-avatar-text: hsl(215, 25%, 27%);
+  --navbar-avatar-border: hsl(220, 13%, 91%);
+  --navbar-avatar-hover-bg: hsl(210, 40%, 92%);
+
+  /* Nodes Library Styles */
+  --nodes-bg: hsl(0, 0%, 100%);
+  --nodes-border: hsl(220, 13%, 91%);
+  --nodes-text: hsl(215, 25%, 27%);
+  --nodes-text-hover: hsl(222, 47%, 11%);
+  --nodes-bg-hover: hsl(210, 40%, 98%);
+  --nodes-header-border: hsl(220, 14%, 96%);
+  --nodes-header-text: hsl(222, 47%, 11%);
+  --nodes-btn-text: hsl(218, 11%, 65%);
+  --nodes-btn-text-hover: hsl(215, 25%, 27%);
+  --nodes-btn-bg-hover: hsl(210, 40%, 98%);
+  --nodes-btn-bg-active: hsl(210, 40%, 96.1%);
+  --nodes-search-bg: hsla(210, 40%, 98%, 0.6);
+  --nodes-search-border: hsl(220, 13%, 91%);
+  --nodes-search-text: hsl(215, 25%, 27%);
+  --nodes-search-placeholder: hsl(218, 11%, 65%);
+  --nodes-search-focus-border: hsl(243, 75%, 70%);
+  --nodes-search-focus-bg: hsl(0, 0%, 100%);
+  --nodes-search-icon: hsl(218, 11%, 65%);
+  --nodes-section-header-text: hsl(218, 11%, 65%);
+  --nodes-section-header-text-hover: hsl(215, 25%, 27%);
+  --nodes-item-bg: hsl(0, 0%, 100%);
+  --nodes-item-border: hsl(220, 13%, 91%);
+  --nodes-item-hover-border: hsl(243, 75%, 85%);
+  --nodes-item-active-bg: hsl(210, 40%, 98%);
+  --nodes-item-icon-bg: hsla(243, 75%, 96%, 0.5);
+  --nodes-item-icon-bg-hover: hsl(243, 75%, 96%);
+  --nodes-item-icon-border: hsla(243, 75%, 90%, 0.3);
+  --nodes-item-label: hsl(215, 25%, 27%);
+  --nodes-item-desc: hsl(218, 11%, 65%);
+  --nodes-item-icon-color: hsl(243, 75%, 59%);
+  --nodes-empty-icon: hsl(218, 11%, 75%);
+  --nodes-empty-title: hsl(215, 20%, 45%);
+  --nodes-empty-desc: hsl(218, 11%, 65%);
+  --nodes-footer-bg: hsla(210, 40%, 98%, 0.3);
+  --nodes-footer-border: hsl(220, 14%, 96%);
+  --nodes-footer-btn-bg: hsl(0, 0%, 100%);
+  --nodes-footer-btn-bg-hover: hsl(210, 40%, 98%);
+  --nodes-footer-btn-border: hsl(220, 13%, 91%);
+  --nodes-footer-btn-border-hover: hsl(220, 13%, 80%);
+  --nodes-footer-btn-text: hsl(215, 25%, 27%);
+  --nodes-footer-btn-text-hover: hsl(222, 47%, 11%);
 }
 
+.dark {
+  --app-bg-color: hsl(222, 47%, 9%);
+  --navbar-bg-color: hsl(222, 47%, 11%);
+
+  /* Topbar Styles */
+  --topbar-bg: hsl(222, 47%, 11%);
+  --topbar-border: hsl(222, 47%, 18%);
+  --topbar-text: hsl(210, 40%, 98%);
+  --topbar-text-muted: hsl(215, 20%, 65%);
+  --topbar-pill-bg: hsl(217, 33%, 15%);
+  --topbar-pill-border: hsl(217, 33%, 20%);
+  --topbar-share-btn-bg: hsl(217.2, 91.2%, 59.8%);
+  --topbar-share-btn-hover: hsl(217.2, 91.2%, 54%);
+  --topbar-icon-color: hsl(215, 20%, 65%);
+  --topbar-icon-hover-color: hsl(210, 40%, 98%);
+  --topbar-icon-hover-bg: hsl(217, 33%, 15%);
+
+  /* Draggable Node Color */
+  --draggable-node-bg-color: hsl(142, 60%, 15%);
+
+  /* Flow Canvas Background Grid */
+  --flow-grid-color: hsl(215, 15%, 25%);
+
+  /* MiniMap Styles */
+  --minimap-bg-color: hsl(222, 47%, 12%); 
+  --minimap-border-color: hsl(222, 47%, 18%);
+  --minimap-mask-color: hsla(0, 0%, 0%, 0.4);
+  --minimap-node-color: hsl(217.2, 91.2%, 59.8%);
+
+  /* React Flow Handle (Connection Points) */
+  --handle-bg-color: hsl(217.2, 91.2%, 59.8%);
+  --handle-border-color: hsl(222, 47%, 11%);
+  --handle-shadow-color: hsla(0, 0%, 0%, 0.3);
+
+  /* BaseNode UI Colors */
+  --node-bg-color: hsl(222, 47%, 12%);
+  --node-border-color: hsl(222, 47%, 18%);
+  --header-border-color: hsla(222, 47%, 18%, 0.6);
+  
+  --icon-bg-color: hsl(149, 80%, 12%);
+  --icon-text-color: hsl(149, 80%, 55%);
+  
+  --header-text-color: hsl(210, 40%, 98%);
+  --text-muted-color: hsl(215, 20%, 65%);
+  --text-muted-hover-color: hsl(210, 40%, 98%);
+  
+  --input-bg-color: hsl(222, 47%, 8%);
+  --input-border-color: hsl(222, 47%, 18%);
+  --input-text-color: hsl(213, 31%, 91%);
+  --input-focus-border-color: hsl(217.2, 91.2%, 59.8%);
+  --input-focus-bg-color: hsl(222, 47%, 12%);
+
+  --footer-bg-color: hsla(149, 80%, 10%, 0.2);
+  --footer-border-color: hsla(222, 47%, 18%, 0.4);
+  --footer-accent-color: hsl(149, 80%, 55%);
+
+  /* Navbar Styles */
+  --navbar-border-color: hsl(222, 47%, 18%);
+  --navbar-tooltip-bg: hsl(210, 40%, 98%);
+  --navbar-tooltip-text: hsl(222, 47%, 11%);
+  --navbar-item-active-bg: hsl(222, 47%, 18%);
+  --navbar-item-active-text: hsl(210, 40%, 98%);
+  --navbar-item-text: hsl(215, 20%, 65%);
+  --navbar-item-hover-bg: hsl(222, 47%, 16%);
+  --navbar-item-hover-text: hsl(210, 40%, 98%);
+  --navbar-avatar-bg: hsl(222, 47%, 18%);
+  --navbar-avatar-text: hsl(210, 40%, 98%);
+  --navbar-avatar-border: hsl(222, 47%, 22%);
+  --navbar-avatar-hover-bg: hsl(222, 47%, 26%);
+
+  /* Nodes Library Styles */
+  --nodes-bg: hsl(222, 47%, 12%);
+  --nodes-border: hsl(222, 47%, 18%);
+  --nodes-text: hsl(210, 40%, 98%);
+  --nodes-text-hover: hsl(210, 40%, 98%);
+  --nodes-bg-hover: hsl(222, 47%, 16%);
+  --nodes-header-border: hsl(222, 47%, 18%);
+  --nodes-header-text: hsl(210, 40%, 98%);
+  --nodes-btn-text: hsl(215, 20%, 65%);
+  --nodes-btn-text-hover: hsl(210, 40%, 98%);
+  --nodes-btn-bg-hover: hsl(222, 47%, 16%);
+  --nodes-btn-bg-active: hsl(222, 47%, 20%);
+  --nodes-search-bg: hsla(222, 47%, 8%, 0.6);
+  --nodes-search-border: hsl(222, 47%, 18%);
+  --nodes-search-text: hsl(210, 40%, 98%);
+  --nodes-search-placeholder: hsl(215, 20%, 65%);
+  --nodes-search-focus-border: hsl(243, 75%, 65%);
+  --nodes-search-focus-bg: hsl(222, 47%, 12%);
+  --nodes-search-icon: hsl(215, 20%, 65%);
+  --nodes-section-header-text: hsl(215, 20%, 65%);
+  --nodes-section-header-text-hover: hsl(210, 40%, 98%);
+  --nodes-item-bg: hsl(222, 47%, 14%);
+  --nodes-item-border: hsl(222, 47%, 18%);
+  --nodes-item-hover-border: hsl(243, 75%, 45%);
+  --nodes-item-active-bg: hsl(222, 47%, 16%);
+  --nodes-item-icon-bg: hsla(243, 75%, 25%, 0.25);
+  --nodes-item-icon-bg-hover: hsla(243, 75%, 25%, 0.45);
+  --nodes-item-icon-border: hsla(243, 75%, 45%, 0.3);
+  --nodes-item-label: hsl(210, 40%, 98%);
+  --nodes-item-desc: hsl(215, 20%, 65%);
+  --nodes-item-icon-color: hsl(243, 75%, 70%);
+  --nodes-empty-icon: hsl(215, 20%, 45%);
+  --nodes-empty-title: hsl(215, 20%, 75%);
+  --nodes-empty-desc: hsl(215, 20%, 65%);
+  --nodes-footer-bg: hsla(222, 47%, 8%, 0.3);
+  --nodes-footer-border: hsl(222, 47%, 18%);
+  --nodes-footer-btn-bg: hsl(222, 47%, 12%);
+  --nodes-footer-btn-bg-hover: hsl(222, 47%, 16%);
+  --nodes-footer-btn-border: hsl(222, 47%, 18%);
+  --nodes-footer-btn-border-hover: hsl(222, 47%, 24%);
+  --nodes-footer-btn-text: hsl(210, 40%, 98%);
+  --nodes-footer-btn-text-hover: hsl(210, 40%, 98%);
 
 
 
+
+}

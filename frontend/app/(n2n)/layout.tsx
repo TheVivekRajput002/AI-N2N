@@ -6,11 +6,11 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
-            <body className="h-screen w-screen overflow-hidden bg-[var(--app-bg-color)] flex">
-                <Navbar />
-                {children}
-            </body>
-        </html>
+
+        <div className="h-screen w-screen overflow-hidden bg-[var(--app-bg-color)] flex">
+            <Navbar />
+            {children}
+        </div>
+
     );
 }
