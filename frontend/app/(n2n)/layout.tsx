@@ -9,6 +9,7 @@ export default function RootLayout({
 
         <div className="h-screen w-screen overflow-hidden bg-[var(--app-bg-color)] flex">
             <Navbar />
+           
             {children}
         </div>
 
