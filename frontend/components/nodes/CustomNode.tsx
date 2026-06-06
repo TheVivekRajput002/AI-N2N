@@ -35,8 +35,8 @@ const handleStyle = {
 
 
 function CustomNode({ data, selected }: { data: { label: string; description?: string }, selected: boolean }) {
-  
-  const iconMap = {
+
+  const iconMap: Record<string, React.ReactNode> = {
     Input: <RiInputCursorMove />,
     LLM: <IoHardwareChipOutline />,
     Output: <MdOutput />,
@@ -161,56 +161,56 @@ function CustomNode({ data, selected }: { data: { label: string; description?: s
           <BsThreeDots />
         </button>
       </div>
-     <div className="p-4 flex flex-col gap-3">
+      <div className="p-4 flex flex-col gap-3">
 
-                    <div className="flex flex-col gap-1">
-                        <div className="flex items-center gap-1.5">
-                            <label className="text-2xs text-[var(--text-muted-color)] font-sans">
-                                {data.label !== 'LLM' && (data.label === 'Text' ? 'Text' : 'Name')}
-                                {data.label === 'LLM' && ' This is LLM'}
-                            </label>
-                        </div>
-                        {
-                            data.label !== 'LLM' &&
-                            <div className="relative">
-                                <input
-                                    type="text"
-                                    // value={currName}
-                                    // onChange={handleNameChange}
-                                    className="w-full h-8 bg-[var(--input-bg-color)] border border-[var(--input-border-color)] rounded-lg px-3 font-mono text-xxs text-[var(--input-text-color)] focus:outline-none focus:border-[var(--input-focus-border-color)] focus:bg-[var(--input-focus-bg-color)] transition-all"
-                                />
-                            </div>
-                        }
-                    </div>
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-1.5">
+            <label className="text-2xs text-[var(--text-muted-color)] font-sans">
+              {data.label !== 'LLM' && (data.label === 'Text' ? 'Text' : 'Name')}
+              {data.label === 'LLM' && ' This is LLM'}
+            </label>
+          </div>
+          {
+            data.label !== 'LLM' &&
+            <div className="relative">
+              <input
+                type="text"
+                // value={currName}
+                // onChange={handleNameChange}
+                className="w-full h-8 bg-[var(--input-bg-color)] border border-[var(--input-border-color)] rounded-lg px-3 font-mono text-xxs text-[var(--input-text-color)] focus:outline-none focus:border-[var(--input-focus-border-color)] focus:bg-[var(--input-focus-bg-color)] transition-all"
+              />
+            </div>
+          }
+        </div>
 
-                    {
-                        (data.label === 'Input' || data.label === 'Output') && (
-                            <div className="flex flex-col gap-1">
-                                <label className="text-2xs text-[var(--text-muted-color)] font-sans pl-0.5">Type</label>
-                                <div className="relative">
-                                    <select
-                                        // value={dataType}
-                                        // onChange={handleTypeChange}
-                                        className="w-full h-8 bg-[var(--input-bg-color)] border border-[var(--input-border-color)] rounded-lg pl-3 pr-8 font-sans text-xs text-[var(--input-text-color)] focus:outline-none focus:border-[var(--input-focus-border-color)] focus:bg-[var(--input-focus-bg-color)] transition-all appearance-none cursor-pointer"
-                                    >
-                                        <option value="Text">Text</option>
-                                        <option value="File">File</option>
-                                    </select>
-                                    <MdExpandMore className="absolute right-2 top-1/2 -translate-y-1/2" />
-                                </div>
-                            </div>
-                        )
-                    }
+        {
+          (data.label === 'Input' || data.label === 'Output') && (
+            <div className="flex flex-col gap-1">
+              <label className="text-2xs text-[var(--text-muted-color)] font-sans pl-0.5">Type</label>
+              <div className="relative">
+                <select
+                  // value={dataType}
+                  // onChange={handleTypeChange}
+                  className="w-full h-8 bg-[var(--input-bg-color)] border border-[var(--input-border-color)] rounded-lg pl-3 pr-8 font-sans text-xs text-[var(--input-text-color)] focus:outline-none focus:border-[var(--input-focus-border-color)] focus:bg-[var(--input-focus-bg-color)] transition-all appearance-none cursor-pointer"
+                >
+                  <option value="Text">Text</option>
+                  <option value="File">File</option>
+                </select>
+                <MdExpandMore className="absolute right-2 top-1/2 -translate-y-1/2" />
+              </div>
+            </div>
+          )
+        }
 
-                </div>
+      </div>
 
-                <div className="px-4 py-2 bg-[var(--footer-bg-color)] border-t border-[var(--footer-border-color)] rounded-b-xl flex items-center justify-between">
-                    <div className="flex items-center gap-1 text-[var(--text-muted-color)] text-xs">
-                        <MdOutlineDownloadDone />
-                        <span>Ready</span>
-                    </div>
-                    <span className="font-mono text-xs font-bold text-[var(--footer-accent-color)]">id</span>
-                </div>
+      <div className="px-4 py-2 bg-[var(--footer-bg-color)] border-t border-[var(--footer-border-color)] rounded-b-xl flex items-center justify-between">
+        <div className="flex items-center gap-1 text-[var(--text-muted-color)] text-xs">
+          <MdOutlineDownloadDone />
+          <span>Ready</span>
+        </div>
+        <span className="font-mono text-xs font-bold text-[var(--footer-accent-color)]">id</span>
+      </div>
 
 
     </div>
