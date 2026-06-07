@@ -163,6 +163,7 @@ export interface WorkflowType {
     name: string;
     description: string;
     isEnabled: boolean;
+    currentVersionId: string;
     workspaceId: string;
     createdAt: string;
     updatedAt: string;

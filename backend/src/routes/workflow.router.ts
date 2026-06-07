@@ -1,9 +1,10 @@
 import express from 'express'
+import { getWorkflows, createWorkflow} from '../controllers/workflow.controller'
 
 const router = express.Router()
 
-// router.get('/:id')
-// router.patch('/:id')
+router.get('/:workspaceId', getWorkflows)
+router.post('/:workspaceId', createWorkflow)
 // router.delete('/:id')
 // router.post('/:id/duplicate')
 
