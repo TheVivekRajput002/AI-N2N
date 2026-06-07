@@ -27,26 +27,26 @@ export async function createWorkflowVersion(req: Request, res: Response) {
             where: { workflowId },
             orderBy: { versionNumber: "desc" },
         });
-        
+
         const nextNumber = latest ? latest.versionNumber + 1 : 1;
 
         const workflowVersion = await prisma.workflowVersion.create({
             data: {
                 workflowId,
-                versionNumber:nextNumber, 
-                graph, 
+                versionNumber: nextNumber,
+                graph,
             }
         })
 
         const updatedWorkflow = await prisma.workflow.update({
-            where:{id:workflowId},
-            data:{
+            where: { id: workflowId },
+            data: {
                 currentVersionId: workflowVersion.id
             }
         })
 
         res.status(201).json({
-            success:true,
+            success: true,
             workflowVersion,
             workflow: updatedWorkflow
         })
@@ -57,6 +57,52 @@ export async function createWorkflowVersion(req: Request, res: Response) {
             message: error
         })
         console.log(error)
+
+    }
+
+}
+
+export async function getWorkflowVersion(req: Request, res: Response) {
+
+    try {
+        const { workflowId } = req.query as { workflowId: string };
+
+        if (!workflowId) {
+            res.status(400).json({
+                success: false,
+                message: "workflowId is required"
+            });
+            return;
+        }
+
+        const workflow = await prisma.workflow.findUnique({
+            where: {
+                id: workflowId,
+            },
+            include: {
+                currentVersion: true
+            }
+        });
+
+        if (!workflow) {
+            res.status(404).json({
+                success: false,
+                message: "Workflow not found"
+            });
+            return;
+        }
+
+        res.status(200).json({
+            success: true,
+            workflowVersion: workflow.currentVersion,
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error instanceof Error ? error.message : "Internal Server Error"
+        });
+        console.log(error);
 
     }
 

@@ -17,6 +17,7 @@ import {
 } from 'react-icons/fi';
 import { useWorkspace, useWorkflow, WorkflowType } from '@/utils/store';
 import { apiPost } from '@/utils/api';
+import { useFlowState } from '@/hooks/useFlowState';
 
 
 const WorkflowPage = ({ initialWorkflows }: { initialWorkflows: WorkflowType[] }) => {
@@ -104,6 +105,13 @@ const WorkflowPage = ({ initialWorkflows }: { initialWorkflows: WorkflowType[] }
       day: 'numeric',
       year: 'numeric'
     });
+  };
+
+  const handleWorkflowClick = (workflowId: string) => {
+    const workflow = workflows.find((w) => w.id === workflowId);
+    if (workflow?.currentVersion) {
+      console.log(workflow.currentVersion.graph);
+    }
   };
 
   const workspaceName = currentWorkspace?.name || "Workspace";
@@ -214,7 +222,7 @@ const WorkflowPage = ({ initialWorkflows }: { initialWorkflows: WorkflowType[] }
                 href={`/workspaces/${workspaceId}/${workflow.id}`}
                 className="group relative flex flex-col justify-between p-6 bg-[var(--ios-card-bg)] border border-[var(--ios-card-border)] rounded-3xl backdrop-blur-md shadow-[var(--ios-card-shadow)] hover:-translate-y-1 hover:shadow-lg active:scale-[0.98] transition-all duration-300 select-none overflow-hidden"
               >
-                <div>
+                <div onClick={() => handleWorkflowClick(workflow.id)} >
                   {/* Top Section: Status indicator & Delete */}
                   <div className="flex items-center justify-between mb-5">
                     {/* iOS Status Pill */}

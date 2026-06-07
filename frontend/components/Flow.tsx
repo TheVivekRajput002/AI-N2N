@@ -21,6 +21,7 @@ import CustomNode from './nodes/CustomNode'
 import CustomEdge from './edges/CustomEdges'
 import { NodesLibrary } from './NodesLibrary'
 
+
 // Register your custom types OUTSIDE the component
 // (if defined inside, React re-creates them every render → flickering)
 const nodeTypes = {
@@ -55,6 +56,8 @@ function Flow() {
     onNodesChange, onEdgesChange,
     onConnect, addNode, saveFlow, restoreFlow
   } = useFlowState()
+
+
 
   const onDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault()

@@ -1,7 +1,5 @@
 import prisma from "@/config/db"
 import { Request, Response } from "express"
-import { getOrCreateUser } from "./auth.controller"
-import { getAuth } from "@clerk/express"
 
 export async function getWorkflows(req: Request, res: Response) {
     const { workspaceId } = req.params as {workspaceId: string}
@@ -11,10 +9,12 @@ export async function getWorkflows(req: Request, res: Response) {
                 workspaceId: workspaceId
             }
         })
+
         return res.status(200).json({
             success: true,
-            workflows
+            workflows,
         })
+
     } catch (error) {
         return res.status(400).json({
             success: false,

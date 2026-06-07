@@ -2,12 +2,17 @@
 import Topbar from '@/components/Topbar';
 import { ReactFlowProvider } from '@xyflow/react'
 import Flow from '@/components/Flow'
+import { apiGet } from '@/utils/api'
 
 
-function App() {
+async function App() {
+//   const { workflowId } = params
 
+//   const response = await apiGet(`/workflow-version?workflowId=${workflowId}`)
+//   console.log(response)
 
     return (
+
         <div >
             <div style={{ width: '100vw', height: '100vh' }}>
                 <ReactFlowProvider>

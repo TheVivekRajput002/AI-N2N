@@ -158,15 +158,24 @@ export const useWorkspace = create<WorkspaceSetState>((set) => ({
     }
 }))
 
+export interface WorkflowVersionType {
+    id: string;
+    versionNumber: number;
+    graph: any;
+    createdAt: string;
+    workflowId: string;
+}
+
 export interface WorkflowType {
     id: string;
     name: string;
     description: string;
     isEnabled: boolean;
-    currentVersionId: string;
+    currentVersionId: string | null;
     workspaceId: string;
     createdAt: string;
     updatedAt: string;
+    currentVersion?: WorkflowVersionType | null;
 }
 
 export interface WorkflowSetState {

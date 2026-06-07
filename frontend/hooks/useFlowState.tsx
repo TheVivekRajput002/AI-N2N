@@ -1,9 +1,11 @@
-// src/hooks/useFlowState.js
+// src/hooks/useFlowState.tsx
 import { useCallback } from 'react'
 import { type Node, useNodesState, useEdgesState, addEdge, type Connection, type ReactFlowInstance, type Viewport } from '@xyflow/react'
-import { apiPost } from '@/utils/api'
+import { apiPost, apiGet } from '@/utils/api'
+import { useParams } from 'next/navigation'
 
 export function useFlowState() {
+  const { workflowId } = useParams() as { workflowId: string }
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([])
   const [edges, setEdges, onEdgesChange] = useEdgesState([])
 
@@ -29,38 +31,47 @@ export function useFlowState() {
     setNodes((nds) => [...nds, newNode])
   }, [setNodes])
 
-  // save to localStorage
-  const saveFlow = useCallback(async (reactFlowInstance: ReactFlowInstance, workflowId: string) => {
+  // save to API
+  const saveFlow = useCallback(async (reactFlowInstance: ReactFlowInstance, wId: string) => {
     const flow = reactFlowInstance.toObject()
     const jsonFlow = JSON.stringify(flow)
 
     try {
-
       const response = await apiPost(`/workflow-version`, {
-        graph: jsonFlow,
-        workflowId: workflowId,
+        graph: flow, // Save the actual JSON object to the database
+        workflowId: wId,
       })
 
       console.log(response)
-
       localStorage.setItem('savedFlow', jsonFlow)
-      
     } catch (error) {
-
+      console.error("Failed to save flow:", error)
     }
 
     alert('Saved!')
   }, [])
 
-  // restore from localStorage
-  const restoreFlow = useCallback((setViewport: (Viewport: Viewport) => void) => {
-    const saved = localStorage.getItem('savedFlow')
-    if (!saved) return
-    const flow = JSON.parse(saved)
-    setNodes(flow.nodes)
-    setEdges(flow.edges)
-    setViewport(flow.viewport)
-  }, [setNodes, setEdges])
+  // restore from API
+  const restoreFlow = useCallback(async (setViewport: (viewport: Viewport) => void) => {
+    if (!workflowId) return
+    try {
+      const response = await apiGet<{ success: boolean, workflowVersion: any }>(`/workflow-version?workflowId=${workflowId}`)
+      if (response.success && response.workflowVersion?.graph) {
+        const graph = response.workflowVersion.graph
+        
+        // If graph was saved as a string (legacy/fallback), parse it; otherwise, use it directly
+        const flow = typeof graph === 'string' ? JSON.parse(graph) : graph
+        
+        if (flow.nodes) setNodes(flow.nodes)
+        if (flow.edges) setEdges(flow.edges)
+        if (flow.viewport && setViewport) {
+          setViewport(flow.viewport)
+        }
+      }
+    } catch (error) {
+      console.error("Failed to restore flow from backend:", error)
+    }
+  }, [workflowId, setNodes, setEdges])
 
   return {
     nodes, edges,
