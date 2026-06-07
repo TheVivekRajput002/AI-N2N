@@ -48,7 +48,7 @@ const edgeTypes = {
 }
 
 function Flow() {
-  const [colorMode, setColorMode] = useState<"light" | "dark">("light");
+  const [colorMode, setColorMode] = useState<"light" | "dark">("dark");
   const { toObject, setViewport, screenToFlowPosition } = useReactFlow()
   const {
     nodes, edges,
@@ -92,6 +92,10 @@ function Flow() {
         : "light"
     );
   }, []);
+
+  useEffect(() => {
+    restoreFlow(setViewport)
+  }, [restoreFlow, setViewport]);
 
   return (
     <ReactFlow

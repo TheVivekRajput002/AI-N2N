@@ -11,6 +11,10 @@ import {
   FiGitBranch,
   FiMoreVertical
 } from 'react-icons/fi';
+import { useFlowState } from '@/hooks/useFlowState';
+import { useReactFlow, type ReactFlowInstance } from '@xyflow/react';
+import { useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 
 // Custom high-fidelity VectorShift logo SVG
 const VectorShiftLogo = ({ className = "w-7 h-5" }) => (
@@ -29,46 +33,36 @@ const VectorShiftLogo = ({ className = "w-7 h-5" }) => (
   </svg>
 );
 
-// Custom Magic Wand / Sparkle clean icon
-const MagicWandIcon = ({ size = 18, ...props }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}
-  >
-    <path d="M15 4 20 9" />
-    <path d="M3 21l12-12" />
-    <path d="M20.5 2c-.3 0-.6.1-.8.4l-2.4 2.4 3 3 2.4-2.4c.4-.4.4-1 0-1.4l-1.4-1.4c-.2-.2-.5-.2-.8-.2Z" />
-    <path d="M18.5 6.5l-3-3" />
-    <path d="m2 2 1.5 1.5M2 22l1.5-1.5M22 2l-1.5 1.5" />
-  </svg>
-);
-
 const Topbar = ({
-  onSave = () => {},
   onOpenFolder = () => {},
   onUndo = () => {},
   onRedo = () => {},
   onShare = () => {},
   onDeploy = () => {},
-  onCleanCanvas = () => {},
   onMoreActions = () => {}
 }: {
-  onSave?: () => void;
   onOpenFolder?: () => void;
   onUndo?: () => void;
   onRedo?: () => void;
   onShare?: () => void;
   onDeploy?: () => void;
-  onCleanCanvas?: () => void;
   onMoreActions?: () => void;
 } = {}) => {
+
+  const router = useRouter()
+  const {workflowId} = useParams() as {workflowId: string}
+
+const {saveFlow} = useFlowState()
+const reactFlowInstance = useReactFlow()
+
+const handleSave = async () => {
+    try {
+      saveFlow(reactFlowInstance, workflowId)
+    } catch (err) {
+        console.error(err)
+    }
+}
+
   return (
     <header className="w-[calc(100vw-88px)] mx-2 flex items-center justify-between px-6 py-2 h-12 bg-[var(--topbar-bg)] border border-[var(--topbar-border)] rounded-xl shadow-sm select-none z-50">
 
@@ -88,7 +82,7 @@ const Topbar = ({
         {/* Core Editor Actions */}
         <div className="flex items-center gap-1">
           <button
-            onClick={onSave}
+            onClick={handleSave}
             className="w-9 h-9 flex items-center justify-center rounded-lg text-[var(--topbar-icon-color)] hover:text-[var(--topbar-icon-hover-color)] hover:bg-[var(--topbar-icon-hover-bg)] transition-all duration-200"
             title="Save workflow"
           >
@@ -96,7 +90,7 @@ const Topbar = ({
           </button>
 
           <button
-            onClick={onOpenFolder}
+            onClick={() => router.back()}
             className="w-9 h-9 flex items-center justify-center rounded-lg text-[var(--topbar-icon-color)] hover:text-[var(--topbar-icon-hover-color)] hover:bg-[var(--topbar-icon-hover-bg)] transition-all duration-200"
             title="Open project folder"
           >
@@ -161,15 +155,6 @@ const Topbar = ({
             <FiGitBranch size={15} />
           </button>
         </div>
-
-        {/* Clean Canvas / Auto layout Button */}
-        <button
-          onClick={onCleanCanvas}
-          className="w-9 h-9 flex items-center justify-center rounded-lg text-[var(--topbar-icon-color)] hover:text-[var(--topbar-icon-hover-color)] hover:bg-[var(--topbar-icon-hover-bg)] transition-all duration-200"
-          title="Auto-align canvas nodes"
-        >
-          <MagicWandIcon size={17} />
-        </button>
 
         {/* More Actions Menu */}
         <button

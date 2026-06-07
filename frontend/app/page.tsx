@@ -7,10 +7,10 @@ export default function Home() {
     <div>
       <header className="flex justify-end items-center p-4 gap-4 h-16">
         <Show when="signed-out">
-          <SignInButton forceRedirectUrl="/(n2n)/workspaces">
+          <SignInButton forceRedirectUrl="/workspaces">
             <button >Sign in</button>
           </SignInButton>
-          <SignUpButton forceRedirectUrl="/(n2n)/workspaces">
+          <SignUpButton forceRedirectUrl="/workspaces">
             <button className="bg-purple-700 text-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer">
               Sign Up
             </button>
