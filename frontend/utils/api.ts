@@ -1,4 +1,5 @@
 
+
 export async function apiGet<T>(endpoint: string, token?: string | null): Promise<T> {
     const headers: HeadersInit = {}
     if (token) {
@@ -22,6 +23,17 @@ export async function apiPost<T>(endpoint: string, body: unknown, token?: string
             method: 'POST',
             headers,
             body: JSON.stringify(body),
+        }
+    )
+    if (!res.ok) throw new Error(`API error: ${res.status}`);
+    return res.json();
+}
+
+export async function apiDelete<T>(endpoint: string ): Promise<T> {
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${endpoint}`,
+        {
+            method: 'DELETE',
         }
     )
     if (!res.ok) throw new Error(`API error: ${res.status}`);
