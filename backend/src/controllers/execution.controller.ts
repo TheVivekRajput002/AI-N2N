@@ -7,7 +7,7 @@ import { executeGraph } from "../lib/executeGraph";
  * creates DB logs for execution tracking, and awaits completion to return outputs.
  */
 export async function executeWorkflow(req: Request, res: Response): Promise<void> {
-  const { workflowId } = req.params;
+  const { workflowId } = req.params as { workflowId: string };
   const { input, triggeredBy } = req.body;
   
   const triggerType = triggeredBy === "API" ? "API" : "MANUAL";
@@ -133,7 +133,7 @@ export async function executeWorkflow(req: Request, res: Response): Promise<void
  * Returns the history of executions for a specific workflow.
  */
 export async function getWorkflowExecutions(req: Request, res: Response): Promise<void> {
-  const { workflowId } = req.params;
+  const { workflowId } = req.params as { workflowId: string };
 
   try {
     const executions = await prisma.execution.findMany({
@@ -158,7 +158,7 @@ export async function getWorkflowExecutions(req: Request, res: Response): Promis
  * Returns granular node-by-node details for a specific execution run.
  */
 export async function getExecutionDetails(req: Request, res: Response): Promise<void> {
-  const { executionId } = req.params;
+  const { executionId } = req.params as { executionId: string };
 
   try {
     const execution = await prisma.execution.findUnique({
