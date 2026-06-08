@@ -15,6 +15,7 @@ dotenv.config()
 
 const allowedOrigins = [
     'http://localhost:3000',
+    'https://ai-n2n.vercel.app',
     // config.FRONTEND_URL,
 ];
 

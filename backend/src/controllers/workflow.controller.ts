@@ -37,7 +37,6 @@ export async function createWorkflow(req: Request, res: Response) {
             }
         })
 
-        // Create the first version
         const version = await prisma.workflowVersion.create({
             data: {
                 workflowId: workflow.id,

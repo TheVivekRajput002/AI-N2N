@@ -2,10 +2,6 @@ import { Request, Response } from "express";
 import prisma from "../config/db";
 import { executeGraph } from "../lib/executeGraph";
 
-/**
- * Triggers workflow execution synchronously. It loads the graph, runs Kahn's algorithm,
- * creates DB logs for execution tracking, and awaits completion to return outputs.
- */
 export async function executeWorkflow(req: Request, res: Response): Promise<void> {
   const { workflowId } = req.params as { workflowId: string };
   const { input, triggeredBy } = req.body;
@@ -13,7 +9,7 @@ export async function executeWorkflow(req: Request, res: Response): Promise<void
   const triggerType = triggeredBy === "API" ? "API" : "MANUAL";
 
   try {
-    // 1. Fetch workflow and its current active version
+
     const workflow = await prisma.workflow.findUnique({
       where: { id: workflowId },
       include: { currentVersion: true },
@@ -46,8 +42,6 @@ export async function executeWorkflow(req: Request, res: Response): Promise<void
     }
 
     const startedAt = new Date();
-
-    // 2. Create parent execution log in database
     const execution = await prisma.execution.create({
       data: {
         workflowId,
@@ -60,7 +54,6 @@ export async function executeWorkflow(req: Request, res: Response): Promise<void
     });
 
     try {
-      // 3. Execute the graph traversal synchronously
       const output = await executeGraph({
         nodes,
         edges,
@@ -71,7 +64,6 @@ export async function executeWorkflow(req: Request, res: Response): Promise<void
       const finishedAt = new Date();
       const totalDuration = finishedAt.getTime() - startedAt.getTime();
 
-      // 4. Record successful execution
       const updatedExecution = await prisma.execution.update({
         where: { id: execution.id },
         data: {
@@ -97,7 +89,7 @@ export async function executeWorkflow(req: Request, res: Response): Promise<void
       const totalDuration = finishedAt.getTime() - startedAt.getTime();
       const errorMsg = execErr?.message || String(execErr);
 
-      // Record failed execution
+
       const failedExecution = await prisma.execution.update({
         where: { id: execution.id },
         data: {
@@ -129,9 +121,7 @@ export async function executeWorkflow(req: Request, res: Response): Promise<void
   }
 }
 
-/**
- * Returns the history of executions for a specific workflow.
- */
+
 export async function getWorkflowExecutions(req: Request, res: Response): Promise<void> {
   const { workflowId } = req.params as { workflowId: string };
 
@@ -154,9 +144,7 @@ export async function getWorkflowExecutions(req: Request, res: Response): Promis
   }
 }
 
-/**
- * Returns granular node-by-node details for a specific execution run.
- */
+
 export async function getExecutionDetails(req: Request, res: Response): Promise<void> {
   const { executionId } = req.params as { executionId: string };
 
