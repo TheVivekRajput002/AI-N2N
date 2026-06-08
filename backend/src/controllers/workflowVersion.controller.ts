@@ -97,7 +97,11 @@ export async function getWorkflowVersion(req: Request, res: Response) {
             success: true,
             workflowVersion: workflow.currentVersion,
             workflowName: workflow.name,
-            workspaceName: workflow.workspace.name
+            workspaceName: workflow.workspace.name,
+            createdAt: workflow.createdAt,
+            updatedAt: workflow.updatedAt,
+            description: workflow.description,
+            isEnabled: workflow.isEnabled
         });
 
     } catch (error) {

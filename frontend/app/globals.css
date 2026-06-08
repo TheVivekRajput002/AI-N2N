@@ -159,6 +159,23 @@
   --nodes-footer-btn-border-hover: hsl(220, 13%, 80%);
   --nodes-footer-btn-text: hsl(215, 25%, 27%);
   --nodes-footer-btn-text-hover: hsl(222, 47%, 11%);
+
+  /* FlowBar (Right Sidebar) Styles */
+  --flowbar-bg: rgba(255, 255, 255, 0.72);
+  --flowbar-border: rgba(0, 0, 0, 0.08);
+  --flowbar-text-primary: #1c1c1e;
+  --flowbar-text-secondary: #8e8e93;
+  --flowbar-section-border: rgba(0, 0, 0, 0.05);
+  --flowbar-input-bg: rgba(0, 0, 0, 0.03);
+  --flowbar-input-border: rgba(0, 0, 0, 0.05);
+  --flowbar-input-focus: #007aff;
+  --flowbar-btn-primary: #e17032; /* iOS Orange */
+  --flowbar-btn-primary-hover: #d25f20;
+  --flowbar-btn-secondary: rgba(0, 0, 0, 0.04);
+  --flowbar-btn-secondary-hover: rgba(0, 0, 0, 0.08);
+  --flowbar-trash-bg: rgba(255, 59, 48, 0.08);
+  --flowbar-trash-color: #ff3b30;
+  --flowbar-trash-hover-bg: rgba(255, 59, 48, 0.16);
 }
 
 .dark {
@@ -303,9 +320,22 @@
   --nodes-footer-btn-text: hsl(210, 40%, 98%);
   --nodes-footer-btn-text-hover: hsl(210, 40%, 98%);
 
-
-
-
+  /* FlowBar (Right Sidebar) Styles */
+  --flowbar-bg: rgba(28, 28, 30, 0.72);
+  --flowbar-border: rgba(255, 255, 255, 0.08);
+  --flowbar-text-primary: #f2f2f7;
+  --flowbar-text-secondary: #98989f;
+  --flowbar-section-border: rgba(255, 255, 255, 0.06);
+  --flowbar-input-bg: rgba(255, 255, 255, 0.05);
+  --flowbar-input-border: rgba(255, 255, 255, 0.08);
+  --flowbar-input-focus: #0a84ff;
+  --flowbar-btn-primary: #e17032;
+  --flowbar-btn-primary-hover: #f18245;
+  --flowbar-btn-secondary: rgba(255, 255, 255, 0.06);
+  --flowbar-btn-secondary-hover: rgba(255, 255, 255, 0.12);
+  --flowbar-trash-bg: rgba(255, 69, 58, 0.15);
+  --flowbar-trash-color: #ff453a;
+  --flowbar-trash-hover-bg: rgba(255, 69, 58, 0.25);
 }
 
 /* iOS Animations */
@@ -703,4 +733,151 @@
 
 .ios-topbar-center-container:active {
   transform: scale(0.98);
+}
+
+/* iOS FlowBar right sidebar styles */
+.ios-flowbar-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.ios-flowbar-section {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--flowbar-section-border);
+}
+
+.ios-flowbar-section:last-child {
+  border-bottom: none;
+}
+
+.ios-flowbar-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.ios-flowbar-section-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--flowbar-text-primary);
+  letter-spacing: -0.01em;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.ios-flowbar-label {
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--flowbar-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 4px;
+}
+
+.ios-flowbar-input-box {
+  width: 100%;
+  background-color: var(--flowbar-input-bg);
+  border: 1px solid var(--flowbar-input-border);
+  border-radius: 10px;
+  padding: 7px 11px;
+  font-size: 12.5px;
+  color: var(--flowbar-text-primary);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+}
+
+.ios-flowbar-input-box:focus {
+  border-color: var(--flowbar-input-focus);
+  background-color: var(--node-bg-color);
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.12);
+}
+
+.ios-flowbar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 0;
+  font-size: 12px;
+}
+
+.ios-flowbar-row-label {
+  color: var(--flowbar-text-secondary);
+}
+
+.ios-flowbar-row-value {
+  font-weight: 500;
+  color: var(--flowbar-text-primary);
+}
+
+.ios-flowbar-btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 9px 14px;
+  background-color: var(--flowbar-btn-primary);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 10px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  border: none;
+  cursor: pointer;
+}
+
+.ios-flowbar-btn-primary:hover {
+  background-color: var(--flowbar-btn-primary-hover);
+  transform: translateY(-0.5px);
+}
+
+.ios-flowbar-btn-primary:active {
+  transform: scale(0.98);
+}
+
+.ios-flowbar-btn-secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 14px;
+  background-color: var(--flowbar-btn-secondary);
+  color: var(--flowbar-text-primary);
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 10px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  border: none;
+  cursor: pointer;
+  flex: 1;
+}
+
+.ios-flowbar-btn-secondary:hover {
+  background-color: var(--flowbar-btn-secondary-hover);
+}
+
+.ios-flowbar-btn-secondary:active {
+  transform: scale(0.98);
+}
+
+.ios-flowbar-btn-trash {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background-color: var(--flowbar-trash-bg);
+  color: var(--flowbar-trash-color);
+  border-radius: 10px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.ios-flowbar-btn-trash:hover {
+  background-color: var(--flowbar-trash-hover-bg);
+}
+
+.ios-flowbar-btn-trash:active {
+  transform: scale(0.95);
 }

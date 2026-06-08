@@ -14,7 +14,6 @@ model user {
   email      String      @unique
   createdAt DateTime @default(now())
   workspaces workspace[]
-  apiKeys    apiKey[]
 
   @@index([clerkId])
 }
@@ -77,7 +76,7 @@ enum ExecutionStatus {
   CANCELLED
 }
 
-enum TriggerType{
+enum TriggerType {
   API
   MANUAL
   RETRY
@@ -108,7 +107,7 @@ error String?
   @@index([startedAt])
 }
 
-enum nodeExecutionStatus{
+enum nodeExecutionStatus {
   PENDING
   RUNNING
   SUCCESS
@@ -134,13 +133,3 @@ model nodeExecution {
   @@index([status])
 }
 
-model apiKey {
-  id        String   @id @default(uuid())
-  label     String
-  hashedKey String   @unique
-  createdAt DateTime @default(now())
-  userId    String
-  user      user     @relation(fields: [userId], references: [id])
-
-  @@index([userId])
-}

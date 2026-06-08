@@ -85,6 +85,7 @@ export function useFlowState() {
   return {
     nodes, edges,
     onNodesChange, onEdgesChange,
-    onConnect, addNode, saveFlow, restoreFlow
+    onConnect, addNode, saveFlow, restoreFlow,
+    setNodes
   }
 }

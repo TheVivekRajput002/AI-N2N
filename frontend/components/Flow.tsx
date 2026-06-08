@@ -12,6 +12,7 @@ import {
   useReactFlow,
 } from '@xyflow/react'
 import { useEffect } from 'react'
+import { useParams } from 'next/navigation'
 
 // MUST import the css or nodes/edges won't render correctly
 import '@xyflow/react/dist/style.css'
@@ -20,6 +21,7 @@ import { useFlowState } from '@/hooks/useFlowState'
 import CustomNode from './nodes/CustomNode'
 import CustomEdge from './edges/CustomEdges'
 import { NodesLibrary } from './NodesLibrary'
+import FlowBar from './FlowBar'
 
 
 // Register your custom types OUTSIDE the component
@@ -50,12 +52,19 @@ const edgeTypes = {
 
 function Flow() {
   const [colorMode, setColorMode] = useState<"light" | "dark">("dark");
-  const { toObject, setViewport, screenToFlowPosition } = useReactFlow()
+  const { workflowId } = useParams() as { workflowId: string }
+  const reactFlowInstance = useReactFlow()
+  const { toObject, setViewport, screenToFlowPosition } = reactFlowInstance
   const {
     nodes, edges,
     onNodesChange, onEdgesChange,
-    onConnect, addNode, saveFlow, restoreFlow
+    onConnect, addNode, saveFlow, restoreFlow,
+    setNodes
   } = useFlowState()
+
+  const handleSave = useCallback(() => {
+    saveFlow(reactFlowInstance, workflowId)
+  }, [saveFlow, reactFlowInstance, workflowId])
 
   const onDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault()
@@ -140,6 +149,12 @@ function Flow() {
 
 
       <NodesLibrary />
+
+      <FlowBar 
+        nodes={nodes} 
+        setNodes={setNodes} 
+        onSave={handleSave} 
+      />
 
     </ReactFlow>
   )

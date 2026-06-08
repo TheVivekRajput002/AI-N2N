@@ -33,7 +33,13 @@ export const AllNodes: NodeConfigItem[] = [
   {
     type: 'input',
     category: 'Input',
-    data: { label: 'Input', description: 'Define input fields', nodeData: {} },
+    data: {
+      label: 'Input',
+      description: 'Define input fields',
+      nodeData: {
+        input: ''
+      }
+    },
     icon: <RiInputCursorMove className="w-5 h-5 text-[var(--nodes-item-icon-color)]" />
   },
 
@@ -61,7 +67,14 @@ export const AllNodes: NodeConfigItem[] = [
   {
     type: 'llm',
     category: 'AI / Prompt',
-    data: { label: 'LLM', description: 'Execute LLM prompt', nodeData: {} },
+    data: {
+      label: 'LLM',
+      description: 'Execute LLM prompt',
+      nodeData: {
+        "api key": "",
+        output: "",
+      }
+    },
     icon: <IoHardwareChipOutline className="w-5 h-5 text-[var(--nodes-item-icon-color)]" />
   },
 
