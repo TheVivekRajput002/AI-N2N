@@ -180,7 +180,13 @@ function CustomNode({ data, selected }: { data: { label: string; description?: s
               <input
                 type="text"
                 readOnly
-                value={data.nodeData?.input}
+                value={
+                  data.label === 'LLM'
+                    ? (typeof data.nodeData?.output === 'object' && data.nodeData?.output !== null
+                        ? JSON.stringify(data.nodeData.output)
+                        : (data.nodeData?.output ?? ''))
+                    : (data.nodeData?.input ?? '')
+                }
                 className="w-full h-8 bg-[var(--input-bg-color)] border border-[var(--input-border-color)] rounded-lg px-3 font-mono text-xxs text-[var(--input-text-color)] focus:outline-none focus:border-[var(--input-focus-border-color)] focus:bg-[var(--input-focus-bg-color)] transition-all"
               />
             </div>

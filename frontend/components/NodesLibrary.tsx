@@ -134,7 +134,7 @@ export const NodesLibrary = () => {
       </div>
 
       {/* Categories Content */}
-      <div className="flex-1 overflow-y-auto px-4 py-2 flex flex-col gap-1 scrollbar-thin scrollbar-thumb-slate-200">
+      <div className="flex-1 overflow-y-auto no-scrollbar px-4 py-2 flex flex-col gap-1">
         
         {categories.map((category) => {
           const categoryNodes = filteredNodes.filter(node => node.category === category);

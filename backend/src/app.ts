@@ -6,6 +6,7 @@ import workflowRouter from './routes/workflow.router'
 import workspaceRouter from './routes/workspace.router'
 import { clerkMiddleware } from '@clerk/express'
 import workflowVersionRouter from './routes/workflowVersion.router'
+import executionRouter from './routes/execution.router'
 import { config } from './config/config'
 
 const app = express()
@@ -35,6 +36,8 @@ app.use('/auth', authRouter)
 app.use('/workspaces', workspaceRouter)
 app.use('/workflows', workflowRouter)
 app.use('/workflow-version', workflowVersionRouter)
+app.use('/executions', executionRouter)
 
 export default app
+
 

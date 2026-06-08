@@ -16,7 +16,7 @@ import { IoPlayOutline } from "react-icons/io5";
 import { useFlowState } from '@/hooks/useFlowState';
 import { useReactFlow } from '@xyflow/react';
 import { useRouter, useParams } from 'next/navigation';
-import { apiGet } from '@/utils/api';
+import { apiGet, apiPost } from '@/utils/api';
 import Link from 'next/link';
 
 const Topbar = ({
@@ -43,6 +43,7 @@ const Topbar = ({
 
   const [workflowName, setWorkflowName] = useState<string>('Simple Workflow Template');
   const [workspaceName, setWorkspaceName] = useState<string>('Templates');
+  const [isRunning, setIsRunning] = useState<boolean>(false);
 
   useEffect(() => {
     if (!workflowId) return;
@@ -79,6 +80,65 @@ const Topbar = ({
     }
   };
 
+  const handlePlay = async () => {
+    if (isRunning) return;
+    setIsRunning(true);
+    try {
+      // 1. Save flow first
+      await handleSave();
+
+      // 2. Call the execution endpoint
+      const response = await apiPost<{
+        success: boolean;
+        execution?: {
+          status: string;
+          error?: string | null;
+          nodeExecutions: Array<{
+            nodeId: string;
+            status: string;
+            output: any;
+            error: string | null;
+          }>;
+        };
+        error?: string;
+      }>(`/executions/workflow/${workflowId}`, {});
+
+      if (response.execution) {
+        const nodeExecutions = response.execution.nodeExecutions;
+        // 3. Update the nodes on canvas with outputs
+        reactFlowInstance.setNodes((nds) =>
+          nds.map((node) => {
+            const exec = nodeExecutions.find((ne) => ne.nodeId === node.id);
+            if (exec) {
+              return {
+                ...node,
+                data: {
+                  ...node.data,
+                  nodeData: {
+                    ...(node.data.nodeData || {}),
+                    output: exec.status === "SUCCESS" ? exec.output : `Error: ${exec.error || "Failed"}`
+                  }
+                }
+              };
+            }
+            return node;
+          })
+        );
+      }
+
+      if (response.success) {
+        alert("Workflow executed successfully!");
+      } else {
+        alert(`Workflow execution failed: ${response.error || "Unknown error"}`);
+      }
+    } catch (err: any) {
+      console.error("Workflow execution failed:", err);
+      alert(`Workflow execution failed: ${err.message || String(err)}`);
+    } finally {
+      setIsRunning(false);
+    }
+  };
+
   return (
     <header className="ios-topbar w-[calc(100vw-88px)] mx-2 flex items-center justify-between px-4 py-2 h-12 select-none z-50">
 
@@ -88,15 +148,17 @@ const Topbar = ({
         {/* Core Editor Actions */}
         <div className="flex items-center gap-1">
           <button
-            // onClick={}
+            onClick={handlePlay}
+            disabled={isRunning}
             className="ios-topbar-btn"
-            title="Back to workspace"
+            title={isRunning ? "Running..." : "Run workflow"}
           >
-            <IoPlayOutline size={19} />
+            <IoPlayOutline size={19} className={isRunning ? "animate-spin text-emerald-500" : ""} />
           </button>
 
           <button
             onClick={handleSave}
+            disabled={isRunning}
             className="ios-topbar-btn"
             title="Save workflow"
           >

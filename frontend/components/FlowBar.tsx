@@ -30,6 +30,7 @@ import {
 import { MdOutput } from 'react-icons/md';
 import { IoHardwareChipOutline } from 'react-icons/io5';
 import { RxText } from 'react-icons/rx';
+import ReactMarkdown from 'react-markdown';
 
 interface FlowBarProps {
   nodes: Node[];
@@ -293,7 +294,7 @@ export default function FlowBar({ nodes, setNodes, onSave }: FlowBarProps) {
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 overflow-y-auto px-4 py-1 divide-y divide-[var(--flowbar-section-border)]">
+      <div className="flex-1 overflow-y-auto no-scrollbar px-4 py-1 divide-y divide-[var(--flowbar-section-border)]">
         
         {selectedNode ? (
           /* ==============================================================
@@ -359,13 +360,33 @@ export default function FlowBar({ nodes, setNodes, onSave }: FlowBarProps) {
                           <div className="flex items-center justify-between">
                             <span className="font-mono text-2xs font-semibold text-[var(--flowbar-text-secondary)]">{key}</span>
                           </div>
-                          <input
-                            type="text"
-                            value={val === null || val === undefined ? '' : typeof val === 'object' ? JSON.stringify(val) : val}
-                            onChange={(e) => updateNodeDataField(key, e.target.value)}
-                            readOnly={selectedNode.type === "llm"}
-                            className="w-full bg-[var(--node-bg-color)] border border-[var(--flowbar-input-border)] rounded-md px-2 py-1 text-2xs font-mono text-[var(--flowbar-text-primary)] focus:outline-none focus:border-[var(--flowbar-input-focus)]"
-                          />
+                           {key === "output" ? (
+                             <div className="w-full bg-[var(--node-bg-color)] border border-[var(--flowbar-input-border)] rounded-md px-3 py-2.5 text-[11.5px] font-sans leading-relaxed text-[var(--flowbar-text-primary)] overflow-y-auto max-h-[300px] min-h-[90px]">
+                               <ReactMarkdown
+                                 components={{
+                                   h1: ({node, ...props}: any) => <h1 className="text-sm font-bold mt-2.5 mb-1.5 border-b border-[var(--flowbar-border)] pb-0.5 text-[var(--flowbar-text-primary)]" {...props} />,
+                                   h2: ({node, ...props}: any) => <h2 className="text-xs font-bold mt-2 mb-1 text-[var(--flowbar-text-primary)]" {...props} />,
+                                   h3: ({node, ...props}: any) => <h3 className="text-[11px] font-bold mt-1.5 mb-1 text-[var(--flowbar-text-primary)]" {...props} />,
+                                   p: ({node, ...props}: any) => <p className="mb-1.5 last:mb-0 text-[var(--flowbar-text-secondary)]" {...props} />,
+                                   ul: ({node, ...props}: any) => <ul className="list-disc pl-4 mb-2 text-[var(--flowbar-text-secondary)]" {...props} />,
+                                   ol: ({node, ...props}: any) => <ol className="list-decimal pl-4 mb-2 text-[var(--flowbar-text-secondary)]" {...props} />,
+                                   li: ({node, ...props}: any) => <li className="mb-0.5" {...props} />,
+                                   code: ({node, ...props}: any) => <code className="bg-[var(--flowbar-input-bg)] px-1 rounded font-mono text-[10px] text-[var(--flowbar-text-primary)]" {...props} />,
+                                   pre: ({node, ...props}: any) => <pre className="bg-[var(--flowbar-input-bg)] p-2 rounded font-mono text-[10px] overflow-x-auto my-1.5" {...props} />,
+                                 }}
+                               >
+                                 {val === null || val === undefined ? '' : typeof val === 'object' ? JSON.stringify(val, null, 2) : String(val)}
+                               </ReactMarkdown>
+                             </div>
+                           ) : (
+                             <input
+                               type="text"
+                               value={val === null || val === undefined ? '' : typeof val === 'object' ? JSON.stringify(val) : val}
+                               onChange={(e) => updateNodeDataField(key, e.target.value)}
+                               readOnly={key === "output"}
+                               className="w-full bg-[var(--node-bg-color)] border border-[var(--flowbar-input-border)] rounded-md px-2 py-1 text-2xs font-mono text-[var(--flowbar-text-primary)] focus:outline-none focus:border-[var(--flowbar-input-focus)]"
+                             />
+                           )}
                         </div>
                       )
                     ))}
