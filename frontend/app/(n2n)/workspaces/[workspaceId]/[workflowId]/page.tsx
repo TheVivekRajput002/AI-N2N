@@ -14,7 +14,7 @@ async function App() {
     return (
 
         <div >
-            <div style={{ width: '100vw', height: '100vh' }}>
+            <div style={{ width: '100vw', height: '100vh', paddingRight: '60px' }}>
                 <ReactFlowProvider>
                     <div className='absolute top-1 right-0 z-50'>
                         <Topbar />

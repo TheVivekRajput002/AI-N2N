@@ -38,9 +38,9 @@ const nodeTypes = {
   decision: CustomNode,
   merge: CustomNode,
   exception: CustomNode,
-  customInput: CustomNode,
+  input: CustomNode,
   llm: CustomNode,
-  customOutput: CustomNode,
+  output: CustomNode,
   text: CustomNode,
 }
 
@@ -57,8 +57,6 @@ function Flow() {
     onConnect, addNode, saveFlow, restoreFlow
   } = useFlowState()
 
-
-
   const onDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault()
     event.dataTransfer.dropEffect = 'move'
@@ -72,7 +70,7 @@ function Flow() {
       if (!rawData) return
 
       try {
-        const { nodeType, label, description } = JSON.parse(rawData)
+        const { nodeType, label, description, nodeData } = JSON.parse(rawData)
 
         // Get drop position relative to canvas
         const position = screenToFlowPosition({
@@ -80,7 +78,7 @@ function Flow() {
           y: event.clientY,
         })
 
-        addNode(nodeType, { label, description }, position)
+        addNode(nodeType, { label, description, nodeData }, position)
       } catch (err) {
         console.error('Error parsing dropped node data:', err)
       }
@@ -115,20 +113,31 @@ function Flow() {
       fitView                          // auto-fit nodes on first load
     >
       {/* Grid background */}
-      <Background variant={BackgroundVariant.Dots} gap={16} size={1} />
+      <Background variant={BackgroundVariant.Dots} gap={30} />
 
       {/* Zoom controls bottom-left */}
-      <Controls />
+      <Controls className='scale-110 border border-[var(--minimap-border-color)] shadow-xl rounded-md overflow-hidden backdrop-blur-md bg-opacity-80' />
 
       {/* Mini map bottom-right */}
-      <MiniMap nodeStrokeWidth={3} />
 
 
-      <div className='absolute top-15 right-15 z-50'>
+      <MiniMap
+        className=" border border-[var(--minimap-border-color)] shadow-2xl rounded-xl opacity-90 backdrop-blur-sm"
+        style={{
+          width: 200,
+          height: 120,
+          backgroundColor: 'var(--minimap-bg-color)',
+          border: '1px solid var(--minimap-border-color)',
+          borderRadius: '0.75rem',
+          opacity: 0.4,
+          bottom: 25,
+        }}
+        maskColor="var(--minimap-mask-color)"
+        nodeColor="var(--minimap-node-color)"
+        nodeStrokeWidth={3}
+      />
 
 
-
-      </div>
 
       <NodesLibrary />
 

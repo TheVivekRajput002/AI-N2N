@@ -1,24 +1,33 @@
 // src/hooks/useFlowState.tsx
 import { useCallback } from 'react'
-import { type Node, useNodesState, useEdgesState, addEdge, type Connection, type ReactFlowInstance, type Viewport } from '@xyflow/react'
+import { type Node, type Edge, useNodesState, useEdgesState, addEdge, type Connection, type ReactFlowInstance, type Viewport, MarkerType } from '@xyflow/react'
 import { apiPost, apiGet } from '@/utils/api'
 import { useParams } from 'next/navigation'
 
 export function useFlowState() {
   const { workflowId } = useParams() as { workflowId: string }
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([])
-  const [edges, setEdges, onEdgesChange] = useEdgesState([])
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([])
 
   // called when user draws a new connection between two handles
   const onConnect = useCallback(
-    (connection: Connection) => setEdges((eds) => addEdge(connection, eds)),
+    (connection: Connection) => setEdges((eds) => addEdge({
+      ...connection,
+      type: 'customEdge',
+      animated: true,
+      markerEnd: {
+        type: MarkerType.Arrow,
+        height: 20,
+        width: 20,
+      }
+    }, eds)),
     [setEdges]
   )
 
   // add a new node programmatically
   const addNode = useCallback((
     nodeType: string,
-    data: { label: string, description?: string },
+    data: { label: string, description?: string, nodeData?: Record<string, any> },
     position?: { x: number, y: number }
   ) => {
 

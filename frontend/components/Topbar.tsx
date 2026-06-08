@@ -1,6 +1,6 @@
-
 "use client"
 
+import React, { useState, useEffect } from 'react';
 import {
   FiSave,
   FiFolder,
@@ -9,30 +9,15 @@ import {
   FiChevronDown,
   FiShare2,
   FiGitBranch,
-  FiMoreVertical
+  FiMoreVertical,
+  FiChevronLeft
 } from 'react-icons/fi';
+import { IoPlayOutline } from "react-icons/io5";
 import { useFlowState } from '@/hooks/useFlowState';
-import { useReactFlow, type ReactFlowInstance } from '@xyflow/react';
-import { useRouter } from 'next/navigation';
-import { useParams } from 'next/navigation';
-
-
-// Custom high-fidelity VectorShift logo SVG
-const VectorShiftLogo = ({ className = "w-7 h-5" }) => (
-  <svg
-    viewBox="0 0 32 24"
-    fill="currentColor"
-    className={className}
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    {/* Capsule 1: Left */}
-    <rect x="2" y="12" width="6" height="14" rx="3" transform="rotate(-45 5 19)" />
-    {/* Capsule 2: Middle */}
-    <rect x="10" y="6" width="6" height="20" rx="3" transform="rotate(-45 13 16)" />
-    {/* Capsule 3: Right (Small) */}
-    <rect x="18" y="2" width="6" height="8" rx="3" transform="rotate(-45 21 6)" />
-  </svg>
-);
+import { useReactFlow } from '@xyflow/react';
+import { useRouter, useParams } from 'next/navigation';
+import { apiGet } from '@/utils/api';
+import Link from 'next/link';
 
 const Topbar = ({
   onOpenFolder = () => {},
@@ -50,120 +35,141 @@ const Topbar = ({
   onMoreActions?: () => void;
 } = {}) => {
 
-  const router = useRouter()
-  const {workflowId} = useParams() as {workflowId: string}
+  const router = useRouter();
+  const { workspaceId, workflowId } = useParams() as { workspaceId: string; workflowId: string };
 
-const {saveFlow} = useFlowState()
-const reactFlowInstance = useReactFlow()
+  const { saveFlow } = useFlowState();
+  const reactFlowInstance = useReactFlow();
 
-const handleSave = async () => {
+  const [workflowName, setWorkflowName] = useState<string>('Simple Workflow Template');
+  const [workspaceName, setWorkspaceName] = useState<string>('Templates');
+
+  useEffect(() => {
+    if (!workflowId) return;
+
+    let isMounted = true;
+    const fetchNames = async () => {
+      try {
+        const response = await apiGet<{
+          success: boolean;
+          workflowName?: string;
+          workspaceName?: string;
+        }>(`/workflow-version?workflowId=${workflowId}`);
+
+        if (response.success && isMounted) {
+          if (response.workflowName) setWorkflowName(response.workflowName);
+          if (response.workspaceName) setWorkspaceName(response.workspaceName);
+        }
+      } catch (err) {
+        console.error("Failed to fetch workflow / workspace names:", err);
+      }
+    };
+
+    fetchNames();
+    return () => {
+      isMounted = false;
+    };
+  }, [workflowId]);
+
+  const handleSave = async () => {
     try {
-      saveFlow(reactFlowInstance, workflowId)
+      await saveFlow(reactFlowInstance, workflowId);
     } catch (err) {
-        console.error(err)
+      console.error(err);
     }
-}
+  };
 
   return (
-    <header className="w-[calc(100vw-88px)] mx-2 flex items-center justify-between px-6 py-2 h-12 bg-[var(--topbar-bg)] border border-[var(--topbar-border)] rounded-xl shadow-sm select-none z-50">
+    <header className="ios-topbar w-[calc(100vw-88px)] mx-2 flex items-center justify-between px-4 py-2 h-12 select-none z-50">
 
-      {/* ================= Left: Logo & Core Actions ================= */}
-      <div className="flex items-center gap-4">
-        {/* Logo */}
-        <div
-          className="flex items-center gap-2 cursor-pointer text-slate-900 hover:text-black transition-colors"
-          title="VectorShift"
-        >
-          <VectorShiftLogo className="w-8 h-6" />
-        </div>
-
-        {/* Divider */}
-        <div className="w-[1.5px] h-6 bg-[var(--topbar-border)] mx-1" />
+      {/* ================= Left: Core Actions ================= */}
+      <div className="flex items-center gap-3">
 
         {/* Core Editor Actions */}
         <div className="flex items-center gap-1">
           <button
-            onClick={handleSave}
-            className="w-9 h-9 flex items-center justify-center rounded-lg text-[var(--topbar-icon-color)] hover:text-[var(--topbar-icon-hover-color)] hover:bg-[var(--topbar-icon-hover-bg)] transition-all duration-200"
-            title="Save workflow"
+            // onClick={}
+            className="ios-topbar-btn"
+            title="Back to workspace"
           >
-            <FiSave size={18} />
+            <IoPlayOutline size={19} />
           </button>
 
           <button
-            onClick={() => router.back()}
-            className="w-9 h-9 flex items-center justify-center rounded-lg text-[var(--topbar-icon-color)] hover:text-[var(--topbar-icon-hover-color)] hover:bg-[var(--topbar-icon-hover-bg)] transition-all duration-200"
-            title="Open project folder"
+            onClick={handleSave}
+            className="ios-topbar-btn"
+            title="Save workflow"
           >
-            <FiFolder size={18} />
+            <FiSave size={16} />
           </button>
 
           <button
             onClick={onUndo}
-            className="w-9 h-9 flex items-center justify-center rounded-lg text-[var(--topbar-icon-color)] hover:text-[var(--topbar-icon-hover-color)] hover:bg-[var(--topbar-icon-hover-bg)] transition-all duration-200"
+            className="ios-topbar-btn"
             title="Undo"
           >
-            <FiRotateCcw size={18} />
+            <FiRotateCcw size={16} />
           </button>
 
           <button
             onClick={onRedo}
-            className="w-9 h-9 flex items-center justify-center rounded-lg text-[var(--topbar-icon-color)] hover:text-[var(--topbar-icon-hover-color)] hover:bg-[var(--topbar-icon-hover-bg)] transition-all duration-200"
+            className="ios-topbar-btn"
             title="Redo"
           >
-            <FiRotateCw size={18} />
+            <FiRotateCw size={16} />
           </button>
         </div>
       </div>
 
       {/* ================= Center: Breadcrumbs & Title ================= */}
-      <div
-        className="flex items-center gap-2 px-3 py-1.5 rounded-lg cursor-pointer hover:bg-slate-50 active:bg-slate-100 transition-colors duration-200 group"
-        title="Template settings"
+      <Link
+        className="ios-topbar-center-container"
+        title="Workflow details"
+        href={`/workspaces/${workspaceId}`}
       >
-        <span className="text-[13px] font-normal text-[var(--topbar-text-muted)]">
-          Templates
+        <span className="text-[12px] font-normal text-[var(--ios-topbar-text-muted)] tracking-tight">
+          {workspaceName}
         </span>
-        <span className="text-[13px] text-slate-300">/</span>
-        <span className="text-[13.5px] font-semibold text-[var(--topbar-text)]">
-          Simple Workflow Template
+        <span className="text-[12px] text-[var(--ios-topbar-border)] font-light">/</span>
+        <span className="text-[13px] font-semibold text-[var(--ios-topbar-text)] tracking-tight">
+          {workflowName}
         </span>
         <FiChevronDown
-          size={14}
-          className="text-[var(--topbar-icon-color)] group-hover:text-[var(--topbar-icon-hover-color)] transition-colors ml-0.5"
+          size={13}
+          className="text-[var(--ios-topbar-text-muted)] transition-colors ml-0.5"
         />
-      </div>
+      </Link>
 
       {/* ================= Right: Core Canvas / Share / Deploy Actions ================= */}
       <div className="flex items-center gap-2">
         {/* Share & Branch Pill Container */}
-        <div className="flex items-center p-0.5 pr-2.5 gap-2 bg-[var(--topbar-pill-bg)] border border-[var(--topbar-pill-border)] rounded-full">
+        <div className="ios-topbar-pill">
           {/* Share Button (Blue Circle) */}
           <button
             onClick={onShare}
-            className="w-7 h-7 flex items-center justify-center rounded-full bg-[var(--topbar-share-btn-bg)] hover:bg-[var(--topbar-share-btn-hover)] text-white shadow-sm transition-all duration-200"
+            className="ios-topbar-share-btn"
             title="Share workflow"
           >
-            <FiShare2 size={13.5} />
+            <FiShare2 size={12.5} />
           </button>
 
           {/* Deploy / Branch Details Button */}
           <button
             onClick={onDeploy}
-            className="w-6 h-6 flex items-center justify-center rounded-md text-[var(--topbar-icon-color)] hover:text-[var(--topbar-icon-hover-color)] transition-colors"
+            className="w-6 h-6 flex items-center justify-center rounded-md text-[var(--ios-topbar-icon-color)] hover:text-[var(--ios-topbar-icon)] transition-colors active:scale-95"
             title="Workflow branches & deployments"
           >
-            <FiGitBranch size={15} />
+            <FiGitBranch size={14.5} />
           </button>
         </div>
 
         {/* More Actions Menu */}
         <button
           onClick={onMoreActions}
-          className="w-9 h-9 flex items-center justify-center rounded-lg text-[var(--topbar-icon-color)] hover:text-[var(--topbar-icon-hover-color)] hover:bg-[var(--topbar-icon-hover-bg)] transition-all duration-200"
+          className="ios-topbar-btn"
           title="More actions"
         >
-          <FiMoreVertical size={18} />
+          <FiMoreVertical size={16.5} />
         </button>
       </div>
 
@@ -171,4 +177,4 @@ const handleSave = async () => {
   );
 };
 
-export default Topbar
+export default Topbar;

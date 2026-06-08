@@ -1,6 +1,6 @@
 
 
-// src/nodes/CustomNode.jsx
+// src/nodes/CustomNode.tsx
 import { Handle, Position } from '@xyflow/react'
 import { RiInputCursorMove } from "react-icons/ri";
 import { MdExpandMore } from "react-icons/md";
@@ -10,13 +10,39 @@ import { IoHardwareChipOutline } from "react-icons/io5";
 import { MdOutput } from "react-icons/md";
 import { RxText } from "react-icons/rx";
 import {
-  FiZap,
-  FiSend,
-  FiList,
-  FiClock,
+  FiPlay,
+  FiFileText,
+  FiGlobe,
+  FiAnchor,
+  FiUpload,
+  FiDatabase,
+  FiGitBranch,
+  FiRefreshCw,
   FiRotateCw,
-  FiBox,
   FiGitCommit,
+  FiGitPullRequest,
+  FiCpu,
+  FiMessageSquare,
+  FiFile,
+  FiLayers,
+  FiMic,
+  FiGrid,
+  FiImage,
+  FiSliders,
+  FiType,
+  FiCode,
+  FiTerminal,
+  FiPlusCircle,
+  FiCalendar,
+  FiMap,
+  FiMail,
+  FiSend,
+  FiServer,
+  FiSlack,
+  FiZap,
+  FiBox,
+  FiClock,
+  FiList,
 } from 'react-icons/fi';
 
 const handleStyle = {
@@ -33,10 +59,10 @@ const handleStyle = {
   cursor: 'crosshair'
 };
 
-
-function CustomNode({ data, selected }: { data: { label: string; description?: string }, selected: boolean }) {
+function CustomNode({ data, selected }: { data: { label: string; description?: string, nodeData?: Record<string, any> }, selected: boolean }) {
 
   const iconMap: Record<string, React.ReactNode> = {
+    // Legacy / fallback mappings
     Input: <RiInputCursorMove />,
     LLM: <IoHardwareChipOutline />,
     Output: <MdOutput />,
@@ -47,65 +73,112 @@ function CustomNode({ data, selected }: { data: { label: string; description?: s
     Delay: <FiClock />,
     Loop: <FiRotateCw />,
     Merge: <FiGitCommit />,
+
+    // New categories mappings
+    // Input
+    'Start': <FiPlay />,
+    'Form Input': <FiFileText />,
+    'HTTP Request': <FiGlobe />,
+    'Webhook': <FiAnchor />,
+    'File Upload': <FiUpload />,
+    'Database Query': <FiDatabase />,
+    
+    // Logic
+    'If/Else': <FiGitBranch />,
+    'Switch': <FiRefreshCw />,
+    'Loop/For Each': <FiRotateCw />,
+    'Split': <FiGitPullRequest />,
+    
+    // AI / Prompt
+    'LLM Prompt': <FiCpu />,
+    'Chat Completion': <FiMessageSquare />,
+    'Text Summariz': <FiFile />,
+    'Text Embedding': <FiLayers />,
+    'Audio': <FiMic />,
+    'Analysis': <FiGrid />,
+    'Image': <FiImage />,
+    
+    // Transform
+    'Set Variable': <FiSliders />,
+    'Format Text': <FiType />,
+    'Parse JSON': <FiCode />,
+    'Build JSON': <FiTerminal />,
+    'Math Expression': <FiPlusCircle />,
+    'Date Formatter': <FiCalendar />,
+    'Data Mapper': <FiMap />,
+    
+    // Output
+    'Send Email': <FiMail />,
+    'Post Webhook': <FiSend />,
+    'Database Insert': <FiServer />,
+    'Slack': <FiSlack />,
+  };
+
+  // Find which category the node belongs to based on label to apply proper color classes
+  const getCategoryColorClass = (label: string) => {
+    const inputs = ['Input', 'Start', 'Form Input', 'HTTP Request', 'Webhook', 'File Upload', 'Database Query', 'Trigger'];
+    const logics = ['Logic', 'Conditional', 'Decision', 'If/Else', 'Switch', 'Loop/For Each', 'Loop', 'Merge', 'Split'];
+    const ais = ['AI / Prompt', 'LLM', 'LLM Prompt', 'Chat Completion', 'Text Summariz', 'Text Embedding', 'Audio', 'Analysis', 'Image'];
+    const transforms = ['Transform', 'Text', 'Set Variable', 'Format Text', 'Parse JSON', 'Build JSON', 'Math Expression', 'Date Formatter', 'Data Mapper', 'Delay'];
+    const outputs = ['Output', 'Notification', 'Send Email', 'Post Webhook', 'Database Insert', 'Slack'];
+
+    if (inputs.includes(label)) return 'ios-icon-bg-input';
+    if (logics.includes(label)) return 'ios-icon-bg-logic';
+    if (ais.includes(label)) return 'ios-icon-bg-ai';
+    if (transforms.includes(label)) return 'ios-icon-bg-transform';
+    if (outputs.includes(label)) return 'ios-icon-bg-output';
+    return '';
   };
 
   return (
     <div className="w-72 bg-[var(--node-bg-color)] border border-[var(--node-border-color)] rounded-xl node-shadow transition-all duration-200 hover:node-active-shadow select-none relative">
 
       {/* Handles based on node type */}
-      {data.label === "Input" || data.label === "Text" || data.label === "Trigger" ? (
+      {data.label === "Input" || data.label === "Text" || data.label === "Trigger" || data.label === "Start" || data.label === "Webhook" ? (
         <Handle
           type="source"
           position={Position.Right}
-          // id={data.label === "Text" ? `${id}-ouput` : `${id}-value`}
           style={handleStyle}
         />
-      ) : data.label === "Output" ? (
+      ) : data.label === "Output" || data.label === "Send Email" || data.label === "Post Webhook" || data.label === "Database Insert" || data.label === "Slack" ? (
         <Handle
           type="target"
           position={Position.Left}
-          // id={`${id}-value`}
           style={handleStyle}
         />
-      ) : data.label === "LLM" ? (
+      ) : data.label === "LLM" || data.label === "LLM Prompt" || data.label === "Chat Completion" ? (
         <>
           <Handle
             type="target"
             position={Position.Left}
-            // id={`${id}-system`}
             style={{ ...handleStyle, top: `${100 / 3}%` }}
           />
           <Handle
             type="target"
             position={Position.Left}
-            // id={`${id}-prompt`}
             style={{ ...handleStyle, top: `${200 / 3}%` }}
           />
           <Handle
             type="source"
             position={Position.Right}
-            // id={`${id}-response`}
             style={handleStyle}
           />
         </>
-      ) : data.label === "Conditional" || data.label === "Decision" ? (
+      ) : data.label === "Conditional" || data.label === "Decision" || data.label === "If/Else" || data.label === "Split" ? (
         <>
           <Handle
             type="target"
             position={Position.Left}
-            // id={`${id}-target`}
             style={handleStyle}
           />
           <Handle
             type="source"
             position={Position.Right}
-            // id={`${id}-true`}
             style={{ ...handleStyle, top: '35%', background: '#3b82f6' }}
           />
           <Handle
             type="source"
             position={Position.Right}
-            // id={`${id}-false`}
             style={{ ...handleStyle, top: '65%', background: '#ef4444' }}
           />
         </>
@@ -114,19 +187,16 @@ function CustomNode({ data, selected }: { data: { label: string; description?: s
           <Handle
             type="target"
             position={Position.Left}
-            // id={`${id}-input-1`}
             style={{ ...handleStyle, top: '35%' }}
           />
           <Handle
             type="target"
             position={Position.Left}
-            // id={`${id}-input-2`}
             style={{ ...handleStyle, top: '65%' }}
           />
           <Handle
             type="source"
             position={Position.Right}
-            // id={`${id}-output`}
             style={handleStyle}
           />
         </>
@@ -136,13 +206,11 @@ function CustomNode({ data, selected }: { data: { label: string; description?: s
           <Handle
             type="target"
             position={Position.Left}
-            // id={`${id}-target`}
             style={handleStyle}
           />
           <Handle
             type="source"
             position={Position.Right}
-            // id={`${id}-source`}
             style={handleStyle}
           />
         </>
@@ -150,7 +218,7 @@ function CustomNode({ data, selected }: { data: { label: string; description?: s
 
       <div className="flex items-center justify-between px-4 py-2 border-b border-[var(--header-border-color)]">
         <div className="flex items-center gap-2">
-          <div className="flex items-center justify-center w-7 h-7 bg-[var(--icon-bg-color)] rounded text-[var(--icon-text-color)]">
+          <div className={`ios-node-icon-wrapper ${getCategoryColorClass(data.label) || 'bg-[var(--icon-bg-color)] text-[var(--icon-text-color)]'}`}>
             {
               iconMap[data.label] || <FiBox />
             }
@@ -166,17 +234,16 @@ function CustomNode({ data, selected }: { data: { label: string; description?: s
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-1.5">
             <label className="text-2xs text-[var(--text-muted-color)] font-sans">
-              {data.label !== 'LLM' && (data.label === 'Text' ? 'Text' : 'Name')}
-              {data.label === 'LLM' && ' This is LLM'}
+              {data.label !== 'LLM' && data.label !== 'LLM Prompt' && data.label !== 'Chat Completion' && (data.label === 'Text' || data.label === 'Format Text' ? 'Text' : 'Name')}
+              {(data.label === 'LLM' || data.label === 'LLM Prompt' || data.label === 'Chat Completion') && ' This is LLM'}
             </label>
           </div>
           {
-            data.label !== 'LLM' &&
+            data.label !== 'LLM' && data.label !== 'LLM Prompt' && data.label !== 'Chat Completion' &&
             <div className="relative">
               <input
                 type="text"
-                // value={currName}
-                // onChange={handleNameChange}
+                value={data.nodeData?.input || 'nodeData.inputt'}
                 className="w-full h-8 bg-[var(--input-bg-color)] border border-[var(--input-border-color)] rounded-lg px-3 font-mono text-xxs text-[var(--input-text-color)] focus:outline-none focus:border-[var(--input-focus-border-color)] focus:bg-[var(--input-focus-bg-color)] transition-all"
               />
             </div>
@@ -184,13 +251,11 @@ function CustomNode({ data, selected }: { data: { label: string; description?: s
         </div>
 
         {
-          (data.label === 'Input' || data.label === 'Output') && (
+          (data.label === 'Input' || data.label === 'Form Input' || data.label === 'Output') && (
             <div className="flex flex-col gap-1">
-              <label className="text-2xs text-[var(--text-muted-color)] font-sans pl-0.5">Type</label>
+              <label className="text-2xs text-[var(--text-muted-color)] font-sans pl-0.5 text-left">Type</label>
               <div className="relative">
                 <select
-                  // value={dataType}
-                  // onChange={handleTypeChange}
                   className="w-full h-8 bg-[var(--input-bg-color)] border border-[var(--input-border-color)] rounded-lg pl-3 pr-8 font-sans text-xs text-[var(--input-text-color)] focus:outline-none focus:border-[var(--input-focus-border-color)] focus:bg-[var(--input-focus-bg-color)] transition-all appearance-none cursor-pointer"
                 >
                   <option value="Text">Text</option>

@@ -80,7 +80,8 @@ export async function getWorkflowVersion(req: Request, res: Response) {
                 id: workflowId,
             },
             include: {
-                currentVersion: true
+                currentVersion: true,
+                workspace: true
             }
         });
 
@@ -95,6 +96,8 @@ export async function getWorkflowVersion(req: Request, res: Response) {
         res.status(200).json({
             success: true,
             workflowVersion: workflow.currentVersion,
+            workflowName: workflow.name,
+            workspaceName: workflow.workspace.name
         });
 
     } catch (error) {

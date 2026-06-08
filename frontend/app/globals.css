@@ -22,7 +22,7 @@
   --ios-card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.03), 0 1px 2px 0 rgba(0, 0, 0, 0.02);
   --ios-input-bg: rgba(0, 0, 0, 0.03);
 
-  --navbar-bg-color: hsl(0, 0%, 100%);
+  --navbar-bg-color: rgba(255, 255, 255, 0.72);
 
   /* Topbar Styles */
   --topbar-bg: hsl(0, 0%, 100%);
@@ -37,14 +37,26 @@
   --topbar-icon-hover-color: hsl(222, 47%, 11%);
   --topbar-icon-hover-bg: hsl(210, 40%, 96.1%);
 
-    /* Draggble Node Color */
-    --draggable-node-bg-color: hsl(122, 60%, 90%);
+  /* iOS Topbar Theme Variables */
+  --ios-topbar-bg: rgba(255, 255, 255, 0.72);
+  --ios-topbar-border: rgba(0, 0, 0, 0.08);
+  --ios-topbar-text: #1c1c1e;
+  --ios-topbar-text-muted: #8e8e93;
+  --ios-topbar-icon: #007aff;
+  --ios-topbar-icon-color: #3a3a3c;
+  --ios-topbar-icon-hover-bg: rgba(0, 0, 0, 0.04);
+  --ios-topbar-icon-active-bg: rgba(0, 0, 0, 0.08);
+  --ios-topbar-pill-bg: rgba(0, 0, 0, 0.03);
+  --ios-topbar-pill-border: rgba(0, 0, 0, 0.05);
+
+  /* Draggble Node Color */
+  --draggable-node-bg-color: hsl(122, 60%, 90%);
 
   /* Flow Canvas Background Grid */
   --flow-grid-color: hsl(0, 0%, 67%);
 
   /* MiniMap Styles */
-  --minimap-bg-color: hsl(122, 60%, 90%); 
+  --minimap-bg-color: hsl(122, 60%, 90%);
   --minimap-border-color: hsl(250, 6%, 79%);
   --minimap-mask-color: hsla(0, 0%, 100%, 0.1);
   --minimap-node-color: hsl(227, 23%, 15%);
@@ -56,39 +68,54 @@
 
   /* BaseNode UI Colors */
   --node-bg-color: hsl(0, 0%, 100%);
-  --node-border-color: hsl(220, 13%, 91%); /* gray-200 equivalent */
-  --header-border-color: hsla(220, 13%, 91%, 0.6); /* gray-200/60 equivalent */
-  
-  --icon-bg-color: hsl(149, 80%, 90%); /* emerald-100 equivalent */
-  --icon-text-color: hsl(163, 94%, 24%); /* emerald-700 equivalent */
-  
-  --header-text-color: hsl(222, 47%, 11%); /* slate-900 equivalent */
-  --text-muted-color: hsl(218, 11%, 65%); /* gray-400 equivalent */
-  --text-muted-hover-color: hsl(221, 39%, 11%); /* gray-900 equivalent */
-  
-  --input-bg-color: hsl(210, 20%, 98%); /* gray-50 equivalent */
-  --input-border-color: hsl(220, 13%, 91%); /* gray-200 equivalent */
-  --input-text-color: hsl(215, 25%, 27%); /* slate-700 equivalent */
-  --input-focus-border-color: hsl(213, 94%, 68%); /* blue-400 equivalent */
-  --input-focus-bg-color: hsl(0, 0%, 100%); /* white equivalent */
+  --node-border-color: hsl(220, 13%, 91%);
+  /* gray-200 equivalent */
+  --header-border-color: hsla(220, 13%, 91%, 0.6);
+  /* gray-200/60 equivalent */
 
-  --footer-bg-color: hsla(152, 81%, 96%, 0.4); /* emerald-50/40 equivalent */
-  --footer-border-color: hsla(220, 14%, 96%, 0.6); /* gray-100/60 equivalent */
-  --footer-accent-color: hsl(161, 94%, 30%); /* emerald-600 equivalent */
+  --icon-bg-color: hsl(149, 80%, 90%);
+  /* emerald-100 equivalent */
+  --icon-text-color: hsl(163, 94%, 24%);
+  /* emerald-700 equivalent */
+
+  --header-text-color: hsl(222, 47%, 11%);
+  /* slate-900 equivalent */
+  --text-muted-color: hsl(218, 11%, 65%);
+  /* gray-400 equivalent */
+  --text-muted-hover-color: hsl(221, 39%, 11%);
+  /* gray-900 equivalent */
+
+  --input-bg-color: hsl(210, 20%, 98%);
+  /* gray-50 equivalent */
+  --input-border-color: hsl(220, 13%, 91%);
+  /* gray-200 equivalent */
+  --input-text-color: hsl(215, 25%, 27%);
+  /* slate-700 equivalent */
+  --input-focus-border-color: hsl(213, 94%, 68%);
+  /* blue-400 equivalent */
+  --input-focus-bg-color: hsl(0, 0%, 100%);
+  /* white equivalent */
+
+  --footer-bg-color: hsla(152, 81%, 96%, 0.4);
+  /* emerald-50/40 equivalent */
+  --footer-border-color: hsla(220, 14%, 96%, 0.6);
+  /* gray-100/60 equivalent */
+  --footer-accent-color: hsl(161, 94%, 30%);
+  /* emerald-600 equivalent */
 
   /* Navbar Styles */
-  --navbar-border-color: hsl(220, 13%, 91%);
-  --navbar-tooltip-bg: hsl(222, 47%, 11%);
-  --navbar-tooltip-text: hsl(0, 0%, 100%);
-  --navbar-item-active-bg: hsl(210, 40%, 96.1%);
-  --navbar-item-active-text: hsl(222, 47%, 11%);
-  --navbar-item-text: hsl(218, 11%, 65%);
-  --navbar-item-hover-bg: hsl(210, 40%, 98%);
-  --navbar-item-hover-text: hsl(215, 25%, 27%);
-  --navbar-avatar-bg: hsl(210, 40%, 96.1%);
+  --navbar-border-color: rgba(0, 0, 0, 0.06);
+  --navbar-tooltip-bg: rgba(0, 0, 0, 0.85);
+  --navbar-tooltip-text: #ffffff;
+  --navbar-item-active-bg: rgba(0, 122, 255, 0.08);
+  --navbar-item-active-text: #007AFF;
+  --navbar-item-text: hsl(215, 16%, 50%);
+  --navbar-item-hover-bg: rgba(0, 0, 0, 0.04);
+  --navbar-item-hover-text: hsl(222, 47%, 11%);
+  --navbar-avatar-bg: rgba(0, 0, 0, 0.03);
   --navbar-avatar-text: hsl(215, 25%, 27%);
-  --navbar-avatar-border: hsl(220, 13%, 91%);
-  --navbar-avatar-hover-bg: hsl(210, 40%, 92%);
+  --navbar-avatar-border: rgba(0, 0, 0, 0.08);
+  --navbar-avatar-hover-bg: rgba(0, 0, 0, 0.06);
 
   /* Nodes Library Styles */
   --nodes-bg: hsl(0, 0%, 100%);
@@ -136,7 +163,7 @@
 
 .dark {
   --app-bg-color: hsl(222, 47%, 9%);
-  --navbar-bg-color: hsl(222, 47%, 11%);
+  --navbar-bg-color: rgba(28, 28, 30, 0.72);
 
   /* iOS Theme Variables */
   --ios-blue: 210, 100%, 52%;
@@ -168,6 +195,18 @@
   --topbar-icon-hover-color: hsl(210, 40%, 98%);
   --topbar-icon-hover-bg: hsl(217, 33%, 15%);
 
+  /* iOS Topbar Theme Variables */
+  --ios-topbar-bg: rgba(28, 28, 30, 0.72);
+  --ios-topbar-border: rgba(255, 255, 255, 0.08);
+  --ios-topbar-text: #f2f2f7;
+  --ios-topbar-text-muted: #98989f;
+  --ios-topbar-icon: #0a84ff;
+  --ios-topbar-icon-color: #e5e5ea;
+  --ios-topbar-icon-hover-bg: rgba(255, 255, 255, 0.06);
+  --ios-topbar-icon-active-bg: rgba(255, 255, 255, 0.12);
+  --ios-topbar-pill-bg: rgba(255, 255, 255, 0.05);
+  --ios-topbar-pill-border: rgba(255, 255, 255, 0.08);
+
   /* Draggable Node Color */
   --draggable-node-bg-color: hsl(142, 60%, 15%);
 
@@ -175,7 +214,7 @@
   --flow-grid-color: hsl(215, 15%, 25%);
 
   /* MiniMap Styles */
-  --minimap-bg-color: hsl(222, 47%, 12%); 
+  --minimap-bg-color: hsl(222, 47%, 12%);
   --minimap-border-color: hsl(222, 47%, 18%);
   --minimap-mask-color: hsla(0, 0%, 0%, 0.4);
   --minimap-node-color: hsl(217.2, 91.2%, 59.8%);
@@ -189,14 +228,14 @@
   --node-bg-color: hsl(222, 47%, 12%);
   --node-border-color: hsl(222, 47%, 18%);
   --header-border-color: hsla(222, 47%, 18%, 0.6);
-  
+
   --icon-bg-color: hsl(149, 80%, 12%);
   --icon-text-color: hsl(149, 80%, 55%);
-  
+
   --header-text-color: hsl(210, 40%, 98%);
   --text-muted-color: hsl(215, 20%, 65%);
   --text-muted-hover-color: hsl(210, 40%, 98%);
-  
+
   --input-bg-color: hsl(222, 47%, 8%);
   --input-border-color: hsl(222, 47%, 18%);
   --input-text-color: hsl(213, 31%, 91%);
@@ -208,18 +247,18 @@
   --footer-accent-color: hsl(149, 80%, 55%);
 
   /* Navbar Styles */
-  --navbar-border-color: hsl(222, 47%, 18%);
-  --navbar-tooltip-bg: hsl(210, 40%, 98%);
-  --navbar-tooltip-text: hsl(222, 47%, 11%);
-  --navbar-item-active-bg: hsl(222, 47%, 18%);
-  --navbar-item-active-text: hsl(210, 40%, 98%);
+  --navbar-border-color: rgba(255, 255, 255, 0.08);
+  --navbar-tooltip-bg: rgba(255, 255, 255, 0.95);
+  --navbar-tooltip-text: #000000;
+  --navbar-item-active-bg: rgba(10, 132, 255, 0.15);
+  --navbar-item-active-text: #0A84FF;
   --navbar-item-text: hsl(215, 20%, 65%);
-  --navbar-item-hover-bg: hsl(222, 47%, 16%);
+  --navbar-item-hover-bg: rgba(255, 255, 255, 0.05);
   --navbar-item-hover-text: hsl(210, 40%, 98%);
-  --navbar-avatar-bg: hsl(222, 47%, 18%);
+  --navbar-avatar-bg: rgba(255, 255, 255, 0.05);
   --navbar-avatar-text: hsl(210, 40%, 98%);
-  --navbar-avatar-border: hsl(222, 47%, 22%);
-  --navbar-avatar-hover-bg: hsl(222, 47%, 26%);
+  --navbar-avatar-border: rgba(255, 255, 255, 0.12);
+  --navbar-avatar-hover-bg: rgba(255, 255, 255, 0.08);
 
   /* Nodes Library Styles */
   --nodes-bg: hsl(222, 47%, 12%);
@@ -271,19 +310,38 @@
 
 /* iOS Animations */
 @keyframes iosFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes iosSlideUp {
-  from { transform: translateY(100%); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 @media (min-width: 640px) {
   @keyframes iosSlideUp {
-    from { transform: scale(0.95) translateY(20px); opacity: 0; }
-    to { transform: scale(1) translateY(0); opacity: 1; }
+    from {
+      transform: scale(0.95) translateY(20px);
+      opacity: 0;
+    }
+
+    to {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+    }
   }
 }
 
@@ -293,4 +351,356 @@
 
 .animate-slide-up {
   animation: iosSlideUp 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Reset default React Flow node wrappers */
+.react-flow__node-input,
+.react-flow__node-output,
+.react-flow__node-default {
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  width: auto !important;
+  box-shadow: none !important;
+}
+
+/* Remove default selection outlines on the wrapper element */
+.react-flow__node.selected,
+.react-flow__node:focus,
+.react-flow__node.selected:hover {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* iOS Node Library UI Styles */
+.ios-nodes-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.ios-category-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.ios-category-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ios-text-primary);
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  user-select: none;
+  transition: opacity 0.2s ease;
+}
+
+.ios-category-header:hover {
+  opacity: 0.8;
+}
+
+.ios-category-header-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ios-category-chevron {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--ios-text-muted);
+}
+
+.ios-category-chevron.collapsed {
+  transform: rotate(-90deg);
+}
+
+.ios-category-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ios-node-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background-color: var(--nodes-item-bg);
+  border: 1px solid var(--nodes-item-border);
+  border-radius: 12px;
+  cursor: grab;
+  user-select: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.ios-node-card:hover {
+  transform: translateY(-1px);
+  border-color: var(--nodes-item-hover-border);
+  background-color: var(--nodes-bg-hover);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.ios-node-card:active {
+  cursor: grabbing;
+  transform: scale(0.97);
+  background-color: var(--nodes-item-active-bg);
+}
+
+.ios-node-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.ios-node-card:hover .ios-node-icon-wrapper {
+  transform: scale(1.05);
+}
+
+.ios-node-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ios-text-primary);
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* iOS Category-specific Icon styles using HSL colors */
+.ios-icon-bg-input {
+  background-color: hsla(var(--ios-green), 0.12);
+  color: hsl(var(--ios-green));
+}
+.ios-icon-bg-logic {
+  background-color: hsla(var(--ios-blue), 0.12);
+  color: hsl(var(--ios-blue));
+}
+.ios-icon-bg-ai {
+  background-color: hsla(var(--ios-purple), 0.12);
+  color: hsl(var(--ios-purple));
+}
+.ios-icon-bg-transform {
+  background-color: hsla(var(--ios-orange), 0.12);
+  color: hsl(var(--ios-orange));
+}
+.ios-icon-bg-output {
+  background-color: hsla(var(--ios-red), 0.12);
+  color: hsl(var(--ios-red));
+}
+
+.dark .ios-icon-bg-input {
+  background-color: hsla(var(--ios-green), 0.2);
+  color: hsl(var(--ios-green));
+}
+.dark .ios-icon-bg-logic {
+  background-color: hsla(var(--ios-blue), 0.2);
+  color: hsl(var(--ios-blue));
+}
+.dark .ios-icon-bg-ai {
+  background-color: hsla(var(--ios-purple), 0.2);
+  color: hsl(var(--ios-purple));
+}
+.dark .ios-icon-bg-transform {
+  background-color: hsla(var(--ios-orange), 0.2);
+  color: hsl(var(--ios-orange));
+}
+.dark .ios-icon-bg-output {
+  background-color: hsla(var(--ios-red), 0.2);
+  color: hsl(var(--ios-red));
+}
+
+/* iOS Glassmorphism Navbar Utilities */
+.ios-navbar {
+  background-color: var(--navbar-bg-color);
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  border-right: 1px solid var(--navbar-border-color);
+  transition: background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ios-logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #007AFF 0%, #0051C7 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 122, 255, 0.25);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ios-logo-container:hover {
+  transform: scale(1.04);
+  box-shadow: 0 6px 14px rgba(0, 122, 255, 0.35);
+}
+
+.ios-nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--navbar-item-text);
+}
+
+.ios-nav-item:hover {
+  background-color: var(--navbar-item-hover-bg);
+  color: var(--navbar-item-hover-text);
+  transform: translateY(-0.5px);
+}
+
+.ios-nav-item.active {
+  background-color: var(--navbar-item-active-bg);
+  color: var(--navbar-item-active-text);
+  font-weight: 600;
+}
+
+.ios-nav-item:active {
+  transform: scale(0.92);
+}
+
+.ios-tooltip {
+  position: absolute;
+  left: 58px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  background-color: var(--navbar-tooltip-bg);
+  color: var(--navbar-tooltip-text);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-6px) scale(0.95);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  z-index: 100;
+}
+
+.ios-nav-item:hover .ios-tooltip {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+}
+
+/* Theme Toggle Button rotation animation */
+.ios-theme-toggle {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ios-theme-toggle:hover {
+  transform: rotate(20deg) scale(1.05);
+}
+.ios-theme-toggle:active {
+  transform: rotate(-10deg) scale(0.92);
+}
+
+/* iOS Topbar UI Styles */
+.ios-topbar {
+  background-color: var(--ios-topbar-bg);
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  border: 1px solid var(--ios-topbar-border);
+  border-radius: 14px;
+  box-shadow: var(--ios-card-shadow);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ios-topbar-divider {
+  width: 1px;
+  height: 18px;
+  background-color: var(--ios-topbar-border);
+  margin: 0 4px;
+}
+
+.ios-topbar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  color: var(--ios-topbar-icon-color);
+  background-color: transparent;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ios-topbar-btn:hover {
+  background-color: var(--ios-topbar-icon-hover-bg);
+  color: var(--ios-topbar-icon);
+  transform: translateY(-0.5px);
+}
+
+.ios-topbar-btn:active {
+  background-color: var(--ios-topbar-icon-active-bg);
+  transform: scale(0.92);
+}
+
+.ios-topbar-pill {
+  display: flex;
+  align-items: center;
+  padding: 3px 10px;
+  gap: 8px;
+  background-color: var(--ios-topbar-pill-bg);
+  border: 1px solid var(--ios-topbar-pill-border);
+  border-radius: 20px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ios-topbar-share-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #007aff 0%, #0051c7 100%);
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 122, 255, 0.2);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ios-topbar-share-btn:hover {
+  background: linear-gradient(135deg, #0a84ff 0%, #007aff 100%);
+  transform: scale(1.05);
+}
+
+.ios-topbar-share-btn:active {
+  transform: scale(0.95);
+}
+
+.ios-topbar-center-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--ios-topbar-text);
+  border: 1px solid transparent;
+}
+
+.ios-topbar-center-container:hover {
+  background-color: var(--ios-topbar-icon-hover-bg);
+  border-color: var(--ios-topbar-border);
+}
+
+.ios-topbar-center-container:active {
+  transform: scale(0.98);
 }
