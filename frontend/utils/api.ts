@@ -1,5 +1,3 @@
-
-
 const getBaseUrl = () => {
     const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
     if (!baseUrl && typeof window !== 'undefined') {
@@ -42,11 +40,15 @@ export async function apiPost<T>(endpoint: string, body: unknown, token?: string
     return res.json();
 }
 
-export async function apiDelete<T>(endpoint: string ): Promise<T> {
-
+export async function apiDelete<T>(endpoint: string, token?: string | null): Promise<T> {
+    const headers: HeadersInit = {}
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`
+    }
     const res = await fetch(getCleanUrl(endpoint),
         {
             method: 'DELETE',
+            headers,
         }
     )
     if (!res.ok) throw new Error(`API error: ${res.status}`);

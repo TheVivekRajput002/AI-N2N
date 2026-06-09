@@ -673,29 +673,12 @@ export default function FlowBar({ nodes, setNodes, onSave }: FlowBarProps) {
           <>
             <button
               onClick={onSave}
-              className="ios-flowbar-btn-primary"
+              className="ios-flowbar-btn-green"
               title="Save current workflow to cloud"
             >
               <FiSave size={14} className="mr-1.5" />
               Save Change
             </button>
-
-            <div className="flex gap-2">
-              <button
-                className="ios-flowbar-btn-secondary"
-                title="Duplicate workflow"
-              >
-                <FiCopy size={13} className="mr-1.5" />
-                Duplicate Flow
-              </button>
-              
-              <button
-                className="ios-flowbar-btn-trash"
-                title="Delete workflow"
-              >
-                <FiTrash2 size={15} />
-              </button>
-            </div>
           </>
         )}
       </div>

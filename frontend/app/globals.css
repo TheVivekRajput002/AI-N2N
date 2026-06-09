@@ -835,6 +835,32 @@
   transform: scale(0.98);
 }
 
+.ios-flowbar-btn-green {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 9px 14px;
+  background-color: hsl(var(--ios-green));
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 10px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  border: none;
+  cursor: pointer;
+}
+
+.ios-flowbar-btn-green:hover {
+  background-color: hsl(var(--ios-green));
+  filter: brightness(0.9);
+  transform: translateY(-0.5px);
+}
+
+.ios-flowbar-btn-green:active {
+  transform: scale(0.98);
+}
+
 .ios-flowbar-btn-secondary {
   display: flex;
   align-items: center;

@@ -16,7 +16,7 @@ import {
   FiActivity
 } from 'react-icons/fi';
 import { useWorkspace, useWorkflow, WorkflowType } from '@/utils/store';
-import { apiPost } from '@/utils/api';
+import { apiDelete, apiPost } from '@/utils/api';
 import { useFlowState } from '@/hooks/useFlowState';
 
 
@@ -92,10 +92,17 @@ const WorkflowPage = ({ initialWorkflows }: { initialWorkflows: WorkflowType[] }
   };
 
   // Delete workflow handler
-  const handleDeleteWorkflow = (id: string, e: React.MouseEvent) => {
+  const handleDeleteWorkflow = async (id: string, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    removeWorkflow(id);
+    try {
+      const response: { success: boolean } = await apiDelete(`/workflows/${id}`);
+      if (response.success) {
+        removeWorkflow(id);
+      }
+    } catch (error) {
+      console.error("Failed to delete workflow:", error);
+    }
   };
 
   const formatDate = (isoString: string) => {
