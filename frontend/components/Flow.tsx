@@ -33,14 +33,11 @@ import OutputNode from './nodes/categories/OutputNode'
 // (if defined inside, React re-creates them every render → flickering)
 const nodeTypes = {
   input: InputNode,
-  trigger: InputNode,
   customNode: CustomNode,
   action: CustomNode,
   notification: OutputNode,
   email: OutputNode,
   conditional: LogicNode,
-  switch: LogicNode,
-  loop: LogicNode,
   delay: TransformNode,
   http_get: IntegrationNode,
   http_post: IntegrationNode,

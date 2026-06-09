@@ -3,7 +3,7 @@ import { Handle, Position } from '@xyflow/react';
 import { RiInputCursorMove } from "react-icons/ri";
 import { BsThreeDots } from "react-icons/bs";
 import { MdOutlineDownloadDone } from "react-icons/md";
-import { FiZap, FiBox } from 'react-icons/fi';
+import { FiBox } from 'react-icons/fi';
 
 const handleStyle = {
   right: '-6px',
@@ -22,7 +22,6 @@ const handleStyle = {
 function InputNode({ data, selected, type }: { data: { label: string; description?: string, nodeData?: Record<string, any> }, selected: boolean, type: string }) {
 
   const iconMap: Record<string, React.ReactNode> = {
-    trigger: <FiZap />,
     input: <RiInputCursorMove />,
   };
 
@@ -51,28 +50,22 @@ function InputNode({ data, selected, type }: { data: { label: string; descriptio
       </div>
 
       <div className="p-5 flex flex-col gap-3">
-        {type === 'input' ? (
-          <div className="flex flex-col gap-1">
-            <div className="flex flex-col items-left gap-1.5">
-              <label className="text-2xs text-[var(--text-muted-color)] font-sans text-left">
-                Input
-              </label>
-            </div>
-            <div className="relative">
-              <input
-                type="text"
-                readOnly
-                value={data.nodeData?.input ?? ''}
-                placeholder="Enter input value..."
-                className="w-full pointer-events-none h-8 bg-[var(--input-bg-color)] border border-[var(--input-border-color)] rounded-lg px-3 font-mono text-xxs text-[var(--input-text-color)] focus:outline-none focus:border-[var(--input-focus-border-color)] focus:bg-[var(--input-focus-bg-color)] transition-all"
-              />
-            </div>
+        <div className="flex flex-col gap-1">
+          <div className="flex flex-col items-left gap-1.5">
+            <label className="text-2xs text-[var(--text-muted-color)] font-sans text-left">
+              Input
+            </label>
           </div>
-        ) : (
-          <div className="text-2xs text-[var(--text-muted-color)] italic font-sans text-center py-2">
-            No configuration needed
+          <div className="relative">
+            <input
+              type="text"
+              readOnly
+              value={data.nodeData?.input ?? ''}
+              placeholder="Enter input value..."
+              className="w-full pointer-events-none h-8 bg-[var(--input-bg-color)] border border-[var(--input-border-color)] rounded-lg px-3 font-mono text-xxs text-[var(--input-text-color)] focus:outline-none focus:border-[var(--input-focus-border-color)] focus:bg-[var(--input-focus-bg-color)] transition-all"
+            />
           </div>
-        )}
+        </div>
       </div>
 
       <div className="px-4 py-2 bg-[var(--footer-bg-color)] border-t border-[var(--footer-border-color)] rounded-b-xl flex items-center justify-between">

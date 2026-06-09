@@ -10,7 +10,7 @@ export async function executeInputStarter(
 ): Promise<any> {
   const nodeType = (node.type || "").toLowerCase() || (node.data?.label || "").toLowerCase();
 
-  if (nodeType === "input" || nodeType === "trigger") {
+  if (nodeType === "input") {
     if (typeof globalInput === "string" && globalInput) {
       return globalInput;
     } else if (globalInput && typeof globalInput === "object") {

@@ -8,17 +8,14 @@ import {
   FiInfo,
   FiList,
   FiSliders,
-  FiLayers,
   FiTrash2,
   FiCopy,
   FiSave,
   FiPlus,
   FiX,
   FiMoreHorizontal,
-  FiZap,
   FiChevronDown,
   FiChevronRight,
-  FiRotateCw,
   FiGitCommit,
   FiClock,
   FiSend,
@@ -70,10 +67,8 @@ export default function FlowBar({ nodes, setNodes, onSave }: FlowBarProps) {
     const type = (nodeType || '').toLowerCase();
     if (type === 'llm') return ['output', 'model', 'provider'];
     if (type === 'http_get' || type === 'http_post') return ['output', 'status'];
-    if (type === 'input' || type === 'trigger') return ['output'];
+    if (type === 'input') return ['output'];
     if (type === 'conditional') return ['output', 'conditionMet'];
-    if (type === 'switch') return ['output', 'matchedCase'];
-    if (type === 'loop') return ['output', 'body', 'done'];
     return ['output'];
   };
 
@@ -311,8 +306,8 @@ export default function FlowBar({ nodes, setNodes, onSave }: FlowBarProps) {
 
   // Node icons and colors helper
   const getNodeCategoryColorClass = (label: string) => {
-    const inputs = ['Input', 'Trigger'];
-    const logics = ['Conditional', 'Switch', 'Loop', 'Merge'];
+    const inputs = ['Input'];
+    const logics = ['Conditional', 'Merge'];
     const ais = ['LLM'];
     const transforms = ['Text', 'Delay'];
     const integrations = ['HTTP GET', 'HTTP POST'];
@@ -328,11 +323,8 @@ export default function FlowBar({ nodes, setNodes, onSave }: FlowBarProps) {
   };
 
   const nodeIconsMap: Record<string, React.ReactNode> = {
-    Trigger: <FiZap />,
     Input: <RiInputCursorMove />,
     Conditional: <FiList />,
-    Switch: <FiLayers />,
-    Loop: <FiRotateCw />,
     Merge: <FiGitCommit />,
     LLM: <IoHardwareChipOutline />,
     Text: <RxText />,
@@ -848,10 +840,7 @@ const PROVIDER_MODELS: Record<string, string[]> = {
                     <span className="ios-flowbar-row-label">Type</span>
                     <span className="ios-flowbar-row-value text-slate-500">Workflow</span>
                   </div>
-                  <div className="ios-flowbar-row">
-                    <span className="ios-flowbar-row-label">Status</span>
-                    <span className="ios-flowbar-row-value text-emerald-500 font-semibold">Enabled</span>
-                  </div>
+              
                   <div className="ios-flowbar-row">
                     <span className="ios-flowbar-row-label">Created</span>
                     <span className="ios-flowbar-row-value">{formatDateString(workflowDetails.createdAt)}</span>
@@ -884,101 +873,20 @@ const PROVIDER_MODELS: Record<string, string[]> = {
                 <div className="flex flex-col gap-3.5 mt-1.5">
                   <div className="flex items-center justify-between font-sans text-xs">
                     <span className="text-[var(--flowbar-text-secondary)]">Auto-run on trigger</span>
-                    <button
-                      type="button"
-                      onClick={() => setRuntimeSettings(prev => ({ ...prev, autoRun: !prev.autoRun }))}
+                    <div
+                     
                       className={`px-3 py-1 font-bold text-[10.5px] rounded-lg transition-all border ${runtimeSettings.autoRun ? 'bg-[hsla(var(--ios-orange),0.12)] border-[hsla(var(--ios-orange),0.2)] text-[hsl(var(--ios-orange))]' : 'bg-[var(--flowbar-btn-secondary)] border-[var(--flowbar-input-border)] text-[var(--flowbar-text-secondary)]'}`}
                     >
-                      [ {runtimeSettings.autoRun ? 'On' : 'Off'} ]
-                    </button>
-                  </div>
-                  <div className="flex items-center justify-between font-sans text-xs">
-                    <span className="text-[var(--flowbar-text-secondary)]">Timeout (ms)</span>
-                    <input
-                      type="number"
-                      value={runtimeSettings.timeout}
-                      onChange={(e) => setRuntimeSettings(prev => ({ ...prev, timeout: Number(e.target.value) }))}
-                      className="w-16 h-7 bg-[var(--flowbar-input-bg)] border border-[var(--flowbar-input-border)] rounded-lg text-center font-mono font-bold text-xs focus:outline-none"
-                    />
-                  </div>
-                  <div className="flex items-center justify-between font-sans text-xs">
-                    <span className="text-[var(--flowbar-text-secondary)]">Retry attempts</span>
-                    <input
-                      type="number"
-                      value={runtimeSettings.retryAttempts}
-                      onChange={(e) => setRuntimeSettings(prev => ({ ...prev, retryAttempts: Number(e.target.value) }))}
-                      className="w-16 h-7 bg-[var(--flowbar-input-bg)] border border-[var(--flowbar-input-border)] rounded-lg text-center font-mono font-bold text-xs focus:outline-none"
-                    />
-                  </div>
-                  <div className="flex items-center justify-between font-sans text-xs">
-                    <span className="text-[var(--flowbar-text-secondary)]">Stop on error</span>
-                    <button
-                      type="button"
-                      onClick={() => setRuntimeSettings(prev => ({ ...prev, stopOnError: !prev.stopOnError }))}
-                      className={`px-3 py-1 font-bold text-[10.5px] rounded-lg transition-all border ${runtimeSettings.stopOnError ? 'bg-[hsla(var(--ios-orange),0.12)] border-[hsla(var(--ios-orange),0.2)] text-[hsl(var(--ios-orange))]' : 'bg-[var(--flowbar-btn-secondary)] border-[var(--flowbar-input-border)] text-[var(--flowbar-text-secondary)]'}`}
-                    >
-                      [ {runtimeSettings.stopOnError ? 'On' : 'Off'} ]
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Variables Section (collapsible) */}
-            <div className="ios-flowbar-section">
-              <div 
-                className="ios-flowbar-section-header cursor-pointer"
-                onClick={() => toggleSection('variables')}
-              >
-                <span className="ios-flowbar-section-title">Variables</span>
-                <FiMoreHorizontal size={14} className="text-[var(--flowbar-text-secondary)]" />
-              </div>
-
-              {!collapsedSections.variables && (
-                <div className="flex flex-col gap-2 mt-1">
-                  {workflowVars.map((v, index) => (
-                    <div key={index} className="flex items-center justify-between text-xs py-0.5">
-                      <span className="font-mono text-2xs text-[var(--flowbar-text-secondary)]">{v.key}</span>
-                      <div className="flex items-center gap-1.5">
-                        <span className="font-mono text-2xs text-[var(--flowbar-text-primary)] font-semibold">{v.value}</span>
-                        <button
-                          onClick={() => handleDeleteWorkflowVar(index)}
-                          className="text-red-500 hover:text-red-700 transition-colors"
-                          title="Delete Variable"
-                        >
-                          <FiX size={10} />
-                        </button>
-                      </div>
+                      {"Running"}
                     </div>
-                  ))}
-
-                  {/* Add dynamic variable form */}
-                  <form onSubmit={handleAddWorkflowVar} className="flex gap-1.5 mt-2 pt-2 border-t border-[var(--flowbar-section-border)]">
-                    <input
-                      type="text"
-                      placeholder="Name"
-                      value={newVarKey}
-                      onChange={(e) => setNewVarKey(e.target.value)}
-                      className="flex-1 min-w-0 bg-[var(--flowbar-input-bg)] border border-[var(--flowbar-input-border)] rounded-lg px-2 py-1 text-2xs font-mono focus:outline-none focus:border-[var(--flowbar-input-focus)]"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Value"
-                      value={newVarValue}
-                      onChange={(e) => setNewVarValue(e.target.value)}
-                      className="flex-1 min-w-0 bg-[var(--flowbar-input-bg)] border border-[var(--flowbar-input-border)] rounded-lg px-2 py-1 text-2xs font-mono focus:outline-none focus:border-[var(--flowbar-input-focus)]"
-                    />
-                    <button
-                      type="submit"
-                      className="bg-[var(--flowbar-input-focus)] hover:opacity-90 text-white rounded-lg p-1 flex items-center justify-center shrink-0"
-                      title="Add Variable"
-                    >
-                      <FiPlus size={12} />
-                    </button>
-                  </form>
+                  </div>
+                 
+                
                 </div>
               )}
             </div>
+
+         
           </>
         )}
 

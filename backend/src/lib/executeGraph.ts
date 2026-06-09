@@ -122,11 +122,11 @@ export async function executeGraph({
       // 3. Execute node logic
       let output: any = "";
 
-      if (nodeType === "input" || nodeType === "trigger") {
+      if (nodeType === "input") {
         output = await executeInputStarter(node, resolvedInput, globalInput);
       } else if (nodeType === "llm") {
         output = await executeAiPrompt(node, resolvedInput);
-      } else if (nodeType === "conditional" || nodeType === "switch" || nodeType === "loop") {
+      } else if (nodeType === "conditional") {
         output = await executeLogic(node, resolvedInput, nodeOutputs, nodes);
       } else if (nodeType === "delay") {
         output = await executeTransform(node, resolvedInput);
@@ -136,7 +136,7 @@ export async function executeGraph({
         output = await executeOutput(node, resolvedInput);
       } else {
         // Pass-through node behavior for non-functional nodes
-        output = resolvedInput || node.data?.nodeData || {};
+        output = parentValues.length > 0 ? resolvedInput : (node.data?.nodeData || {});
       }
 
       nodeOutputs[node.id] = output;
@@ -167,23 +167,6 @@ export async function executeGraph({
           const handle = edge?.sourceHandle || "true";
           if ((isTrue && handle === "false") || (!isTrue && handle === "true")) {
             propagatedValue = "__SKIPPED_BRANCH__";
-          } else {
-            propagatedValue = output.value;
-          }
-        } else if (nodeType === "switch" && output && typeof output === "object" && "matchedCase" in output) {
-          const matchedCase = output.matchedCase || "default";
-          const handle = edge?.sourceHandle || "default";
-          if (handle !== matchedCase) {
-            propagatedValue = "__SKIPPED_BRANCH__";
-          } else {
-            propagatedValue = output.value;
-          }
-        } else if (nodeType === "loop" && output && typeof output === "object" && ("body" in output || "done" in output)) {
-          const handle = edge?.sourceHandle || "done";
-          if (handle === "body") {
-            propagatedValue = output.body;
-          } else if (handle === "done") {
-            propagatedValue = output.done;
           } else {
             propagatedValue = output.value;
           }

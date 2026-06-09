@@ -1,9 +1,6 @@
 import {
-  FiZap,
   FiList,
   FiClock,
-  FiRotateCw,
-  FiLayers,
   FiGlobe,
   FiMail,
 } from 'react-icons/fi';
@@ -24,12 +21,6 @@ export interface NodeConfigItem {
 
 export const AllNodes: NodeConfigItem[] = [
   // === Input / Starter ===
-  {
-    type: 'trigger',
-    category: 'Input / Starter',
-    data: { label: 'Trigger', description: 'Initiate workflows', nodeData: {} },
-    icon: <FiZap className="w-5 h-5 text-[var(--nodes-item-icon-color)]" />
-  },
   {
     type: 'input',
     category: 'Input / Starter',
@@ -75,32 +66,6 @@ export const AllNodes: NodeConfigItem[] = [
     },
     icon: <FiList className="w-5 h-5 text-[var(--nodes-item-icon-color)]" />
   },
-  {
-    type: 'switch',
-    category: 'Logic',
-    data: {
-      label: 'Switch',
-      description: 'Route execution to N branches',
-      nodeData: {
-        cases: []
-      }
-    },
-    icon: <FiLayers className="w-5 h-5 text-[var(--nodes-item-icon-color)]" />
-  },
-  {
-    type: 'loop',
-    category: 'Logic',
-    data: {
-      label: 'Loop',
-      description: 'Iterate over an array',
-      nodeData: {
-        arrayPath: '',
-        mode: 'sequential'
-      }
-    },
-    icon: <FiRotateCw className="w-5 h-5 text-[var(--nodes-item-icon-color)]" />
-  },
-
   // === Transform ===
   {
     type: 'delay',

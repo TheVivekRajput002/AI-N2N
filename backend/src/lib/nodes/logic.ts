@@ -1,15 +1,8 @@
 import { FlowNode } from "../../types";
 
 export interface LogicResult {
-  nodeType: "conditional" | "switch" | "loop";
-  // For conditional:
+  nodeType: "conditional";
   conditionMet?: boolean;
-  // For switch:
-  matchedCase?: string;
-  // For loop:
-  body?: any;
-  done?: any;
-  // Fallback / main output value
   value: any;
 }
 
@@ -109,66 +102,6 @@ export async function executeLogic(
       nodeType: "conditional",
       conditionMet,
       value: resolvedInput,
-    };
-  }
-
-  if (nodeType === "switch") {
-    const cases = Array.isArray(node.data?.nodeData?.cases) ? node.data.nodeData.cases : [];
-    let matchedCase = "default";
-
-    for (let i = 0; i < cases.length; i++) {
-      const c = cases[i];
-      if (String(resolvedInput) === String(c.value || c.label)) {
-        matchedCase = `case_${i}`;
-        break;
-      }
-    }
-
-    return {
-      nodeType: "switch",
-      matchedCase,
-      value: resolvedInput,
-    };
-  }
-
-  if (nodeType === "loop") {
-    const arrayPath = node.data?.nodeData?.arrayPath || "";
-    let items: any[] = [];
-
-    if (resolvedInput) {
-      if (Array.isArray(resolvedInput)) {
-        items = resolvedInput;
-      } else if (typeof resolvedInput === "object") {
-        if (arrayPath) {
-          const parts = arrayPath.split(".");
-          let current = resolvedInput;
-          for (const part of parts) {
-            if (current && typeof current === "object") {
-              current = current[part];
-            } else {
-              current = undefined;
-              break;
-            }
-          }
-          if (Array.isArray(current)) {
-            items = current;
-          }
-        }
-        if (items.length === 0 && Array.isArray(resolvedInput.items)) {
-          items = resolvedInput.items;
-        }
-      }
-    }
-
-    if (!Array.isArray(items)) {
-      items = [];
-    }
-
-    return {
-      nodeType: "loop",
-      body: items,
-      done: items,
-      value: items,
     };
   }
 

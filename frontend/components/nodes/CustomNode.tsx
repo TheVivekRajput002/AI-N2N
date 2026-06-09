@@ -6,11 +6,9 @@ import { BsThreeDots } from "react-icons/bs";
 import { IoHardwareChipOutline } from "react-icons/io5";
 import { RxText } from "react-icons/rx";
 import {
-  FiZap,
   FiSend,
   FiList,
   FiClock,
-  FiRotateCw,
   FiGitCommit,
   FiBox,
 } from 'react-icons/fi';
@@ -32,10 +30,8 @@ const handleStyle = {
 function CustomNode({ data, selected, type }: { data: { label: string; description?: string, nodeData?: Record<string, any> }, selected: boolean, type: string }) {
 
   const iconMap: Record<string, React.ReactNode> = {
-    trigger: <FiZap />,
     input: <RiInputCursorMove />,
     conditional: <FiList />,
-    loop: <FiRotateCw />,
     merge: <FiGitCommit />,
     llm: <IoHardwareChipOutline />,
     text: <RxText />,
@@ -46,8 +42,8 @@ function CustomNode({ data, selected, type }: { data: { label: string; descripti
 
   // Find which category the node belongs to based on label to apply proper color classes
   const getCategoryColorClass = (label: string) => {
-    const inputs = ['Input', 'Trigger'];
-    const logics = ['Conditional', 'Loop', 'Merge'];
+    const inputs = ['Input'];
+    const logics = ['Conditional', 'Merge'];
     const ais = ['LLM'];
     const transforms = ['Text', 'Delay'];
     const outputs = ['Output', 'Notification'];
@@ -64,7 +60,7 @@ function CustomNode({ data, selected, type }: { data: { label: string; descripti
     <div className="w-72 bg-[var(--node-bg-color)] border border-[var(--node-border-color)] rounded-xl node-shadow transition-all duration-200 hover:node-active-shadow select-none relative">
 
       {/* Handles based on node type */}
-      {type === "input" || type === "text" || type === "trigger" ? (
+      {type === "input" || type === "text" ? (
         <Handle
           type="source"
           position={Position.Right}
