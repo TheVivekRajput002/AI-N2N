@@ -6,20 +6,29 @@ import { CiUser } from "react-icons/ci";
 import Link from 'next/link';
 import { useCallback } from 'react';
 import { usePathname } from 'next/navigation';
+import { TbGridScan } from "react-icons/tb";
 
-// Custom high-fidelity VectorShift logo SVG (white color inside the gradient squircle)
-const VectorShiftLogo = ({ className = "w-[22px] h-[16px]" }) => (
+// Custom high-fidelity AI N2N brand logo SVG
+const N2NLogo = ({ className = "w-[24px] h-[24px]" }) => (
     <svg
-        viewBox="0 0 32 24"
-        fill="currentColor"
+        viewBox="0 0 100 100"
+        fill="none"
         className={className}
         xmlns="http://www.w3.org/2000/svg"
     >
-        <rect x="2" y="12" width="6" height="14" rx="3" transform="rotate(-45 5 19)" />
-        <rect x="10" y="6" width="6" height="20" rx="3" transform="rotate(-45 13 16)" />
-        <rect x="18" y="2" width="6" height="8" rx="3" transform="rotate(-45 21 6)" />
+        <g stroke="currentColor" strokeWidth="13" strokeLinecap="round" strokeLinejoin="round">
+            {/* Top Chevron */}
+            <path d="M 28 18 L 50 40 L 72 18" />
+            {/* Right Chevron */}
+            <path d="M 82 28 L 60 50 L 82 72" />
+            {/* Bottom Chevron */}
+            <path d="M 72 82 L 50 60 L 28 82" />
+            {/* Left Chevron */}
+            <path d="M 18 72 L 40 50 L 18 28" />
+        </g>
     </svg>
 );
+
 
 export const Navbar = () => {
     const pathname = usePathname();
@@ -49,7 +58,7 @@ export const Navbar = () => {
 
     const navItems = [
         { id: 'flow', icon: FiGitBranch, label: 'Pipelines', href: '/workspaces' },
-        { id: 'home', icon: FiHome, label: 'Home', href: '/home' },
+        { id: 'template', icon: TbGridScan, label: 'Templates', href: '/templates' },
         { id: 'settings', icon: FiSettings, label: 'Settings', href: '/settings' },
         { id: 'dashboard', icon: MdOutlineSpaceDashboard, label: 'Dashboard', href: '/dashboard' },
         { id: 'profile', icon: CiUser, label: 'Profile', href: '/profile' },
@@ -65,10 +74,14 @@ export const Navbar = () => {
 
             {/* ================= Logo Section =========================*/}
             <div className="flex items-center justify-center mb-6">
-                <Link href="/home" className="ios-logo-container relative group">
-                    <VectorShiftLogo />
+                <Link href="/home" className="ios-logo-container overflow-hidden relative group">
+                    <img 
+                        src="/icon.jpg" 
+                        alt="AI N2N Logo" 
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
                     <span className="ios-tooltip">
-                        VectorShift
+                        AI N2N
                     </span>
                 </Link>
             </div>
@@ -133,17 +146,6 @@ export const Navbar = () => {
                         {isDark ? 'Light Mode' : 'Dark Mode'}
                     </span>
                 </button>
-
-                {/* User Profile Avatar */}
-                <Link
-                    href="/profile"
-                    className="relative flex items-center justify-center w-9 h-9 rounded-full bg-[var(--navbar-avatar-bg)] text-[var(--navbar-avatar-text)] border border-[var(--navbar-avatar-border)] mt-2 hover:bg-[var(--navbar-avatar-hover-bg)] transition-all duration-200 shadow-sm active:scale-95 group"
-                >
-                    <FiUser size={16} />
-                    <span className="ios-tooltip">
-                        Profile
-                    </span>
-                </Link>
             </div>
         </div>
     );
