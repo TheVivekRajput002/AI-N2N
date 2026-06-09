@@ -66,7 +66,13 @@ export const AllNodes: NodeConfigItem[] = [
   {
     type: 'conditional',
     category: 'Logic',
-    data: { label: 'Conditional', description: 'Branch the workflow', nodeData: {} },
+    data: {
+      label: 'Conditional',
+      description: 'Branch the workflow',
+      nodeData: {
+        condition: ''
+      }
+    },
     icon: <FiList className="w-5 h-5 text-[var(--nodes-item-icon-color)]" />
   },
   {

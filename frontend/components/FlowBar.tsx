@@ -62,6 +62,58 @@ export default function FlowBar({ nodes, setNodes, onSave }: FlowBarProps) {
 
   const [isCollapsed, setIsCollapsed] = useState(false);
 
+  const formatNodeSlug = (label: string) => {
+    return (label || '').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+  };
+
+  const getSuggestedProperties = (nodeType: string) => {
+    const type = (nodeType || '').toLowerCase();
+    if (type === 'llm') return ['output', 'model', 'provider'];
+    if (type === 'http_get' || type === 'http_post') return ['output', 'status'];
+    if (type === 'input' || type === 'trigger') return ['output'];
+    if (type === 'conditional') return ['output', 'conditionMet'];
+    if (type === 'switch') return ['output', 'matchedCase'];
+    if (type === 'loop') return ['output', 'body', 'done'];
+    return ['output'];
+  };
+
+  const compileRulesToExpression = (rulesList: any[], comb: 'AND' | 'OR') => {
+    if (!rulesList || rulesList.length === 0) return 'true';
+    const ruleExpressions = rulesList.map(rule => {
+      const field = rule.field || 'input';
+      const op = rule.operator || 'equals';
+      const val = rule.value || '';
+      
+      const isNumeric = !isNaN(Number(val)) && val.trim() !== '';
+      const formattedValue = isNumeric ? val : JSON.stringify(val);
+      const formattedField = field === 'input' || field === 'value' ? 'input' : field;
+      
+      switch (op) {
+        case 'contains':
+          return `(${formattedField} && String(${formattedField}).includes(${JSON.stringify(val)}))`;
+        case 'not_contains':
+          return `(${formattedField} && !String(${formattedField}).includes(${JSON.stringify(val)}))`;
+        case 'equals':
+          return `(String(${formattedField}) === String(${JSON.stringify(val)}) || ${formattedField} === ${formattedValue})`;
+        case 'not_equals':
+          return `(String(${formattedField}) !== String(${JSON.stringify(val)}) && ${formattedField} !== ${formattedValue})`;
+        case 'gt':
+          return `(Number(${formattedField}) > ${Number(val) || 0})`;
+        case 'lt':
+          return `(Number(${formattedField}) < ${Number(val) || 0})`;
+        case 'gte':
+          return `(Number(${formattedField}) >= ${Number(val) || 0})`;
+        case 'lte':
+          return `(Number(${formattedField}) <= ${Number(val) || 0})`;
+        default:
+          return 'true';
+      }
+    });
+    
+    const joinOp = comb === 'OR' ? ' || ' : ' && ';
+    return ruleExpressions.join(joinOp);
+  };
+
   // Auto-expand when a node is selected
   useEffect(() => {
     if (selectedNode) {
@@ -190,6 +242,28 @@ export default function FlowBar({ nodes, setNodes, onSave }: FlowBarProps) {
               nodeData: {
                 ...currentNodeData,
                 [key]: value,
+              },
+            },
+          };
+        }
+        return node;
+      })
+    );
+  };
+
+  const updateNodeDataFields = (updates: Record<string, any>) => {
+    if (!selectedNode) return;
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.id === selectedNode.id) {
+          const currentNodeData = (node.data as any).nodeData || {};
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              nodeData: {
+                ...currentNodeData,
+                ...updates,
               },
             },
           };
@@ -413,95 +487,304 @@ const PROVIDER_MODELS: Record<string, string[]> = {
 
                   {/* List existing custom keys inside nodeData */}
                   <div className="flex flex-col gap-2.5">
-                    <div className="ios-flowbar-label pl-0.5">Parameters</div>
-                    {Object.entries((selectedNode.data.nodeData as Record<string, any>) || {}).map(([key, val]) => {
-                      if (key === 'type') return null;
-                      const isProviderKey = key === "ai provider" || key === "company";
-                      const currentNodeData = (selectedNode.data as any).nodeData || {};
-                      return (
-                        <div key={key} className="flex flex-col gap-1 bg-[var(--flowbar-input-bg)] p-2 rounded-lg border border-[var(--flowbar-input-border)]">
-                          <div className="flex items-center justify-between">
-                            <span className="font-mono text-2xs font-semibold text-[var(--flowbar-text-secondary)]">
-                              {isProviderKey ? "ai provider" : key}
-                            </span>
-                          </div>
-                          {key === "output" ? (
-                            <div className="w-full bg-[var(--node-bg-color)] border border-[var(--flowbar-input-border)] rounded-md px-3 py-2.5 text-[11.5px] font-sans leading-relaxed text-[var(--flowbar-text-primary)] overflow-y-auto max-h-[300px] min-h-[90px]">
-                              <ReactMarkdown
-                                components={{
-                                  h1: ({node, ...props}: any) => <h1 className="text-sm font-bold mt-2.5 mb-1.5 border-b border-[var(--flowbar-border)] pb-0.5 text-[var(--flowbar-text-primary)]" {...props} />,
-                                  h2: ({node, ...props}: any) => <h2 className="text-xs font-bold mt-2 mb-1 text-[var(--flowbar-text-primary)]" {...props} />,
-                                  h3: ({node, ...props}: any) => <h3 className="text-[11px] font-bold mt-1.5 mb-1 text-[var(--flowbar-text-primary)]" {...props} />,
-                                  p: ({node, ...props}: any) => <p className="mb-1.5 last:mb-0 text-[var(--flowbar-text-secondary)]" {...props} />,
-                                  ul: ({node, ...props}: any) => <ul className="list-disc pl-4 mb-2 text-[var(--flowbar-text-secondary)]" {...props} />,
-                                  ol: ({node, ...props}: any) => <ol className="list-decimal pl-4 mb-2 text-[var(--flowbar-text-secondary)]" {...props} />,
-                                  li: ({node, ...props}: any) => <li className="mb-0.5" {...props} />,
-                                  code: ({node, ...props}: any) => <code className="bg-[var(--flowbar-input-bg)] px-1 rounded font-mono text-[10px] text-[var(--flowbar-text-primary)]" {...props} />,
-                                  pre: ({node, ...props}: any) => <pre className="bg-[var(--flowbar-input-bg)] p-2 rounded font-mono text-[10px] overflow-x-auto my-1.5" {...props} />,
-                                }}
-                              >
-                                {val === null || val === undefined ? '' : typeof val === 'object' ? JSON.stringify(val, null, 2) : String(val)}
-                              </ReactMarkdown>
+                    {selectedNode.type === 'conditional' ? (
+                      (() => {
+                        const nodeDataObj = (selectedNode.data.nodeData || {}) as any;
+                        const condition = nodeDataObj.condition || '';
+                        const combinator = nodeDataObj.combinator || 'AND';
+                        const rules = Array.isArray(nodeDataObj.rules) ? nodeDataObj.rules : [
+                          { field: 'input', operator: 'contains', value: '' }
+                        ];
+
+                        const handleRulesChange = (updatedRules: any[], updatedComb?: 'AND' | 'OR') => {
+                          const finalComb = updatedComb || combinator;
+                          const compiled = compileRulesToExpression(updatedRules, finalComb);
+                          updateNodeDataFields({
+                            rules: updatedRules,
+                            combinator: finalComb,
+                            condition: compiled
+                          });
+                        };
+
+                        const fieldOptions = [
+                          { value: 'input', label: 'Parent Node Output' },
+                          ...nodes.filter(n => n.id !== selectedNode.id).flatMap(node => {
+                            const slug = formatNodeSlug(node.data.label as string);
+                            const props = getSuggestedProperties(node.type || '');
+                            return props.map(prop => ({
+                              value: `{{${slug}.${prop}}}`,
+                              label: `${node.data.label as string}.${prop}`
+                            }));
+                          })
+                        ];
+
+                        return (
+                          <div className="flex flex-col gap-4 font-sans">
+                            <div className="flex flex-col gap-1">
+                              <span className="text-[13px] font-bold text-[var(--flowbar-text-primary)]">
+                                Rules List
+                              </span>
+                              <p className="text-[11px] text-[var(--flowbar-text-secondary)] leading-normal">
+                                Define visual condition rules to route workflow execution path.
+                              </p>
                             </div>
-                          ) : isProviderKey ? (
-                            <select
-                              value={val || 'gemini'}
-                              onChange={(e) => {
-                                const newProvider = e.target.value;
-                                if (key === 'company') {
-                                  const updatedNodeData = { ...currentNodeData };
-                                  delete updatedNodeData['company'];
-                                  updatedNodeData['ai provider'] = newProvider;
+
+                            {/* Rules stack */}
+                            <div className="flex flex-col gap-3.5">
+                              {rules.map((rule: any, idx: number) => {
+                                const showConnector = idx > 0;
+                                return (
+                                  <React.Fragment key={idx}>
+                                    {showConnector && (
+                                      <div className="flex justify-center -my-1.5 relative z-10">
+                                        <span className="px-2.5 py-0.5 text-[10px] font-bold tracking-wider rounded-full bg-[var(--flowbar-input-focus)] text-white shadow-xs select-none">
+                                          {combinator}
+                                        </span>
+                                      </div>
+                                    )}
+
+                                    {/* Spaced card for each rule */}
+                                    <div className="bg-[var(--flowbar-input-bg)] border border-[var(--flowbar-input-border)] rounded-xl p-3.5 flex flex-col gap-3 relative shadow-xs hover:border-[rgba(0,122,255,0.2)] transition-all">
+                                      {/* Rule header with title & delete */}
+                                      <div className="flex items-center justify-between pb-1.5 border-b border-[var(--flowbar-section-border)]">
+                                        <span className="text-3xs font-extrabold tracking-wider uppercase text-[var(--flowbar-text-secondary)]">
+                                          Rule {idx + 1}
+                                        </span>
+                                        {rules.length > 1 && (
+                                          <button
+                                            type="button"
+                                            onClick={() => {
+                                              const newRules = rules.filter((_: any, rIdx: number) => rIdx !== idx);
+                                              handleRulesChange(newRules);
+                                            }}
+                                            className="text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 p-1.5 rounded-lg transition-all cursor-pointer flex items-center justify-center"
+                                            title="Delete rule"
+                                          >
+                                            <FiTrash2 size={13} />
+                                          </button>
+                                        )}
+                                      </div>
+
+                                      {/* Field Picker Selection */}
+                                      <div className="flex flex-col gap-1.5">
+                                        <label className="text-[11px] font-bold text-[var(--flowbar-text-secondary)]">
+                                          When Field
+                                        </label>
+                                        <select
+                                          value={rule.field || 'input'}
+                                          onChange={(e) => {
+                                            const newRules = [...rules];
+                                            newRules[idx].field = e.target.value;
+                                            handleRulesChange(newRules);
+                                          }}
+                                          className="w-full bg-[var(--node-bg-color)] border border-[var(--flowbar-input-border)] rounded-lg py-1.5 px-2.5 text-xs text-[var(--flowbar-text-primary)] focus:outline-none focus:border-[var(--flowbar-input-focus)] cursor-pointer"
+                                        >
+                                          {fieldOptions.map(opt => (
+                                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                          ))}
+                                        </select>
+                                      </div>
+
+                                      {/* Operator & Value side-by-side or stacked in a clean grid */}
+                                      <div className="grid grid-cols-2 gap-2.5">
+                                        <div className="flex flex-col gap-1.5">
+                                          <label className="text-[11px] font-bold text-[var(--flowbar-text-secondary)]">
+                                            Operator
+                                          </label>
+                                          <select
+                                            value={rule.operator || 'contains'}
+                                            onChange={(e) => {
+                                              const newRules = [...rules];
+                                              newRules[idx].operator = e.target.value;
+                                              handleRulesChange(newRules);
+                                            }}
+                                            className="w-full bg-[var(--node-bg-color)] border border-[var(--flowbar-input-border)] rounded-lg py-1.5 px-2.5 text-xs text-[var(--flowbar-text-primary)] focus:outline-none focus:border-[var(--flowbar-input-focus)] cursor-pointer"
+                                          >
+                                            <option value="contains">contains</option>
+                                            <option value="not_contains">not contains</option>
+                                            <option value="equals">equals</option>
+                                            <option value="not_equals">not equals</option>
+                                            <option value="gt">&gt; (greater than)</option>
+                                            <option value="lt">&lt; (less than)</option>
+                                            <option value="gte">&gt;= (greater or equal)</option>
+                                            <option value="lte">&lt;= (less or equal)</option>
+                                          </select>
+                                        </div>
+
+                                        <div className="flex flex-col gap-1.5">
+                                          <label className="text-[11px] font-bold text-[var(--flowbar-text-secondary)]">
+                                            Value
+                                          </label>
+                                          <input
+                                            type="text"
+                                            value={rule.value || ''}
+                                            onChange={(e) => {
+                                              const newRules = [...rules];
+                                              newRules[idx].value = e.target.value;
+                                              handleRulesChange(newRules);
+                                            }}
+                                            placeholder="e.g. error"
+                                            className="w-full bg-[var(--node-bg-color)] border border-[var(--flowbar-input-border)] rounded-lg py-1.5 px-2.5 text-xs text-[var(--flowbar-text-primary)] focus:outline-none focus:border-[var(--flowbar-input-focus)]"
+                                          />
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </React.Fragment>
+                                );
+                              })}
+                            </div>
+
+                            {/* Add Rule Button & Combinator Settings */}
+                            <div className="flex flex-col gap-3 mt-1.5 pt-3 border-t border-[var(--flowbar-section-border)]">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const newRules = [...rules, { field: 'input', operator: 'contains', value: '' }];
+                                  handleRulesChange(newRules);
+                                }}
+                                className="w-full py-2 bg-[var(--flowbar-btn-secondary)] hover:bg-[var(--flowbar-btn-secondary-hover)] active:scale-98 text-xs font-bold rounded-xl border border-[var(--flowbar-input-border)] text-[var(--flowbar-text-primary)] transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                              >
+                                <FiPlus size={14} /> Add Comparison Rule
+                              </button>
+
+                              {rules.length > 1 && (
+                                <div className="flex items-center justify-between bg-[var(--flowbar-input-bg)] p-2.5 rounded-xl border border-[var(--flowbar-input-border)]">
+                                  <div className="flex flex-col">
+                                    <span className="text-[11px] font-bold text-[var(--flowbar-text-primary)] font-sans">
+                                      Match Condition
+                                    </span>
+                                    <span className="text-3xs text-[var(--flowbar-text-secondary)]">
+                                      How to combine multiple rules
+                                    </span>
+                                  </div>
+                                  <div className="flex bg-[var(--flowbar-btn-secondary)] p-0.5 rounded-lg border border-[var(--flowbar-input-border)]">
+                                    <button
+                                      type="button"
+                                      onClick={() => handleRulesChange(rules, 'AND')}
+                                      className={`px-3 py-1 text-3xs font-extrabold rounded-md transition-all ${combinator === 'AND' ? 'bg-[var(--node-bg-color)] text-[var(--flowbar-text-primary)] shadow-sm' : 'text-[var(--flowbar-text-secondary)]'}`}
+                                    >
+                                      AND
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleRulesChange(rules, 'OR')}
+                                      className={`px-3 py-1 text-3xs font-extrabold rounded-md transition-all ${combinator === 'OR' ? 'bg-[var(--node-bg-color)] text-[var(--flowbar-text-primary)] shadow-sm' : 'text-[var(--flowbar-text-secondary)]'}`}
+                                    >
+                                      OR
+                                    </button>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Expression preview */}
+                            <div className="bg-[var(--flowbar-input-bg)] p-3 rounded-xl border border-[var(--flowbar-input-border)] flex flex-col gap-1.5">
+                              <span className="text-[10px] uppercase tracking-wider font-extrabold text-[var(--flowbar-text-secondary)]">
+                                Compiled Expression Preview
+                              </span>
+                              <div className="bg-[var(--node-bg-color)] border border-[var(--flowbar-input-border)] rounded-lg px-2.5 py-2 font-mono text-xs text-[var(--flowbar-text-secondary)] break-all max-h-[65px] overflow-y-auto leading-relaxed">
+                                {condition || 'true'}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })()
+                    ) : (
+                      (() => {
+                        const nodeDataObj = { ...((selectedNode.data.nodeData as Record<string, any>) || {}) };
+                        return Object.entries(nodeDataObj);
+                      })().map(([key, val]) => {
+                        if (key === 'type') return null;
+                        const isProviderKey = key === "ai provider" || key === "company";
+                        const currentNodeData = (selectedNode.data as any).nodeData || {};
+                        return (
+                          <div key={key} className="flex flex-col gap-1 bg-[var(--flowbar-input-bg)] p-2 rounded-lg border border-[var(--flowbar-input-border)]">
+                            <div className="flex items-center justify-between">
+                              <span className="font-mono text-2xs font-semibold text-[var(--flowbar-text-secondary)]">
+                                {isProviderKey ? "ai provider" : key}
+                              </span>
+                            </div>
+                            {key === "output" ? (
+                              <div className="w-full bg-[var(--node-bg-color)] border border-[var(--flowbar-input-border)] rounded-md px-3 py-2.5 text-[11.5px] font-sans leading-relaxed text-[var(--flowbar-text-primary)] overflow-y-auto max-h-[300px] min-h-[90px]">
+                                <ReactMarkdown
+                                  components={{
+                                    h1: ({node, ...props}: any) => <h1 className="text-sm font-bold mt-2.5 mb-1.5 border-b border-[var(--flowbar-border)] pb-0.5 text-[var(--flowbar-text-primary)]" {...props} />,
+                                    h2: ({node, ...props}: any) => <h2 className="text-xs font-bold mt-2 mb-1 text-[var(--flowbar-text-primary)]" {...props} />,
+                                    h3: ({node, ...props}: any) => <h3 className="text-[11px] font-bold mt-1.5 mb-1 text-[var(--flowbar-text-primary)]" {...props} />,
+                                    p: ({node, ...props}: any) => <p className="mb-1.5 last:mb-0 text-[var(--flowbar-text-secondary)]" {...props} />,
+                                    ul: ({node, ...props}: any) => <ul className="list-disc pl-4 mb-2 text-[var(--flowbar-text-secondary)]" {...props} />,
+                                    ol: ({node, ...props}: any) => <ol className="list-decimal pl-4 mb-2 text-[var(--flowbar-text-secondary)]" {...props} />,
+                                    li: ({node, ...props}: any) => <li className="mb-0.5" {...props} />,
+                                    code: ({node, ...props}: any) => <code className="bg-[var(--flowbar-input-bg)] px-1 rounded font-mono text-[10px] text-[var(--flowbar-text-primary)]" {...props} />,
+                                    pre: ({node, ...props}: any) => <pre className="bg-[var(--flowbar-input-bg)] p-2 rounded font-mono text-[10px] overflow-x-auto my-1.5" {...props} />,
+                                  }}
+                                >
+                                  {val === null || val === undefined ? '' : typeof val === 'object' ? JSON.stringify(val, null, 2) : String(val)}
+                                </ReactMarkdown>
+                              </div>
+                            ) : isProviderKey ? (
+                              <select
+                                value={val || 'gemini'}
+                                onChange={(e) => {
+                                  const newProvider = e.target.value;
                                   const defaultModel = PROVIDER_MODELS[newProvider]?.[0] || '';
-                                  updatedNodeData['model'] = defaultModel;
-                                  setNodes((nds) =>
-                                    nds.map((node) => {
-                                      if (node.id === selectedNode.id) {
-                                        return {
-                                          ...node,
-                                          data: {
-                                            ...node.data,
-                                            nodeData: updatedNodeData,
-                                          },
-                                        };
-                                      }
-                                      return node;
-                                    })
-                                  );
-                                } else {
-                                  updateNodeDataField("ai provider", newProvider);
-                                  const defaultModel = PROVIDER_MODELS[newProvider]?.[0] || '';
-                                  updateNodeDataField("model", defaultModel);
-                                }
-                              }}
-                              className="w-full bg-[var(--node-bg-color)] border border-[var(--flowbar-input-border)] rounded-md px-2 py-1 text-2xs font-mono text-[var(--flowbar-text-primary)] focus:outline-none focus:border-[var(--flowbar-input-focus)] cursor-pointer"
-                            >
-                              <option value="gemini">Gemini (Google)</option>
-                              <option value="openai">OpenAI</option>
-                              <option value="groq">Groq</option>
-                            </select>
-                          ) : key === "model" ? (
-                            <input
-                              type="text"
-                              value={val || ''}
-                              onChange={(e) => updateNodeDataField("model", e.target.value)}
-                              placeholder="e.g. gemini-2.5-flash"
-                              className="w-full bg-[var(--node-bg-color)] border border-[var(--flowbar-input-border)] rounded-md px-2 py-1 text-2xs font-mono text-[var(--flowbar-text-primary)] focus:outline-none focus:border-[var(--flowbar-input-focus)]"
-                            />
-                          ) : (
-                            <input
-                              type={key === "api key" ? "password" : "text"}
-                              value={val === null || val === undefined ? '' : typeof val === 'object' ? JSON.stringify(val) : val}
-                              onChange={(e) => updateNodeDataField(key, e.target.value)}
-                              readOnly={key === "output"}
-                              className="w-full bg-[var(--node-bg-color)] border border-[var(--flowbar-input-border)] rounded-md px-2 py-1 text-2xs font-mono text-[var(--flowbar-text-primary)] focus:outline-none focus:border-[var(--flowbar-input-focus)]"
-                            />
-                          )}
-                        </div>
-                      );
-                    })}
+                                  if (key === 'company') {
+                                    const updatedNodeData = { ...currentNodeData };
+                                    delete updatedNodeData['company'];
+                                    updatedNodeData['ai provider'] = newProvider;
+                                    updatedNodeData['model'] = defaultModel;
+                                    setNodes((nds) =>
+                                      nds.map((node) => {
+                                        if (node.id === selectedNode.id) {
+                                          return {
+                                            ...node,
+                                            data: {
+                                              ...node.data,
+                                              nodeData: updatedNodeData,
+                                            },
+                                          };
+                                        }
+                                        return node;
+                                      })
+                                    );
+                                  } else {
+                                    updateNodeDataFields({
+                                      "ai provider": newProvider,
+                                      model: defaultModel,
+                                    });
+                                  }
+                                }}
+                                className="w-full bg-[var(--node-bg-color)] border border-[var(--flowbar-input-border)] rounded-md px-2 py-1 text-2xs font-mono text-[var(--flowbar-text-primary)] focus:outline-none focus:border-[var(--flowbar-input-focus)] cursor-pointer"
+                              >
+                                <option value="gemini">Gemini (Google)</option>
+                                <option value="openai">OpenAI</option>
+                                <option value="groq">Groq</option>
+                              </select>
+                            ) : key === "model" ? (
+                              <select
+                                value={val || ''}
+                                onChange={(e) => updateNodeDataField("model", e.target.value)}
+                                className="w-full bg-[var(--node-bg-color)] border border-[var(--flowbar-input-border)] rounded-md px-2 py-1 text-2xs font-mono text-[var(--flowbar-text-primary)] focus:outline-none focus:border-[var(--flowbar-input-focus)] cursor-pointer"
+                              >
+                                {(PROVIDER_MODELS[currentNodeData["ai provider"] || currentNodeData.provider || currentNodeData.company || "gemini"] || []).map((m) => (
+                                  <option key={m} value={m}>{m}</option>
+                                ))}
+                              </select>
+                            ) : (
+                              <input
+                                type={key === "api key" ? "password" : "text"}
+                                value={val === null || val === undefined ? '' : typeof val === 'object' ? JSON.stringify(val) : val}
+                                onChange={(e) => updateNodeDataField(key, e.target.value)}
+                                readOnly={key === "output"}
+                                className="w-full bg-[var(--node-bg-color)] border border-[var(--flowbar-input-border)] rounded-md px-2 py-1 text-2xs font-mono text-[var(--flowbar-text-primary)] focus:outline-none focus:border-[var(--flowbar-input-focus)]"
+                              />
+                            )}
+                          </div>
+                        );
+                      })
+                    )}
                     
-                    {Object.keys((selectedNode.data.nodeData as Record<string, any>) || {}).filter(k => k !== 'type').length === 0 && (
+                    {Object.keys((selectedNode.data.nodeData as Record<string, any>) || {}).filter(k => k !== 'type').length === 0 && selectedNode.type !== 'conditional' && (
                       <span className="text-[11px] text-[var(--flowbar-text-secondary)] italic pl-1">No custom parameters.</span>
                     )}
                   </div>

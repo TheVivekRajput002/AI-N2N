@@ -48,6 +48,14 @@ app.get('/', (req, res) => {
     })
 })
 
+app.post('/', (req,res) => {
+    console.log(req.body)
+    return res.status(200).json({
+        success: true,
+        message: "Hello"
+    })
+})
+
 app.use('/auth', authRouter)
 app.use('/workspaces', workspaceRouter)
 app.use('/workflows', workflowRouter)

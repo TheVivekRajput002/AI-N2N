@@ -1,5 +1,10 @@
 import prisma from "../config/db";
-import { runLlm } from "./ai";
+import { executeInputStarter } from "./nodes/inputStarter";
+import { executeAiPrompt } from "./nodes/aiPrompt";
+import { executeLogic } from "./nodes/logic";
+import { executeTransform } from "./nodes/transform";
+import { executeIntegration } from "./nodes/integration";
+import { executeOutput } from "./nodes/output";
 import { ExecuteGraphOptions, FlowEdge, FlowNode } from "../types";
 
 // Kahn's Algorithm (Topological Sort).
@@ -52,6 +57,43 @@ export async function executeGraph({
 
     const nodeType = (node.type || "").toLowerCase() || (node.data?.label || "").toLowerCase();
 
+    // Check if this node should be skipped (all parents were skipped)
+    const parentOutputs = nodeInputs[node.id] || {};
+    const parentValues = Object.values(parentOutputs);
+    const isSkipped = parentValues.length > 0 && parentValues.every(val => val === "__SKIPPED_BRANCH__");
+
+    if (isSkipped) {
+      // Create SKIPPED nodeExecution record directly
+      await prisma.nodeExecution.create({
+        data: {
+          nodeId: node.id,
+          nodeType: node.type || node.data?.label || "unknown",
+          executionId: executionId,
+          status: "SKIPPED",
+          input: parentOutputs,
+          startedAt: new Date(),
+          finishedAt: new Date(),
+        },
+      });
+
+      // Propagate SKIPPED status to all targets
+      const targets = adjMap[node.id] || [];
+      for (const targetId of targets) {
+        if (!nodeInputs[targetId]) {
+          nodeInputs[targetId] = {};
+        }
+        nodeInputs[targetId][node.id] = "__SKIPPED_BRANCH__";
+
+        inDegree[targetId]--;
+        if (inDegree[targetId] === 0) {
+          queue.push(targetId);
+        }
+      }
+
+      executedCount++;
+      continue;
+    }
+
     // 1. Create RUNNING nodeExecution record
     const nodeExec = await prisma.nodeExecution.create({
       data: {
@@ -59,70 +101,39 @@ export async function executeGraph({
         nodeType: node.type || node.data?.label || "unknown",
         executionId: executionId,
         status: "RUNNING",
-        input: nodeInputs[node.id] || {},
+        input: parentOutputs,
         startedAt: new Date(),
       },
     });
 
     try {
       // 2. Resolve inputs from parent nodes
-      const parentOutputs = nodeInputs[node.id] || {};
       let resolvedInput: any = "";
-      const parentValues = Object.values(parentOutputs);
+      const activeParentValues = parentValues.filter(
+        (val) => val !== undefined && val !== null && val !== "__SKIPPED_BRANCH__"
+      );
 
-      if (parentValues.length === 1) {
-        resolvedInput = parentValues[0];
-      } else if (parentValues.length > 1) {
-        resolvedInput = parentValues; // Pass array if multiple incoming branches
+      if (activeParentValues.length === 1) {
+        resolvedInput = activeParentValues[0];
+      } else if (activeParentValues.length > 1) {
+        resolvedInput = activeParentValues; // Pass array if multiple incoming branches
       }
 
       // 3. Execute node logic
       let output: any = "";
 
       if (nodeType === "input" || nodeType === "trigger") {
-        // Input or Trigger node logic
-        if (typeof globalInput === "string" && globalInput) {
-          output = globalInput;
-        } else if (globalInput && typeof globalInput === "object") {
-          output = globalInput[node.id] ?? globalInput.input ?? node.data?.nodeData?.input ?? "";
-        } else {
-          output = node.data?.nodeData?.input ?? "";
-        }
+        output = await executeInputStarter(node, resolvedInput, globalInput);
       } else if (nodeType === "llm") {
-        // LLM Node logic
-        const provider =
-          node.data?.nodeData?.["ai provider"] ||
-          node.data?.nodeData?.provider ||
-          node.data?.nodeData?.company ||
-          "gemini";
-
-        const apiKey =
-          node.data?.nodeData?.["api key"] ||
-          node.data?.nodeData?.apiKey ||
-          node.data?.nodeData?.api_key ||
-          (provider === "openai" ? process.env.OPENAI_API_KEY : provider === "groq" ? process.env.GROQ_API_KEY : process.env.GEMINI_API_KEY);
-
-        if (!apiKey) {
-          throw new Error(`${provider.toUpperCase()} API Key is missing for LLM Node (ID: ${node.id}).`);
-        }
-
-        let prompt = resolvedInput;
-        if (!prompt) {
-          throw new Error(`LLM Node (ID: ${node.id}) has no incoming prompt value from previous node.`);
-        }
-
-        if (typeof prompt !== "string") {
-          prompt = typeof prompt === "object" ? JSON.stringify(prompt) : String(prompt);
-        }
-
-        const systemPrompt =
-          node.data?.nodeData?.["system prompt"] ||
-          node.data?.nodeData?.systemPrompt ||
-          node.data?.nodeData?.system_prompt ||
-          undefined;
-
-        const model = node.data?.nodeData?.model || (provider === "openai" ? "gpt-4o" : provider === "groq" ? "llama-3.1-8b-instant" : "gemini-2.5-flash");
-        output = await runLlm({ prompt, apiKey, model, provider, systemPrompt });
+        output = await executeAiPrompt(node, resolvedInput);
+      } else if (nodeType === "conditional" || nodeType === "switch" || nodeType === "loop") {
+        output = await executeLogic(node, resolvedInput, nodeOutputs, nodes);
+      } else if (nodeType === "delay") {
+        output = await executeTransform(node, resolvedInput);
+      } else if (nodeType === "http_get" || nodeType === "http_post") {
+        output = await executeIntegration(node, resolvedInput);
+      } else if (nodeType === "output" || nodeType === "email") {
+        output = await executeOutput(node, resolvedInput);
       } else {
         // Pass-through node behavior for non-functional nodes
         output = resolvedInput || node.data?.nodeData || {};
@@ -147,7 +158,38 @@ export async function executeGraph({
         if (!nodeInputs[targetId]) {
           nodeInputs[targetId] = {};
         }
-        nodeInputs[targetId][node.id] = output;
+
+        let propagatedValue = output;
+        const edge = edges.find((e) => e.source === node.id && e.target === targetId);
+
+        if (nodeType === "conditional" && output && typeof output === "object" && "conditionMet" in output) {
+          const isTrue = !!output.conditionMet;
+          const handle = edge?.sourceHandle || "true";
+          if ((isTrue && handle === "false") || (!isTrue && handle === "true")) {
+            propagatedValue = "__SKIPPED_BRANCH__";
+          } else {
+            propagatedValue = output.value;
+          }
+        } else if (nodeType === "switch" && output && typeof output === "object" && "matchedCase" in output) {
+          const matchedCase = output.matchedCase || "default";
+          const handle = edge?.sourceHandle || "default";
+          if (handle !== matchedCase) {
+            propagatedValue = "__SKIPPED_BRANCH__";
+          } else {
+            propagatedValue = output.value;
+          }
+        } else if (nodeType === "loop" && output && typeof output === "object" && ("body" in output || "done" in output)) {
+          const handle = edge?.sourceHandle || "done";
+          if (handle === "body") {
+            propagatedValue = output.body;
+          } else if (handle === "done") {
+            propagatedValue = output.done;
+          } else {
+            propagatedValue = output.value;
+          }
+        }
+
+        nodeInputs[targetId][node.id] = propagatedValue;
 
         inDegree[targetId]--;
         if (inDegree[targetId] === 0) {
