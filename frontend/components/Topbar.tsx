@@ -19,6 +19,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { apiGet, apiPost } from '@/utils/api';
 import Link from 'next/link';
 import { useToast } from '@/hooks/useToast';
+import { useExecutionStore } from '@/utils/store';
 
 const Topbar = ({
   onOpenFolder = () => {},
@@ -96,6 +97,7 @@ const Topbar = ({
           status: string;
           error?: string | null;
           versionId: string;
+          totalDuration?: number;
           nodeExecutions: Array<{
             nodeId: string;
             status: string;
@@ -107,6 +109,12 @@ const Topbar = ({
       }>(`/executions/workflow/${workflowId}`, {});
 
       if (response.execution) {
+        // Update execution store with execution details
+        useExecutionStore.getState().setExecutionDetails(
+          response.execution.totalDuration ?? null,
+          response.execution.status ?? null
+        );
+
         const nodeExecutions = response.execution.nodeExecutions;
         const currentFlow = reactFlowInstance.toObject();
 

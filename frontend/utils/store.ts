@@ -199,3 +199,15 @@ export const useWorkflow = create<WorkflowSetState>((set) => ({
         set(s => ({ workflows: s.workflows.filter(w => w.id !== id) }))
     }
 }))
+
+export interface ExecutionState {
+    lastExecutionDuration: number | null;
+    lastExecutionStatus: string | null;
+    setExecutionDetails: (duration: number | null, status: string | null) => void;
+}
+
+export const useExecutionStore = create<ExecutionState>((set) => ({
+    lastExecutionDuration: null,
+    lastExecutionStatus: null,
+    setExecutionDetails: (duration, status) => set({ lastExecutionDuration: duration, lastExecutionStatus: status }),
+}));

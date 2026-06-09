@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { type Node } from '@xyflow/react';
 import { apiGet } from '@/utils/api';
+import { useExecutionStore } from '@/utils/store';
 import {
   FiInfo,
   FiList,
@@ -58,6 +59,7 @@ export default function FlowBar({ nodes, setNodes, onSave }: FlowBarProps) {
   const selectedNode = nodes.find((n) => n.selected);
 
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const { lastExecutionDuration, lastExecutionStatus } = useExecutionStore();
 
   const formatNodeSlug = (label: string) => {
     return (label || '').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
@@ -855,37 +857,32 @@ const PROVIDER_MODELS: Record<string, string[]> = {
                       v1.{workflowDetails.versionNumber}.0
                     </span>
                   </div>
-                </div>
-              )}
-            </div>
-
-            {/* Runtime Settings Section (collapsible) */}
-            <div className="ios-flowbar-section">
-              <div 
-                className="ios-flowbar-section-header cursor-pointer"
-                onClick={() => toggleSection('runtime')}
-              >
-                <span className="ios-flowbar-section-title">Runtime Settings</span>
-                <FiMoreHorizontal size={14} className="text-[var(--flowbar-text-secondary)]" />
-              </div>
-
-              {!collapsedSections.runtime && (
-                <div className="flex flex-col gap-3.5 mt-1.5">
-                  <div className="flex items-center justify-between font-sans text-xs">
-                    <span className="text-[var(--flowbar-text-secondary)]">Auto-run on trigger</span>
-                    <div
-                     
-                      className={`px-3 py-1 font-bold text-[10.5px] rounded-lg transition-all border ${runtimeSettings.autoRun ? 'bg-[hsla(var(--ios-orange),0.12)] border-[hsla(var(--ios-orange),0.2)] text-[hsl(var(--ios-orange))]' : 'bg-[var(--flowbar-btn-secondary)] border-[var(--flowbar-input-border)] text-[var(--flowbar-text-secondary)]'}`}
-                    >
-                      {"Running"}
+                  {lastExecutionStatus && (
+                    <div className="ios-flowbar-row">
+                      <span className="ios-flowbar-row-label">Last Status</span>
+                      <span className={`ios-flowbar-row-value font-bold text-[10px] uppercase px-1.5 py-0.5 rounded ${
+                        lastExecutionStatus === 'SUCCESS'
+                          ? 'bg-[hsla(var(--ios-green),0.12)] text-[hsl(var(--ios-green))]'
+                          : 'bg-red-500/10 text-red-500'
+                      }`}>
+                        {lastExecutionStatus}
+                      </span>
                     </div>
-                  </div>
-                 
-                
+                  )}
+                  {lastExecutionDuration !== null && (
+                    <div className="ios-flowbar-row">
+                      <span className="ios-flowbar-row-label">Duration</span>
+                      <span className="ios-flowbar-row-value font-mono text-[11px] bg-[hsla(var(--ios-green),0.12)] text-[hsl(var(--ios-green))] border border-[hsla(var(--ios-green),0.2)] px-1.5 py-0.5 rounded flex items-center gap-1">
+                        <FiClock size={10} />
+                        {lastExecutionDuration >= 1000
+                          ? `${(lastExecutionDuration / 1000).toFixed(2)}s`
+                          : `${lastExecutionDuration}ms`}
+                      </span>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
-
          
           </>
         )}

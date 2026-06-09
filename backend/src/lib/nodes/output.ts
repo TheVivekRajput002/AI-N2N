@@ -11,7 +11,11 @@ export async function executeOutput(
 
   if (nodeType === "output") {
     const outputTemplate = node.data?.nodeData?.output;
-    if (outputTemplate && typeof outputTemplate === "string") {
+    if (
+      outputTemplate &&
+      typeof outputTemplate === "string" &&
+      (/\{\{input\}\}/gi.test(outputTemplate) || /\{\{value\}\}/gi.test(outputTemplate))
+    ) {
       const placeholderVal = typeof resolvedInput === "object" ? JSON.stringify(resolvedInput) : String(resolvedInput);
       return outputTemplate.replace(/\{\{input\}\}/gi, placeholderVal).replace(/\{\{value\}\}/gi, placeholderVal);
     }
