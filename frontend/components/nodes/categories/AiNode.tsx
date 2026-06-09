@@ -63,23 +63,21 @@ function AiNode({ data, selected, type }: { data: { label: string; description?:
       </div>
 
       <div className="p-5 flex flex-col gap-3">
-        {/* API Key field */}
-        {/* <div className="flex flex-col gap-1">
-          <div className="flex flex-col items-left gap-1.5">
-            <label className="text-2xs text-[var(--text-muted-color)] font-sans text-left">
-              API Key
-            </label>
+        {/* Model & Provider Info */}
+        <div className="flex flex-col gap-1.5 text-2xs font-sans text-left text-[var(--text-muted-color)] bg-[var(--input-bg-color)] border border-[var(--input-border-color)] rounded-lg p-2.5">
+          <div className="flex justify-between items-center">
+            <span>Provider</span>
+            <span className="font-semibold font-mono text-xxs text-[var(--input-text-color)] uppercase">
+              {data.nodeData?.['ai provider'] || data.nodeData?.provider || data.nodeData?.company || 'gemini'}
+            </span>
           </div>
-          <div className="relative">
-            <input
-              type="text"
-              readOnly
-              value={data.nodeData?.['api key'] ?? ''}
-              placeholder="Gemini API Key..."
-              className="w-full pointer-events-none h-8 bg-[var(--input-bg-color)] border border-[var(--input-border-color)] rounded-lg px-3 font-mono text-xxs text-[var(--input-text-color)] focus:outline-none focus:border-[var(--input-focus-border-color)] focus:bg-[var(--input-focus-bg-color)] transition-all"
-            />
+          <div className="flex justify-between items-center">
+            <span>Model</span>
+            <span className="font-semibold font-mono text-xxs text-[var(--input-text-color)]">
+              {data.nodeData?.model || 'gemini-2.5-flash'}
+            </span>
           </div>
-        </div> */}
+        </div>
 
         {/* Output field */}
         <div className="flex flex-col gap-1">

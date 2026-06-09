@@ -3,7 +3,7 @@ import { runLlm } from "./ai";
 import { ExecuteGraphOptions, FlowEdge, FlowNode } from "../types";
 
 // Kahn's Algorithm (Topological Sort).
- 
+
 export async function executeGraph({
   nodes,
   edges,
@@ -13,7 +13,7 @@ export async function executeGraph({
   const inDegree: Record<string, number> = {};
   const adjMap: Record<string, string[]> = {};
   const nodeOutputs: Record<string, any> = {};
-  
+
   // nodeInputs collects input from parents: targetNodeId -> { parentNodeId: output }
   const nodeInputs: Record<string, Record<string, any>> = {};
 
@@ -90,14 +90,20 @@ export async function executeGraph({
         }
       } else if (nodeType === "llm") {
         // LLM Node logic
+        const provider =
+          node.data?.nodeData?.["ai provider"] ||
+          node.data?.nodeData?.provider ||
+          node.data?.nodeData?.company ||
+          "gemini";
+
         const apiKey =
           node.data?.nodeData?.["api key"] ||
           node.data?.nodeData?.apiKey ||
           node.data?.nodeData?.api_key ||
-          process.env.GEMINI_API_KEY;
+          (provider === "openai" ? process.env.OPENAI_API_KEY : provider === "groq" ? process.env.GROQ_API_KEY : process.env.GEMINI_API_KEY);
 
         if (!apiKey) {
-          throw new Error(`Gemini API Key is missing for LLM Node (ID: ${node.id}).`);
+          throw new Error(`${provider.toUpperCase()} API Key is missing for LLM Node (ID: ${node.id}).`);
         }
 
         let prompt = resolvedInput;
@@ -109,8 +115,14 @@ export async function executeGraph({
           prompt = typeof prompt === "object" ? JSON.stringify(prompt) : String(prompt);
         }
 
-        const model = node.data?.nodeData?.model || "gemini-2.5-flash";
-        output = await runLlm({ prompt, apiKey, model });
+        const systemPrompt =
+          node.data?.nodeData?.["system prompt"] ||
+          node.data?.nodeData?.systemPrompt ||
+          node.data?.nodeData?.system_prompt ||
+          undefined;
+
+        const model = node.data?.nodeData?.model || (provider === "openai" ? "gpt-4o" : provider === "groq" ? "llama-3.1-8b-instant" : "gemini-2.5-flash");
+        output = await runLlm({ prompt, apiKey, model, provider, systemPrompt });
       } else {
         // Pass-through node behavior for non-functional nodes
         output = resolvedInput || node.data?.nodeData || {};
@@ -144,7 +156,7 @@ export async function executeGraph({
       }
     } catch (error: any) {
       const errorMsg = error?.message || String(error);
-      
+
       // Update nodeExecution record on Failure
       await prisma.nodeExecution.update({
         where: { id: nodeExec.id },

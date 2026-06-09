@@ -270,6 +270,13 @@ export default function FlowBar({ nodes, setNodes, onSave }: FlowBarProps) {
     Notification: <FiSend />,
   };
 
+const PROVIDER_MODELS: Record<string, string[]> = {
+  gemini: ['gemini-2.5-flash', 'gemini-2.5-pro', 'gemini-1.5-flash', 'gemini-1.5-pro'],
+  openai: ['gpt-4o', 'gpt-4o-mini', 'gpt-4-turbo', 'gpt-3.5-turbo'],
+  groq: ['llama-3.1-8b-instant', 'llama-3.3-70b-versatile', 'mixtral-8x7b-32768', 'gemma2-9b-it'],
+};
+
+
   // Date formatter helper
   const formatDateString = (dateStr: string) => {
     if (!dateStr) return '—';
@@ -407,44 +414,92 @@ export default function FlowBar({ nodes, setNodes, onSave }: FlowBarProps) {
                   {/* List existing custom keys inside nodeData */}
                   <div className="flex flex-col gap-2.5">
                     <div className="ios-flowbar-label pl-0.5">Parameters</div>
-                    {Object.entries((selectedNode.data.nodeData as Record<string, any>) || {}).map(([key, val]) => (
-                      // Exclude the 'type' field if rendered above
-                      key !== 'type' && (
+                    {Object.entries((selectedNode.data.nodeData as Record<string, any>) || {}).map(([key, val]) => {
+                      if (key === 'type') return null;
+                      const isProviderKey = key === "ai provider" || key === "company";
+                      const currentNodeData = (selectedNode.data as any).nodeData || {};
+                      return (
                         <div key={key} className="flex flex-col gap-1 bg-[var(--flowbar-input-bg)] p-2 rounded-lg border border-[var(--flowbar-input-border)]">
                           <div className="flex items-center justify-between">
-                            <span className="font-mono text-2xs font-semibold text-[var(--flowbar-text-secondary)]">{key}</span>
+                            <span className="font-mono text-2xs font-semibold text-[var(--flowbar-text-secondary)]">
+                              {isProviderKey ? "ai provider" : key}
+                            </span>
                           </div>
-                           {key === "output" ? (
-                             <div className="w-full bg-[var(--node-bg-color)] border border-[var(--flowbar-input-border)] rounded-md px-3 py-2.5 text-[11.5px] font-sans leading-relaxed text-[var(--flowbar-text-primary)] overflow-y-auto max-h-[300px] min-h-[90px]">
-                               <ReactMarkdown
-                                 components={{
-                                   h1: ({node, ...props}: any) => <h1 className="text-sm font-bold mt-2.5 mb-1.5 border-b border-[var(--flowbar-border)] pb-0.5 text-[var(--flowbar-text-primary)]" {...props} />,
-                                   h2: ({node, ...props}: any) => <h2 className="text-xs font-bold mt-2 mb-1 text-[var(--flowbar-text-primary)]" {...props} />,
-                                   h3: ({node, ...props}: any) => <h3 className="text-[11px] font-bold mt-1.5 mb-1 text-[var(--flowbar-text-primary)]" {...props} />,
-                                   p: ({node, ...props}: any) => <p className="mb-1.5 last:mb-0 text-[var(--flowbar-text-secondary)]" {...props} />,
-                                   ul: ({node, ...props}: any) => <ul className="list-disc pl-4 mb-2 text-[var(--flowbar-text-secondary)]" {...props} />,
-                                   ol: ({node, ...props}: any) => <ol className="list-decimal pl-4 mb-2 text-[var(--flowbar-text-secondary)]" {...props} />,
-                                   li: ({node, ...props}: any) => <li className="mb-0.5" {...props} />,
-                                   code: ({node, ...props}: any) => <code className="bg-[var(--flowbar-input-bg)] px-1 rounded font-mono text-[10px] text-[var(--flowbar-text-primary)]" {...props} />,
-                                   pre: ({node, ...props}: any) => <pre className="bg-[var(--flowbar-input-bg)] p-2 rounded font-mono text-[10px] overflow-x-auto my-1.5" {...props} />,
-                                 }}
-                               >
-                                 {val === null || val === undefined ? '' : typeof val === 'object' ? JSON.stringify(val, null, 2) : String(val)}
-                               </ReactMarkdown>
-                             </div>
-                           ) : (
-                             <input
-                               type={key === "api key" ? "password" : "text"}
-                               value={val === null || val === undefined ? '' : typeof val === 'object' ? JSON.stringify(val) : val}
-                               onChange={(e) => updateNodeDataField(key, e.target.value)}
-                               readOnly={key === "output"}
-
-                               className="w-full bg-[var(--node-bg-color)] border border-[var(--flowbar-input-border)] rounded-md px-2 py-1 text-2xs font-mono text-[var(--flowbar-text-primary)] focus:outline-none focus:border-[var(--flowbar-input-focus)]"
-                             />
-                           )}
+                          {key === "output" ? (
+                            <div className="w-full bg-[var(--node-bg-color)] border border-[var(--flowbar-input-border)] rounded-md px-3 py-2.5 text-[11.5px] font-sans leading-relaxed text-[var(--flowbar-text-primary)] overflow-y-auto max-h-[300px] min-h-[90px]">
+                              <ReactMarkdown
+                                components={{
+                                  h1: ({node, ...props}: any) => <h1 className="text-sm font-bold mt-2.5 mb-1.5 border-b border-[var(--flowbar-border)] pb-0.5 text-[var(--flowbar-text-primary)]" {...props} />,
+                                  h2: ({node, ...props}: any) => <h2 className="text-xs font-bold mt-2 mb-1 text-[var(--flowbar-text-primary)]" {...props} />,
+                                  h3: ({node, ...props}: any) => <h3 className="text-[11px] font-bold mt-1.5 mb-1 text-[var(--flowbar-text-primary)]" {...props} />,
+                                  p: ({node, ...props}: any) => <p className="mb-1.5 last:mb-0 text-[var(--flowbar-text-secondary)]" {...props} />,
+                                  ul: ({node, ...props}: any) => <ul className="list-disc pl-4 mb-2 text-[var(--flowbar-text-secondary)]" {...props} />,
+                                  ol: ({node, ...props}: any) => <ol className="list-decimal pl-4 mb-2 text-[var(--flowbar-text-secondary)]" {...props} />,
+                                  li: ({node, ...props}: any) => <li className="mb-0.5" {...props} />,
+                                  code: ({node, ...props}: any) => <code className="bg-[var(--flowbar-input-bg)] px-1 rounded font-mono text-[10px] text-[var(--flowbar-text-primary)]" {...props} />,
+                                  pre: ({node, ...props}: any) => <pre className="bg-[var(--flowbar-input-bg)] p-2 rounded font-mono text-[10px] overflow-x-auto my-1.5" {...props} />,
+                                }}
+                              >
+                                {val === null || val === undefined ? '' : typeof val === 'object' ? JSON.stringify(val, null, 2) : String(val)}
+                              </ReactMarkdown>
+                            </div>
+                          ) : isProviderKey ? (
+                            <select
+                              value={val || 'gemini'}
+                              onChange={(e) => {
+                                const newProvider = e.target.value;
+                                if (key === 'company') {
+                                  const updatedNodeData = { ...currentNodeData };
+                                  delete updatedNodeData['company'];
+                                  updatedNodeData['ai provider'] = newProvider;
+                                  const defaultModel = PROVIDER_MODELS[newProvider]?.[0] || '';
+                                  updatedNodeData['model'] = defaultModel;
+                                  setNodes((nds) =>
+                                    nds.map((node) => {
+                                      if (node.id === selectedNode.id) {
+                                        return {
+                                          ...node,
+                                          data: {
+                                            ...node.data,
+                                            nodeData: updatedNodeData,
+                                          },
+                                        };
+                                      }
+                                      return node;
+                                    })
+                                  );
+                                } else {
+                                  updateNodeDataField("ai provider", newProvider);
+                                  const defaultModel = PROVIDER_MODELS[newProvider]?.[0] || '';
+                                  updateNodeDataField("model", defaultModel);
+                                }
+                              }}
+                              className="w-full bg-[var(--node-bg-color)] border border-[var(--flowbar-input-border)] rounded-md px-2 py-1 text-2xs font-mono text-[var(--flowbar-text-primary)] focus:outline-none focus:border-[var(--flowbar-input-focus)] cursor-pointer"
+                            >
+                              <option value="gemini">Gemini (Google)</option>
+                              <option value="openai">OpenAI</option>
+                              <option value="groq">Groq</option>
+                            </select>
+                          ) : key === "model" ? (
+                            <input
+                              type="text"
+                              value={val || ''}
+                              onChange={(e) => updateNodeDataField("model", e.target.value)}
+                              placeholder="e.g. gemini-2.5-flash"
+                              className="w-full bg-[var(--node-bg-color)] border border-[var(--flowbar-input-border)] rounded-md px-2 py-1 text-2xs font-mono text-[var(--flowbar-text-primary)] focus:outline-none focus:border-[var(--flowbar-input-focus)]"
+                            />
+                          ) : (
+                            <input
+                              type={key === "api key" ? "password" : "text"}
+                              value={val === null || val === undefined ? '' : typeof val === 'object' ? JSON.stringify(val) : val}
+                              onChange={(e) => updateNodeDataField(key, e.target.value)}
+                              readOnly={key === "output"}
+                              className="w-full bg-[var(--node-bg-color)] border border-[var(--flowbar-input-border)] rounded-md px-2 py-1 text-2xs font-mono text-[var(--flowbar-text-primary)] focus:outline-none focus:border-[var(--flowbar-input-focus)]"
+                            />
+                          )}
                         </div>
-                      )
-                    ))}
+                      );
+                    })}
                     
                     {Object.keys((selectedNode.data.nodeData as Record<string, any>) || {}).filter(k => k !== 'type').length === 0 && (
                       <span className="text-[11px] text-[var(--flowbar-text-secondary)] italic pl-1">No custom parameters.</span>

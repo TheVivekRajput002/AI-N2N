@@ -52,9 +52,12 @@ export const AllNodes: NodeConfigItem[] = [
       description: 'Execute LLM prompt',
       nodeData: {
         "api key": "",
+        "ai provider": "gemini",
+        model: "gemini-2.5-flash",
         output: "",
         "system prompt": "answer in less than 100 words"
       }
+
     },
     icon: <IoHardwareChipOutline className="w-5 h-5 text-[var(--nodes-item-icon-color)]" />
   },
