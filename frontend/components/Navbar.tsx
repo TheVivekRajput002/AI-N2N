@@ -81,6 +81,7 @@ export const Navbar = () => {
 
                     return (
                         <Link
+                            prefetch={item.id === 'flow'}
                             href={item.href}
                             key={item.id}
                             className={`ios-nav-item group ${isActive ? 'active' : ''}`}

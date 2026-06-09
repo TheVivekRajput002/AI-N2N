@@ -6,3 +6,26 @@ export interface User {
     email: string; 
 }
 
+export interface FlowNode {
+  id: string;
+  type?: string;
+  data: {
+    label: string;
+    description?: string;
+    nodeData?: Record<string, any>;
+  };
+}
+
+export interface FlowEdge {
+  id: string;
+  source: string;
+  target: string;
+}
+
+export interface ExecuteGraphOptions {
+  nodes: FlowNode[];
+  edges: FlowEdge[];
+  executionId: string;
+  globalInput?: any;
+}
+

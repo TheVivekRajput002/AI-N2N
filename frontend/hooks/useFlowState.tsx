@@ -57,7 +57,6 @@ export function useFlowState() {
       })
 
       console.log(response)
-      localStorage.setItem('savedFlow', jsonFlow)
       localStorage.setItem(`savedFlow_${wId}`, jsonFlow)
       if (!options?.silent) {
         showToast('Saved successfully to cloud!', 'success')
@@ -99,7 +98,7 @@ export function useFlowState() {
     // Fallback to localStorage if backend didn't return any nodes
     if (!loadedFromBackend) {
       try {
-        const localFlowStr = localStorage.getItem(`savedFlow_${workflowId}`) || localStorage.getItem('savedFlow')
+        const localFlowStr = localStorage.getItem(`savedFlow_${workflowId}`)
         if (localFlowStr) {
           const flow = JSON.parse(localFlowStr)
           if (flow.nodes) setNodes(flow.nodes)

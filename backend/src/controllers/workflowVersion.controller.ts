@@ -47,6 +47,43 @@ export async function createWorkflowVersion(req: Request, res: Response) {
 
 }
 
+export async function updateWorkflowVersion(req: Request, res: Response) {
+
+    try {
+
+        const { graph, versionId } = req.body as {graph: any, versionId: string}
+        if(!graph || !versionId){
+            return res.status(404).json({
+                success: false,
+                message: "all fields are required"
+            })
+        }
+
+        const workflowVersion = await prisma.workflowVersion.update({
+            where: {
+                id: versionId,
+            },
+            data:{
+                graph: graph
+            }
+        })
+
+        res.status(201).json({
+            success: true,
+            workflowVersion,
+        })
+
+    } catch (error) {
+        res.status(400).json({
+            success: false,
+            message: error
+        })
+        console.log(error)
+
+    }
+
+}
+
 export async function getWorkflowVersion(req: Request, res: Response) {
 
     try {
@@ -99,4 +136,6 @@ export async function getWorkflowVersion(req: Request, res: Response) {
     }
 
 }
+
+
 

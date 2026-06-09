@@ -95,6 +95,7 @@ const Topbar = ({
         execution?: {
           status: string;
           error?: string | null;
+          versionId: string;
           nodeExecutions: Array<{
             nodeId: string;
             status: string;
@@ -126,6 +127,12 @@ const Topbar = ({
             return node;
           })
         );
+
+        await apiPost(`/workflow-version/update`, {
+          graph: reactFlowInstance.toObject(),
+          versionId: response.execution.versionId
+        });
+        
       }
 
       if (response.success) {

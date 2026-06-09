@@ -180,6 +180,7 @@ function CustomNode({ data, selected, type }: { data: { label: string; descripti
               <input
                 type="text"
                 readOnly
+                // disabled
                 value={
                   type === 'llm'
                     ? (typeof data.nodeData?.output === 'object' && data.nodeData?.output !== null
@@ -187,7 +188,7 @@ function CustomNode({ data, selected, type }: { data: { label: string; descripti
                         : (data.nodeData?.output ?? ''))
                     : (data.nodeData?.input ?? '')
                 }
-                className="w-full h-8 bg-[var(--input-bg-color)] border border-[var(--input-border-color)] rounded-lg px-3 font-mono text-xxs text-[var(--input-text-color)] focus:outline-none focus:border-[var(--input-focus-border-color)] focus:bg-[var(--input-focus-bg-color)] transition-all"
+                className="w-full pointer-events-none h-8 bg-[var(--input-bg-color)] border border-[var(--input-border-color)] rounded-lg px-3 font-mono text-xxs text-[var(--input-text-color)] focus:outline-none focus:border-[var(--input-focus-border-color)] focus:bg-[var(--input-focus-bg-color)] transition-all"
               />
             </div>
           }

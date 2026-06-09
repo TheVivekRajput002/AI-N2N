@@ -1,33 +1,9 @@
 import prisma from "../config/db";
 import { runLlm } from "./ai";
+import { ExecuteGraphOptions, FlowEdge, FlowNode } from "../types";
 
-interface FlowNode {
-  id: string;
-  type?: string;
-  data: {
-    label: string;
-    description?: string;
-    nodeData?: Record<string, any>;
-  };
-}
-
-interface FlowEdge {
-  id: string;
-  source: string;
-  target: string;
-}
-
-interface ExecuteGraphOptions {
-  nodes: FlowNode[];
-  edges: FlowEdge[];
-  executionId: string;
-  globalInput?: any;
-}
-
-/**
- * Executes a workflow graph using Kahn's Algorithm (Topological Sort).
- * Processes nodes sequentially, handling parent-to-child data forwarding and logging to Prisma.
- */
+// Kahn's Algorithm (Topological Sort).
+ 
 export async function executeGraph({
   nodes,
   edges,

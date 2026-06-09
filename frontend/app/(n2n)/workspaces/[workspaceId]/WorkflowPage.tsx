@@ -219,6 +219,7 @@ const WorkflowPage = ({ initialWorkflows }: { initialWorkflows: WorkflowType[] }
             {filteredWorkflows.map((workflow) => (
               <Link
                 key={workflow.id}
+                prefetch={true}
                 href={`/workspaces/${workspaceId}/${workflow.id}`}
                 className="group relative flex flex-col justify-between p-6 bg-[var(--ios-card-bg)] border border-[var(--ios-card-border)] rounded-3xl backdrop-blur-md shadow-[var(--ios-card-shadow)] hover:-translate-y-1 hover:shadow-lg active:scale-[0.98] transition-all duration-300 select-none overflow-hidden"
               >
