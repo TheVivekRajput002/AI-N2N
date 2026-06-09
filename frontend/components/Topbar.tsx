@@ -159,7 +159,7 @@ const Topbar = ({
           </button>
 
           <button
-            onClick={handleSave}
+            onClick={() => handleSave()}
             disabled={isRunning}
             className="ios-topbar-btn"
             title="Save workflow"
@@ -206,27 +206,7 @@ const Topbar = ({
 
       {/* ================= Right: Core Canvas / Share / Deploy Actions ================= */}
       <div className="flex items-center gap-2">
-        {/* Share & Branch Pill Container */}
-        <div className="ios-topbar-pill">
-          {/* Share Button (Blue Circle) */}
-          <button
-            onClick={onShare}
-            className="ios-topbar-share-btn"
-            title="Share workflow"
-          >
-            <FiShare2 size={12.5} />
-          </button>
-
-          {/* Deploy / Branch Details Button */}
-          <button
-            onClick={onDeploy}
-            className="w-6 h-6 flex items-center justify-center rounded-md text-[var(--ios-topbar-icon-color)] hover:text-[var(--ios-topbar-icon)] transition-colors active:scale-95"
-            title="Workflow branches & deployments"
-          >
-            <FiGitBranch size={14.5} />
-          </button>
-        </div>
-
+      
         {/* More Actions Menu */}
         <button
           onClick={onMoreActions}

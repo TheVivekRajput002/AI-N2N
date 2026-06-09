@@ -42,7 +42,6 @@ export function useFlowState() {
     setNodes((nds) => [...nds, newNode])
   }, [setNodes])
 
-  // save to API
   const saveFlow = useCallback(async (
     reactFlowInstance: ReactFlowInstance, 
     wId: string, 

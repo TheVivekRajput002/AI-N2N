@@ -32,6 +32,22 @@ import { IoHardwareChipOutline } from 'react-icons/io5';
 import { RxText } from 'react-icons/rx';
 import ReactMarkdown from 'react-markdown';
 
+// Custom sidebar toggle icon that matches the design (split panel icon)
+const SidebarToggleIcon = ({ className = "w-[18px] h-[18px]" }) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <rect x="3" y="3" width="18" height="18" rx="2" />
+    <path d="M15 3v18" />
+  </svg>
+);
+
 interface FlowBarProps {
   nodes: Node[];
   setNodes: React.Dispatch<React.SetStateAction<Node[]>>;
@@ -41,6 +57,15 @@ interface FlowBarProps {
 export default function FlowBar({ nodes, setNodes, onSave }: FlowBarProps) {
   const { workflowId } = useParams() as { workflowId: string };
   const selectedNode = nodes.find((n) => n.selected);
+
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  // Auto-expand when a node is selected
+  useEffect(() => {
+    if (selectedNode) {
+      setIsCollapsed(false);
+    }
+  }, [selectedNode]);
 
   // Workflow states
   const [workflowDetails, setWorkflowDetails] = useState<{
@@ -252,6 +277,18 @@ export default function FlowBar({ nodes, setNodes, onSave }: FlowBarProps) {
     }
   };
 
+  if (isCollapsed) {
+    return (
+      <button
+        onClick={() => setIsCollapsed(false)}
+        className="absolute right-4 top-16 w-11 h-11 bg-[var(--flowbar-bg)] border border-[var(--flowbar-border)] rounded-xl shadow-lg hover:shadow-xl backdrop-blur-md -webkit-backdrop-filter-md flex items-center justify-center text-[var(--flowbar-text-primary)] hover:text-[var(--flowbar-text-primary)] hover:bg-[var(--flowbar-btn-secondary-hover)] transition-all duration-200 z-45 cursor-pointer"
+        title="Open Flow Details"
+      >
+        <SidebarToggleIcon />
+      </button>
+    );
+  }
+
   return (
     <div className="absolute right-4 top-16 bottom-4 w-[310px] bg-[var(--flowbar-bg)] border border-[var(--flowbar-border)] rounded-2xl shadow-xl backdrop-blur-md -webkit-backdrop-filter-md flex flex-col overflow-hidden z-45 select-none transition-all duration-300">
       
@@ -279,18 +316,27 @@ export default function FlowBar({ nodes, setNodes, onSave }: FlowBarProps) {
           )}
         </div>
         
-        {selectedNode && (
+        <div className="flex items-center gap-1.5">
+          {selectedNode && (
+            <button
+              onClick={() => {
+                // Deselect the selected node to return to pane view
+                setNodes((nds) => nds.map((n) => ({ ...n, selected: false })));
+              }}
+              className="p-1.5 rounded-lg text-[var(--flowbar-text-secondary)] hover:text-[var(--flowbar-text-primary)] hover:bg-[var(--flowbar-btn-secondary-hover)] transition-colors cursor-pointer flex items-center justify-center"
+              title="Deselect Node"
+            >
+              <FiX size={16} />
+            </button>
+          )}
           <button
-            onClick={() => {
-              // Deselect the selected node to return to pane view
-              setNodes((nds) => nds.map((n) => ({ ...n, selected: false })));
-            }}
-            className="p-1 rounded-md text-[var(--flowbar-text-secondary)] hover:text-[var(--flowbar-text-primary)] transition-colors"
-            title="Deselect Node"
+            onClick={() => setIsCollapsed(true)}
+            className="p-1.5 rounded-lg text-[var(--flowbar-text-secondary)] hover:text-[var(--flowbar-text-primary)] hover:bg-[var(--flowbar-btn-secondary-hover)] active:bg-[var(--flowbar-btn-secondary-hover)] transition-colors cursor-pointer flex items-center justify-center"
+            title="Collapse sidebar"
           >
-            <FiX size={16} />
+            <SidebarToggleIcon />
           </button>
-        )}
+        </div>
       </div>
 
       {/* Main Content Area */}

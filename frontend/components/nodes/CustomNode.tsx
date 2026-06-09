@@ -29,19 +29,19 @@ const handleStyle = {
   cursor: 'crosshair'
 };
 
-function CustomNode({ data, selected }: { data: { label: string; description?: string, nodeData?: Record<string, any> }, selected: boolean }) {
+function CustomNode({ data, selected, type }: { data: { label: string; description?: string, nodeData?: Record<string, any> }, selected: boolean, type: string }) {
 
   const iconMap: Record<string, React.ReactNode> = {
-    Trigger: <FiZap />,
-    Input: <RiInputCursorMove />,
-    Conditional: <FiList />,
-    Loop: <FiRotateCw />,
-    Merge: <FiGitCommit />,
-    LLM: <IoHardwareChipOutline />,
-    Text: <RxText />,
-    Delay: <FiClock />,
-    Output: <MdOutput />,
-    Notification: <FiSend />,
+    trigger: <FiZap />,
+    input: <RiInputCursorMove />,
+    conditional: <FiList />,
+    loop: <FiRotateCw />,
+    merge: <FiGitCommit />,
+    llm: <IoHardwareChipOutline />,
+    text: <RxText />,
+    delay: <FiClock />,
+    output: <MdOutput />,
+    notification: <FiSend />,
   };
 
   // Find which category the node belongs to based on label to apply proper color classes
@@ -64,19 +64,19 @@ function CustomNode({ data, selected }: { data: { label: string; description?: s
     <div className="w-72 bg-[var(--node-bg-color)] border border-[var(--node-border-color)] rounded-xl node-shadow transition-all duration-200 hover:node-active-shadow select-none relative">
 
       {/* Handles based on node type */}
-      {data.label === "Input" || data.label === "Text" || data.label === "Trigger" ? (
+      {type === "input" || type === "text" || type === "trigger" ? (
         <Handle
           type="source"
           position={Position.Right}
           style={handleStyle}
         />
-      ) : data.label === "Output" || data.label === "Notification" ? (
+      ) : type === "output" || type === "notification" ? (
         <Handle
           type="target"
           position={Position.Left}
           style={handleStyle}
         />
-      ) : data.label === "LLM" ? (
+      ) : type === "LLM" ? (
         <>
           <Handle
             type="target"
@@ -94,7 +94,7 @@ function CustomNode({ data, selected }: { data: { label: string; description?: s
             style={handleStyle}
           />
         </>
-      ) : data.label === "Conditional" ? (
+      ) : type === "conditional" ? (
         <>
           <Handle
             type="target"
@@ -112,7 +112,7 @@ function CustomNode({ data, selected }: { data: { label: string; description?: s
             style={{ ...handleStyle, top: '65%', background: '#ef4444' }}
           />
         </>
-      ) : data.label === "Merge" ? (
+      ) : type === "merge" ? (
         <>
           <Handle
             type="target"
@@ -148,9 +148,9 @@ function CustomNode({ data, selected }: { data: { label: string; description?: s
 
       <div className="flex items-center justify-between px-4 py-2 border-b border-[var(--header-border-color)]">
         <div className="flex items-center gap-2">
-          <div className={`ios-node-icon-wrapper ${getCategoryColorClass(data.label) || 'bg-[var(--icon-bg-color)] text-[var(--icon-text-color)]'}`}>
+          <div className={`ios-node-icon-wrapper ${getCategoryColorClass(type) || 'bg-[var(--icon-bg-color)] text-[var(--icon-text-color)]'}`}>
             {
-              iconMap[data.label] || <FiBox />
+              iconMap[type] || <FiBox />
             }
           </div>
           <h3 className="text-sm font-bold tracking-tight text-[var(--header-text-color)]">{data.label}</h3>
@@ -164,24 +164,24 @@ function CustomNode({ data, selected }: { data: { label: string; description?: s
         <div className="flex flex-col gap-1">
           <div className="flex flex-col items-left gap-1.5">
             {
-              data.label === 'LLM' && (
+              type === 'llm' && (
                 <label className="text-3xs text-[var(--text-muted-color)] font-sans mb-2">
                   Chatgpt Lite
                 </label>
               )
             }
             <label className="text-2xs text-[var(--text-muted-color)] font-sans text-left">
-              {data.label !== 'Output' && (data.label === 'LLM' ? 'Output' : 'Input')}
+              {type !== 'output' && (type === 'llm' ? 'output' : 'input')}
             </label>
           </div>
           {
-            data.label !== 'Output' &&
+            type !== 'output' &&
             <div className="relative">
               <input
                 type="text"
                 readOnly
                 value={
-                  data.label === 'LLM'
+                  type === 'llm'
                     ? (typeof data.nodeData?.output === 'object' && data.nodeData?.output !== null
                         ? JSON.stringify(data.nodeData.output)
                         : (data.nodeData?.output ?? ''))
