@@ -74,9 +74,9 @@ const Topbar = ({
     };
   }, [workflowId]);
 
-  const handleSave = async () => {
+  const handleSave = async (options?: { silent?: boolean }) => {
     try {
-      await saveFlow(reactFlowInstance, workflowId);
+      await saveFlow(reactFlowInstance, workflowId, options);
     } catch (err) {
       console.error(err);
     }
@@ -86,8 +86,8 @@ const Topbar = ({
     if (isRunning) return;
     setIsRunning(true);
     try {
-      // 1. Save flow first
-      await handleSave();
+      // 1. Save flow first silently
+      await handleSave({ silent: true });
 
       // 2. Call the execution endpoint
       const response = await apiPost<{

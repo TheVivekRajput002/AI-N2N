@@ -43,7 +43,11 @@ export function useFlowState() {
   }, [setNodes])
 
   // save to API
-  const saveFlow = useCallback(async (reactFlowInstance: ReactFlowInstance, wId: string) => {
+  const saveFlow = useCallback(async (
+    reactFlowInstance: ReactFlowInstance, 
+    wId: string, 
+    options?: { silent?: boolean }
+  ) => {
     const flow = reactFlowInstance.toObject()
     const jsonFlow = JSON.stringify(flow)
 
@@ -56,11 +60,15 @@ export function useFlowState() {
       console.log(response)
       localStorage.setItem('savedFlow', jsonFlow)
       localStorage.setItem(`savedFlow_${wId}`, jsonFlow)
-      showToast('Saved successfully to cloud!', 'success')
+      if (!options?.silent) {
+        showToast('Saved successfully to cloud!', 'success')
+      }
     } catch (error) {
       console.error("Failed to save flow:", error)
       localStorage.setItem(`savedFlow_${wId}`, jsonFlow)
-      showToast('Failed to save to cloud, but saved locally in your browser. Please check your internet connection or backend server.', 'error')
+      if (!options?.silent) {
+        showToast('Failed to save to cloud, but saved locally in your browser. Please check your internet connection or backend server.', 'error')
+      }
     }
   }, [showToast])
 

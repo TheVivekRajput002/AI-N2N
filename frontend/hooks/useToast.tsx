@@ -36,6 +36,20 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const id = Math.random().toString(36).substring(2, 9);
     setToasts((prev) => [...prev, { id, message, type, duration }]);
 
+    // Play the corresponding soundtrack from public/sound-tracks/
+    if (typeof window !== 'undefined') {
+      try {
+        const soundFile = type === 'success' ? 'success.mp3' : 'info.mp3';
+        const audio = new Audio(`/sound-tracks/${soundFile}`);
+        audio.play().catch((err) => {
+          // Playback may be blocked by browser autoplay policy until user interacts with the page.
+          console.warn('Toast sound playback was prevented or failed:', err);
+        });
+      } catch (err) {
+        console.error('Failed to play toast soundtrack:', err);
+      }
+    }
+
     setTimeout(() => {
       removeToast(id);
     }, duration);
