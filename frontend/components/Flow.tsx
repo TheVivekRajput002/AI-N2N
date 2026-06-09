@@ -22,28 +22,36 @@ import CustomNode from './nodes/CustomNode'
 import CustomEdge from './edges/CustomEdges'
 import { NodesLibrary } from './NodesLibrary'
 import FlowBar from './FlowBar'
-
+import InputNode from './nodes/categories/InputNode'
+import AiNode from './nodes/categories/AiNode'
+import LogicNode from './nodes/categories/LogicNode'
+import TransformNode from './nodes/categories/TransformNode'
+import IntegrationNode from './nodes/categories/IntegrationNode'
+import OutputNode from './nodes/categories/OutputNode'
 
 // Register your custom types OUTSIDE the component
 // (if defined inside, React re-creates them every render → flickering)
 const nodeTypes = {
+  input: InputNode,
+  trigger: InputNode,
   customNode: CustomNode,
-  trigger: CustomNode,
   action: CustomNode,
-  notification: CustomNode,
-  conditional: CustomNode,
-  delay: CustomNode,
+  notification: OutputNode,
+  email: OutputNode,
+  conditional: LogicNode,
+  switch: LogicNode,
+  loop: LogicNode,
+  delay: TransformNode,
+  http_get: IntegrationNode,
+  http_post: IntegrationNode,
   userTask: CustomNode,
-  loop: CustomNode,
   subprocess: CustomNode,
   parallel: CustomNode,
   decision: CustomNode,
-  merge: CustomNode,
+  merge: LogicNode,
   exception: CustomNode,
-  input: CustomNode,
-  llm: CustomNode,
-  output: CustomNode,
-  text: CustomNode,
+  llm: AiNode,
+  output: OutputNode,
 }
 
 const edgeTypes = {

@@ -1,19 +1,19 @@
 import {
   FiZap,
-  FiSend,
   FiList,
   FiClock,
   FiRotateCw,
-  FiGitCommit,
+  FiLayers,
+  FiGlobe,
+  FiMail,
 } from 'react-icons/fi';
 import { RiInputCursorMove } from 'react-icons/ri';
 import { MdOutput } from 'react-icons/md';
 import { IoHardwareChipOutline } from 'react-icons/io5';
-import { RxText } from 'react-icons/rx';
 
 export interface NodeConfigItem {
   type: string;
-  category: 'Input' | 'Logic' | 'AI / Prompt' | 'Transform' | 'Output';
+  category: 'Input / Starter' | 'AI / Prompt' | 'Logic' | 'Transform' | 'Integration' | 'Output';
   data: {
     label: string;
     description: string;
@@ -23,16 +23,16 @@ export interface NodeConfigItem {
 }
 
 export const AllNodes: NodeConfigItem[] = [
-  // === INPUT ===
+  // === Input / Starter ===
   {
     type: 'trigger',
-    category: 'Input',
+    category: 'Input / Starter',
     data: { label: 'Trigger', description: 'Initiate workflows', nodeData: {} },
     icon: <FiZap className="w-5 h-5 text-[var(--nodes-item-icon-color)]" />
   },
   {
     type: 'input',
-    category: 'Input',
+    category: 'Input / Starter',
     data: {
       label: 'Input',
       description: 'Define input fields',
@@ -43,27 +43,7 @@ export const AllNodes: NodeConfigItem[] = [
     icon: <RiInputCursorMove className="w-5 h-5 text-[var(--nodes-item-icon-color)]" />
   },
 
-  // === LOGIC ===
-  {
-    type: 'conditional',
-    category: 'Logic',
-    data: { label: 'Conditional', description: 'Branch the workflow', nodeData: {} },
-    icon: <FiList className="w-5 h-5 text-[var(--nodes-item-icon-color)]" />
-  },
-  {
-    type: 'loop',
-    category: 'Logic',
-    data: { label: 'Loop', description: 'Repeat a set of actions', nodeData: {} },
-    icon: <FiRotateCw className="w-5 h-5 text-[var(--nodes-item-icon-color)]" />
-  },
-  {
-    type: 'merge',
-    category: 'Logic',
-    data: { label: 'Merge', description: 'Combine multiple branches', nodeData: {} },
-    icon: <FiGitCommit className="w-5 h-5 text-[var(--nodes-item-icon-color)]" />
-  },
-
-  // === AI / PROMPT ===
+  // === AI / Prompt ===
   {
     type: 'llm',
     category: 'AI / Prompt',
@@ -78,31 +58,107 @@ export const AllNodes: NodeConfigItem[] = [
     icon: <IoHardwareChipOutline className="w-5 h-5 text-[var(--nodes-item-icon-color)]" />
   },
 
-  // === TRANSFORM ===
+  // === Logic ===
   {
-    type: 'text',
-    category: 'Transform',
-    data: { label: 'Text', description: 'Pass simple static text', nodeData: {} },
-    icon: <RxText className="w-5 h-5 text-[var(--nodes-item-icon-color)]" />
+    type: 'conditional',
+    category: 'Logic',
+    data: { label: 'Conditional', description: 'Branch the workflow', nodeData: {} },
+    icon: <FiList className="w-5 h-5 text-[var(--nodes-item-icon-color)]" />
   },
+  {
+    type: 'switch',
+    category: 'Logic',
+    data: {
+      label: 'Switch',
+      description: 'Route execution to N branches',
+      nodeData: {
+        cases: []
+      }
+    },
+    icon: <FiLayers className="w-5 h-5 text-[var(--nodes-item-icon-color)]" />
+  },
+  {
+    type: 'loop',
+    category: 'Logic',
+    data: {
+      label: 'Loop',
+      description: 'Iterate over an array',
+      nodeData: {
+        arrayPath: '',
+        mode: 'sequential'
+      }
+    },
+    icon: <FiRotateCw className="w-5 h-5 text-[var(--nodes-item-icon-color)]" />
+  },
+
+  // === Transform ===
   {
     type: 'delay',
     category: 'Transform',
-    data: { label: 'Delay', description: 'Pause the workflow', nodeData: {} },
+    data: {
+      label: 'Delay',
+      description: 'Pause the workflow',
+      nodeData: {
+        time: ''
+      }
+    },
     icon: <FiClock className="w-5 h-5 text-[var(--nodes-item-icon-color)]" />
   },
 
-  // === OUTPUT ===
+  // === Integration ===
+  {
+    type: 'http_get',
+    category: 'Integration',
+    data: {
+      label: 'HTTP GET',
+      description: 'Make HTTP GET request',
+      nodeData: {
+        url: '',
+        headers: ''
+      }
+    },
+    icon: <FiGlobe className="w-5 h-5 text-[var(--nodes-item-icon-color)]" />
+  },
+  {
+    type: 'http_post',
+    category: 'Integration',
+    data: {
+      label: 'HTTP POST',
+      description: 'Make HTTP POST request',
+      nodeData: {
+        url: '',
+        headers: '',
+        body: ''
+      }
+    },
+    icon: <FiGlobe className="w-5 h-5 text-[var(--nodes-item-icon-color)]" />
+  },
+
+  // === Output ===
   {
     type: 'output',
     category: 'Output',
-    data: { label: 'Output', description: 'Define output fields', nodeData: {} },
+    data: {
+      label: 'Output',
+      description: 'Define output fields',
+      nodeData: {
+        output: ''
+      }
+    },
     icon: <MdOutput className="w-5 h-5 text-[var(--nodes-item-icon-color)]" />
   },
   {
-    type: 'notification',
+    type: 'email',
     category: 'Output',
-    data: { label: 'Notification', description: 'Send alerts or notifications', nodeData: {} },
-    icon: <FiSend className="w-5 h-5 text-[var(--nodes-item-icon-color)]" />
+    data: {
+      label: 'Email',
+      description: 'Send email notification',
+      nodeData: {
+        email: '',
+        subject: '',
+        message: ''
+      }
+    },
+    icon: <FiMail className="w-5 h-5 text-[var(--nodes-item-icon-color)]" />
   }
 ];

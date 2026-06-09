@@ -29,10 +29,11 @@ export const NodesLibrary = () => {
   
   // Collapsible category states
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
-    'Input': true,
-    'Logic': true,
+    'Input / Starter': true,
     'AI / Prompt': true,
+    'Logic': true,
     'Transform': true,
+    'Integration': true,
     'Output': true,
   });
 
@@ -51,6 +52,7 @@ export const NodesLibrary = () => {
     event.target.style.opacity = '0.5';
   };
 
+  // Drag and drop end handler
   const onDragEnd = (event: any) => {
     event.target.style.opacity = '1';
   };
@@ -65,25 +67,28 @@ export const NodesLibrary = () => {
   const hasSearch = searchQuery.length > 0;
 
   // Categories list
-  const categories: ('Input' | 'Logic' | 'AI / Prompt' | 'Transform' | 'Output')[] = [
-    'Input',
-    'Logic',
+  const categories: ('Input / Starter' | 'AI / Prompt' | 'Logic' | 'Transform' | 'Integration' | 'Output')[] = [
+    'Input / Starter',
     'AI / Prompt',
+    'Logic',
     'Transform',
+    'Integration',
     'Output'
   ];
 
   // Helper to map category to icon bg classes
   const getCategoryClass = (category: string) => {
     switch(category) {
-      case 'Input': 
+      case 'Input / Starter': 
         return 'bg-[hsla(var(--ios-green),0.12)] dark:bg-[hsla(var(--ios-green),0.2)] text-[hsl(var(--ios-green))]';
-      case 'Logic': 
-        return 'bg-[hsla(var(--ios-blue),0.12)] dark:bg-[hsla(var(--ios-blue),0.2)] text-[hsl(var(--ios-blue))]';
       case 'AI / Prompt': 
         return 'bg-[hsla(var(--ios-purple),0.12)] dark:bg-[hsla(var(--ios-purple),0.2)] text-[hsl(var(--ios-purple))]';
+      case 'Logic': 
+        return 'bg-[hsla(var(--ios-blue),0.12)] dark:bg-[hsla(var(--ios-blue),0.2)] text-[hsl(var(--ios-blue))]';
       case 'Transform': 
         return 'bg-[hsla(var(--ios-orange),0.12)] dark:bg-[hsla(var(--ios-orange),0.2)] text-[hsl(var(--ios-orange))]';
+      case 'Integration':
+        return 'bg-[hsla(var(--ios-blue),0.12)] dark:bg-[hsla(var(--ios-blue),0.2)] text-[hsl(var(--ios-blue))]';
       case 'Output': 
         return 'bg-[hsla(var(--ios-red),0.12)] dark:bg-[hsla(var(--ios-red),0.2)] text-[hsl(var(--ios-red))]';
       default: 

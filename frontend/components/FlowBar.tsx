@@ -21,7 +21,9 @@ import {
   FiRotateCw,
   FiGitCommit,
   FiClock,
-  FiSend
+  FiSend,
+  FiGlobe,
+  FiMail,
 } from 'react-icons/fi';
 import { 
   RiInputCursorMove,
@@ -236,15 +238,17 @@ export default function FlowBar({ nodes, setNodes, onSave }: FlowBarProps) {
   // Node icons and colors helper
   const getNodeCategoryColorClass = (label: string) => {
     const inputs = ['Input', 'Trigger'];
-    const logics = ['Conditional', 'Loop', 'Merge'];
+    const logics = ['Conditional', 'Switch', 'Loop', 'Merge'];
     const ais = ['LLM'];
     const transforms = ['Text', 'Delay'];
-    const outputs = ['Output', 'Notification'];
+    const integrations = ['HTTP GET', 'HTTP POST'];
+    const outputs = ['Output', 'Email', 'Notification'];
 
     if (inputs.includes(label)) return 'ios-icon-bg-input';
     if (logics.includes(label)) return 'ios-icon-bg-logic';
     if (ais.includes(label)) return 'ios-icon-bg-ai';
     if (transforms.includes(label)) return 'ios-icon-bg-transform';
+    if (integrations.includes(label)) return 'bg-[hsla(var(--ios-blue),0.12)] text-[hsl(var(--ios-blue))]';
     if (outputs.includes(label)) return 'ios-icon-bg-output';
     return '';
   };
@@ -253,12 +257,16 @@ export default function FlowBar({ nodes, setNodes, onSave }: FlowBarProps) {
     Trigger: <FiZap />,
     Input: <RiInputCursorMove />,
     Conditional: <FiList />,
+    Switch: <FiLayers />,
     Loop: <FiRotateCw />,
     Merge: <FiGitCommit />,
     LLM: <IoHardwareChipOutline />,
     Text: <RxText />,
     Delay: <FiClock />,
+    'HTTP GET': <FiGlobe />,
+    'HTTP POST': <FiGlobe />,
     Output: <MdOutput />,
+    Email: <FiMail />,
     Notification: <FiSend />,
   };
 
@@ -426,10 +434,11 @@ export default function FlowBar({ nodes, setNodes, onSave }: FlowBarProps) {
                              </div>
                            ) : (
                              <input
-                               type="text"
+                               type={key === "api key" ? "password" : "text"}
                                value={val === null || val === undefined ? '' : typeof val === 'object' ? JSON.stringify(val) : val}
                                onChange={(e) => updateNodeDataField(key, e.target.value)}
                                readOnly={key === "output"}
+
                                className="w-full bg-[var(--node-bg-color)] border border-[var(--flowbar-input-border)] rounded-md px-2 py-1 text-2xs font-mono text-[var(--flowbar-text-primary)] focus:outline-none focus:border-[var(--flowbar-input-focus)]"
                              />
                            )}
