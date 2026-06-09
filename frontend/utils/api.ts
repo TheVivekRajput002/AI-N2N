@@ -1,11 +1,24 @@
 
 
+const getBaseUrl = () => {
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
+    if (!baseUrl && typeof window !== 'undefined') {
+        console.warn("NEXT_PUBLIC_API_URL environment variable is missing on the client side.");
+    }
+    return baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+};
+
+const getCleanUrl = (endpoint: string) => {
+    const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+    return `${getBaseUrl()}${cleanEndpoint}`;
+};
+
 export async function apiGet<T>(endpoint: string, token?: string | null): Promise<T> {
     const headers: HeadersInit = {}
     if (token) {
         headers['Authorization'] = `Bearer ${token}`
     }
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${endpoint}`, {
+    const res = await fetch(getCleanUrl(endpoint), {
         headers,
         next: { revalidate: 60 }
     })
@@ -18,7 +31,7 @@ export async function apiPost<T>(endpoint: string, body: unknown, token?: string
     if (token) {
         headers['Authorization'] = `Bearer ${token}`
     }
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${endpoint}`,
+    const res = await fetch(getCleanUrl(endpoint),
         {
             method: 'POST',
             headers,
@@ -31,7 +44,7 @@ export async function apiPost<T>(endpoint: string, body: unknown, token?: string
 
 export async function apiDelete<T>(endpoint: string ): Promise<T> {
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${endpoint}`,
+    const res = await fetch(getCleanUrl(endpoint),
         {
             method: 'DELETE',
         }
@@ -39,3 +52,4 @@ export async function apiDelete<T>(endpoint: string ): Promise<T> {
     if (!res.ok) throw new Error(`API error: ${res.status}`);
     return res.json();
 }
+

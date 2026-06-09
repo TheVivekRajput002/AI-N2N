@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 import { ClerkProvider, Show, SignInButton, SignOutButton, SignUpButton, UserButton } from '@clerk/nextjs'
+import { ToastProvider } from "@/hooks/useToast";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,10 +19,13 @@ export default function RootLayout({
       <body >
 
         <ClerkProvider>
-          {children}
+          <ToastProvider>
+            {children}
+          </ToastProvider>
         </ClerkProvider>
 
       </body>
     </html>
   );
 }
+

@@ -16,12 +16,27 @@ dotenv.config()
 const allowedOrigins = [
     'http://localhost:3000',
     'https://ai-n2n.vercel.app',
-    // config.FRONTEND_URL,
 ];
+
+if (config.FRONTEND_URL) {
+    allowedOrigins.push(config.FRONTEND_URL);
+}
 
 app.use(clerkMiddleware())
 app.use(cors({
-    origin: allowedOrigins,
+    origin: (origin, callback) => {
+        // Allow requests with no origin (like mobile apps, curl, or server-to-server)
+        if (!origin) return callback(null, true);
+        
+        const isAllowed = allowedOrigins.includes(origin) || 
+                          origin.endsWith('.vercel.app');
+                          
+        if (isAllowed) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true
 }))
 app.use(express.json())

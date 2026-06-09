@@ -18,6 +18,7 @@ import { useReactFlow } from '@xyflow/react';
 import { useRouter, useParams } from 'next/navigation';
 import { apiGet, apiPost } from '@/utils/api';
 import Link from 'next/link';
+import { useToast } from '@/hooks/useToast';
 
 const Topbar = ({
   onOpenFolder = () => {},
@@ -40,6 +41,7 @@ const Topbar = ({
 
   const { saveFlow } = useFlowState();
   const reactFlowInstance = useReactFlow();
+  const { showToast } = useToast();
 
   const [workflowName, setWorkflowName] = useState<string>('Simple Workflow Template');
   const [workspaceName, setWorkspaceName] = useState<string>('Templates');
@@ -127,13 +129,13 @@ const Topbar = ({
       }
 
       if (response.success) {
-        alert("Workflow executed successfully!");
+        showToast("Workflow executed successfully!", "success");
       } else {
-        alert(`Workflow execution failed: ${response.error || "Unknown error"}`);
+        showToast(`Workflow execution failed: ${response.error || "Unknown error"}`, "error");
       }
     } catch (err: any) {
       console.error("Workflow execution failed:", err);
-      alert(`Workflow execution failed: ${err.message || String(err)}`);
+      showToast(`Workflow execution failed: ${err.message || String(err)}`, "error");
     } finally {
       setIsRunning(false);
     }

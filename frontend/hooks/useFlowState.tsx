@@ -3,11 +3,13 @@ import { useCallback } from 'react'
 import { type Node, type Edge, useNodesState, useEdgesState, addEdge, type Connection, type ReactFlowInstance, type Viewport, MarkerType } from '@xyflow/react'
 import { apiPost, apiGet } from '@/utils/api'
 import { useParams } from 'next/navigation'
+import { useToast } from '@/hooks/useToast'
 
 export function useFlowState() {
   const { workflowId } = useParams() as { workflowId: string }
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([])
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([])
+  const { showToast } = useToast()
 
   // called when user draws a new connection between two handles
   const onConnect = useCallback(
@@ -53,16 +55,19 @@ export function useFlowState() {
 
       console.log(response)
       localStorage.setItem('savedFlow', jsonFlow)
+      localStorage.setItem(`savedFlow_${wId}`, jsonFlow)
+      showToast('Saved successfully to cloud!', 'success')
     } catch (error) {
       console.error("Failed to save flow:", error)
+      localStorage.setItem(`savedFlow_${wId}`, jsonFlow)
+      showToast('Failed to save to cloud, but saved locally in your browser. Please check your internet connection or backend server.', 'error')
     }
-
-    alert('Saved!')
-  }, [])
+  }, [showToast])
 
   // restore from API
   const restoreFlow = useCallback(async (setViewport: (viewport: Viewport) => void) => {
     if (!workflowId) return
+    let loadedFromBackend = false
     try {
       const response = await apiGet<{ success: boolean, workflowVersion: any }>(`/workflow-version?workflowId=${workflowId}`)
       if (response.success && response.workflowVersion?.graph) {
@@ -71,7 +76,10 @@ export function useFlowState() {
         // If graph was saved as a string (legacy/fallback), parse it; otherwise, use it directly
         const flow = typeof graph === 'string' ? JSON.parse(graph) : graph
         
-        if (flow.nodes) setNodes(flow.nodes)
+        if (flow.nodes && flow.nodes.length > 0) {
+          setNodes(flow.nodes)
+          loadedFromBackend = true
+        }
         if (flow.edges) setEdges(flow.edges)
         if (flow.viewport && setViewport) {
           setViewport(flow.viewport)
@@ -79,6 +87,24 @@ export function useFlowState() {
       }
     } catch (error) {
       console.error("Failed to restore flow from backend:", error)
+    }
+
+    // Fallback to localStorage if backend didn't return any nodes
+    if (!loadedFromBackend) {
+      try {
+        const localFlowStr = localStorage.getItem(`savedFlow_${workflowId}`) || localStorage.getItem('savedFlow')
+        if (localFlowStr) {
+          const flow = JSON.parse(localFlowStr)
+          if (flow.nodes) setNodes(flow.nodes)
+          if (flow.edges) setEdges(flow.edges)
+          if (flow.viewport && setViewport) {
+            setViewport(flow.viewport)
+          }
+          console.log("Restored flow from localStorage fallback")
+        }
+      } catch (err) {
+        console.error("Failed to restore flow from localStorage:", err)
+      }
     }
   }, [workflowId, setNodes, setEdges])
 

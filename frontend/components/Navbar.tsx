@@ -4,7 +4,7 @@ import { FiGitBranch, FiHome, FiSettings, FiBell, FiHelpCircle, FiUser, FiSun, F
 import { MdOutlineSpaceDashboard } from "react-icons/md";
 import { CiUser } from "react-icons/ci";
 import Link from 'next/link';
-import toggleTheme from '@/hooks/toggleTheme';
+import { useCallback } from 'react';
 import { usePathname } from 'next/navigation';
 
 // Custom high-fidelity VectorShift logo SVG (white color inside the gradient squircle)
@@ -25,15 +25,27 @@ export const Navbar = () => {
     const pathname = usePathname();
     const [isDark, setIsDark] = useState(false);
 
-    // Read the dark mode state from document element once component mounts (avoiding SSR hydration mismatch)
     useEffect(() => {
-        setIsDark(document.documentElement.classList.contains('dark'));
-    }, []);
+        const savedTheme = localStorage.getItem('theme')
+        if (savedTheme === 'dark' || savedTheme === 'light') {
+            setIsDark(savedTheme === 'dark')
+            return
+        }
 
-    const handleToggleTheme = () => {
-        toggleTheme();
-        setIsDark(document.documentElement.classList.contains('dark'));
-    };
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+        setIsDark(prefersDark)
+    }, [])
+
+    useEffect(() => {
+        const themeName = isDark ? 'dark' : 'light'
+        document.documentElement.style.colorScheme = themeName
+        document.documentElement.classList.toggle('dark', isDark)
+        localStorage.setItem('theme', themeName)
+    }, [isDark])
+
+    const toggleTheme = useCallback(() => {
+        setIsDark((prev) => !prev)
+    }, [])
 
     const navItems = [
         { id: 'flow', icon: FiGitBranch, label: 'Pipelines', href: '/workspaces' },
@@ -90,10 +102,10 @@ export const Navbar = () => {
                         <button
                             key={item.id}
                             className="ios-nav-item group relative"
-                            onClick={() => {}}
+                            onClick={() => { }}
                         >
                             <Icon size={19} className="transition-transform duration-200 group-hover:scale-105" />
-                            
+
                             {item.badge && (
                                 <span className="absolute top-2.5 right-2.5 flex h-2 w-2 rounded-full bg-red-500 ring-2 ring-[var(--navbar-bg-color)] transition-colors duration-300" />
                             )}
@@ -107,7 +119,7 @@ export const Navbar = () => {
 
                 {/* Theme Toggle Button */}
                 <button
-                    onClick={handleToggleTheme}
+                    onClick={toggleTheme}
                     className="ios-nav-item ios-theme-toggle group animate-fade-in"
                     title="Toggle appearance"
                 >
