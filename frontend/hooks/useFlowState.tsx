@@ -1,6 +1,6 @@
 // src/hooks/useFlowState.tsx
-import { useCallback } from 'react'
-import { type Node, type Edge, useNodesState, useEdgesState, addEdge, type Connection, type ReactFlowInstance, type Viewport, MarkerType } from '@xyflow/react'
+import { useCallback, useRef } from 'react'
+import { type Node, type Edge, useNodesState, useEdgesState, addEdge, type Connection, type ReactFlowInstance, type Viewport, MarkerType, reconnectEdge } from '@xyflow/react'
 import { apiPost, apiGet } from '@/utils/api'
 import { useParams } from 'next/navigation'
 import { useToast } from '@/hooks/useToast'
@@ -10,6 +10,8 @@ export function useFlowState() {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([])
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([])
   const { showToast } = useToast()
+
+  const edgeReconnectSuccessful = useRef(true)
 
   // called when user draws a new connection between two handles
   const onConnect = useCallback(
@@ -23,6 +25,31 @@ export function useFlowState() {
         width: 20,
       }
     }, eds)),
+    [setEdges]
+  )
+
+  // called when user starts dragging one end of an edge
+  const onReconnectStart = useCallback(() => {
+    edgeReconnectSuccessful.current = false
+  }, [])
+
+  // called when user successfully connects to a new handle
+  const onReconnect = useCallback(
+    (oldEdge: Edge, newConnection: Connection) => {
+      edgeReconnectSuccessful.current = true
+      setEdges((eds) => reconnectEdge(oldEdge, newConnection, eds))
+    },
+    [setEdges]
+  )
+
+  // called when user drops the connection (either on another handle or empty space)
+  const onReconnectEnd = useCallback(
+    (_: any, edge: Edge) => {
+      if (!edgeReconnectSuccessful.current) {
+        setEdges((eds) => eds.filter((e) => e.id !== edge.id))
+      }
+      edgeReconnectSuccessful.current = true
+    },
     [setEdges]
   )
 
@@ -118,6 +145,9 @@ export function useFlowState() {
     nodes, edges,
     onNodesChange, onEdgesChange,
     onConnect, addNode, saveFlow, restoreFlow,
-    setNodes
+    setNodes,
+    onReconnectStart,
+    onReconnect,
+    onReconnectEnd
   }
 }

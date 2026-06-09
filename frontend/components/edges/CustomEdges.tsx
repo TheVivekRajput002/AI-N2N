@@ -10,13 +10,22 @@ type CustomEdgeProps = EdgeProps & {
     data?: CustomEdgeData
 }
 
-function CustomEdge({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, markerEnd }: CustomEdgeProps) {
+function CustomEdge({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, markerEnd, selected }: CustomEdgeProps) {
     const [edgePath] = getSmoothStepPath({
         sourceX, sourceY, sourcePosition, targetX, targetY, targetPosition
     })
 
     return (
-        <BaseEdge id={id} path={edgePath} markerEnd={markerEnd} style={{ stroke: '#00000' }} />
+        <BaseEdge 
+            id={id} 
+            path={edgePath} 
+            markerEnd={markerEnd} 
+            style={{ 
+                stroke: selected ? 'hsl(var(--ios-blue))' : '#94a3b8', 
+                strokeWidth: selected ? 3 : 2,
+                transition: 'stroke 0.2s, stroke-width 0.2s'
+            }} 
+        />
     )
 }
 

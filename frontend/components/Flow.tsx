@@ -67,7 +67,8 @@ function Flow() {
     nodes, edges,
     onNodesChange, onEdgesChange,
     onConnect, addNode, saveFlow, restoreFlow,
-    setNodes
+    setNodes,
+    onReconnectStart, onReconnect, onReconnectEnd
   } = useFlowState()
 
   const handleSave = useCallback(() => {
@@ -122,6 +123,9 @@ function Flow() {
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
       onConnect={onConnect}
+      onReconnect={onReconnect}
+      onReconnectStart={onReconnectStart}
+      onReconnectEnd={onReconnectEnd}
       nodeTypes={nodeTypes}
       edgeTypes={edgeTypes}
       onDragOver={onDragOver}
