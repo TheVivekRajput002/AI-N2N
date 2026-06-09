@@ -187,20 +187,23 @@ const Topbar = ({
           </button>
 
           <button
-            onClick={onUndo}
+            onClick={() => {
+              window.dispatchEvent(new CustomEvent('flow-restore'));
+              onUndo();
+            }}
             className="ios-topbar-btn"
             title="Undo"
           >
             <FiRotateCcw size={16} />
           </button>
 
-          <button
+          {/* <button
             onClick={onRedo}
             className="ios-topbar-btn"
             title="Redo"
           >
             <FiRotateCw size={16} />
-          </button>
+          </button> */}
         </div>
       </div>
 

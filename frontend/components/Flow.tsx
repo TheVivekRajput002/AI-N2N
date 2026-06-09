@@ -110,7 +110,16 @@ function Flow() {
   }, []);
 
   useEffect(() => {
-    restoreFlow(setViewport)
+    restoreFlow(setViewport);
+
+    const handleRestore = () => {
+      restoreFlow(setViewport);
+    };
+
+    window.addEventListener('flow-restore', handleRestore);
+    return () => {
+      window.removeEventListener('flow-restore', handleRestore);
+    };
   }, [restoreFlow, setViewport]);
 
   return (
