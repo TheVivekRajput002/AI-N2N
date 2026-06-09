@@ -108,31 +108,35 @@ const Topbar = ({
 
       if (response.execution) {
         const nodeExecutions = response.execution.nodeExecutions;
+        const currentFlow = reactFlowInstance.toObject();
+
         // 3. Update the nodes on canvas with outputs
-        reactFlowInstance.setNodes((nds) =>
-          nds.map((node) => {
-            const exec = nodeExecutions.find((ne) => ne.nodeId === node.id);
-            if (exec) {
-              return {
-                ...node,
-                data: {
-                  ...node.data,
-                  nodeData: {
-                    ...(node.data.nodeData || {}),
-                    output: exec.status === "SUCCESS" ? exec.output : `Error: ${exec.error || "Failed"}`
-                  }
+        const updatedNodes = currentFlow.nodes.map((node) => {
+          const exec = nodeExecutions.find((ne) => ne.nodeId === node.id);
+          if (exec) {
+            return {
+              ...node,
+              data: {
+                ...node.data,
+                nodeData: {
+                  ...(node.data.nodeData || {}),
+                  output: exec.status === "SUCCESS" ? exec.output : `Error: ${exec.error || "Failed"}`
                 }
-              };
-            }
-            return node;
-          })
-        );
+              }
+            };
+          }
+          return node;
+        });
+
+        reactFlowInstance.setNodes(updatedNodes);
 
         await apiPost(`/workflow-version/update`, {
-          graph: reactFlowInstance.toObject(),
+          graph: {
+            ...currentFlow,
+            nodes: updatedNodes
+          },
           versionId: response.execution.versionId
         });
-        
       }
 
       if (response.success) {
