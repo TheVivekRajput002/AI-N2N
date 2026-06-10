@@ -1,32 +1,13 @@
-
-import { Show, SignInButton, SignUpButton, SignOutButton, UserButton } from '@clerk/nextjs'
-import Link from "next/link";
+import Header from '@/components/landing-page/Header';
+import Hero from '@/components/landing-page/Hero';
+import WorkflowDetails from '@/components/landing-page/WorkflowDetails';
 
 export default function Home() {
   return (
-    <div>
-      <header className="flex justify-end items-center p-4 gap-4 h-16">
-        <Show when="signed-out">
-          <SignInButton forceRedirectUrl="/workspaces">
-            <button >Sign in</button>
-          </SignInButton>
-          <SignUpButton forceRedirectUrl="/workspaces">
-            <button className="bg-purple-700 text-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer">
-              Sign Up
-            </button>
-          </SignUpButton>
-        </Show>
-        <Show when="signed-in">
-          <UserButton />
-          <SignOutButton />
-        </Show>
-      </header>
-      <Link href='/home'>
-        <button className="bg-purple-700 text-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer">
-          to n2n2
-        </button>
-      </Link>
-      Landing Page
+    <div className="relative overflow-hidden min-h-screen bg-[#F8FAFC] text-[#1E293B] bg-dot-pattern">
+      <Header />
+      <Hero />
+      {/* <WorkflowDetails /> */}
     </div>
   );
 }

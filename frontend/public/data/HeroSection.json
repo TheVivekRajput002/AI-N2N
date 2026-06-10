@@ -1,0 +1,39 @@
+{
+  "title": "Build, run, and chain",
+  "titleMuted": "AI pipelines visually",
+  "subtitle": "Visually orchestrate your AI workflows without writing a single line of glue code.",
+  "ctaText": "Get free demo",
+  "stickyNote": {
+    "text": "Add nodes to keep track of each pipeline step, and automate more workflows with ease."
+  },
+  "reminders": {
+    "title": "Pipelines",
+    "subtitle": "Running",
+    "meetingTitle": "Research Agent",
+    "meetingDesc": "Summarize and route to Slack",
+    "meetingTime": "13:00 - 13:45"
+  },
+  "tasksCard": {
+    "title": "Today's runs",
+    "tasks": [
+      {
+        "badge": 8,
+        "badgeClass": "badge-red",
+        "text": "GPT-4o Summarizer flow",
+        "date": "Sep 10",
+        "progress": 60
+      },
+      {
+        "badge": 3,
+        "badgeClass": "badge-green",
+        "text": "Webhook trigger #4",
+        "date": "Sep 18",
+        "progress": 90,
+        "progressText": "112%"
+      }
+    ]
+  },
+  "integrations": {
+    "title": "50+ Integrations"
+  }
+}

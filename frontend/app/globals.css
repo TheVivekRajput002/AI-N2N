@@ -169,7 +169,8 @@
   --flowbar-input-bg: rgba(0, 0, 0, 0.03);
   --flowbar-input-border: rgba(0, 0, 0, 0.05);
   --flowbar-input-focus: #007aff;
-  --flowbar-btn-primary: #e17032; /* iOS Orange */
+  --flowbar-btn-primary: #e17032;
+  /* iOS Orange */
   --flowbar-btn-primary-hover: #d25f20;
   --flowbar-btn-secondary: rgba(0, 0, 0, 0.04);
   --flowbar-btn-secondary-hover: rgba(0, 0, 0, 0.08);
@@ -533,18 +534,22 @@
   background-color: hsla(var(--ios-green), 0.12);
   color: hsl(var(--ios-green));
 }
+
 .ios-icon-bg-logic {
   background-color: hsla(var(--ios-blue), 0.12);
   color: hsl(var(--ios-blue));
 }
+
 .ios-icon-bg-ai {
   background-color: hsla(var(--ios-purple), 0.12);
   color: hsl(var(--ios-purple));
 }
+
 .ios-icon-bg-transform {
   background-color: hsla(var(--ios-orange), 0.12);
   color: hsl(var(--ios-orange));
 }
+
 .ios-icon-bg-output {
   background-color: hsla(var(--ios-red), 0.12);
   color: hsl(var(--ios-red));
@@ -554,18 +559,22 @@
   background-color: hsla(var(--ios-green), 0.2);
   color: hsl(var(--ios-green));
 }
+
 .dark .ios-icon-bg-logic {
   background-color: hsla(var(--ios-blue), 0.2);
   color: hsl(var(--ios-blue));
 }
+
 .dark .ios-icon-bg-ai {
   background-color: hsla(var(--ios-purple), 0.2);
   color: hsl(var(--ios-purple));
 }
+
 .dark .ios-icon-bg-transform {
   background-color: hsla(var(--ios-orange), 0.2);
   color: hsl(var(--ios-orange));
 }
+
 .dark .ios-icon-bg-output {
   background-color: hsla(var(--ios-red), 0.2);
   color: hsl(var(--ios-red));
@@ -654,9 +663,11 @@
 .ios-theme-toggle {
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
+
 .ios-theme-toggle:hover {
   transform: rotate(20deg) scale(1.05);
 }
+
 .ios-theme-toggle:active {
   transform: rotate(-10deg) scale(0.92);
 }
@@ -933,10 +944,13 @@
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
 /* Hide scrollbar for IE, Edge and Firefox */
 .no-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 /* Custom iOS-style Toast Animations and Styles */
@@ -945,6 +959,7 @@
     transform: translateY(-12px) scale(0.95);
     opacity: 0;
   }
+
   to {
     transform: translateY(0) scale(1);
     opacity: 1;
@@ -1130,14 +1145,34 @@
   width: 100%;
 }
 
-.ios-mini-node-header.input { background-color: hsl(var(--ios-green)); }
-.ios-mini-node-header.llm { background-color: hsl(var(--ios-purple)); }
-.ios-mini-node-header.conditional { background-color: hsl(var(--ios-blue)); }
-.ios-mini-node-header.delay { background-color: hsl(var(--ios-orange)); }
-.ios-mini-node-header.http_get, 
-.ios-mini-node-header.http_post { background-color: hsl(var(--ios-teal)); }
-.ios-mini-node-header.email { background-color: hsl(var(--ios-indigo)); }
-.ios-mini-node-header.output { background-color: hsl(var(--ios-red)); }
+.ios-mini-node-header.input {
+  background-color: hsl(var(--ios-green));
+}
+
+.ios-mini-node-header.llm {
+  background-color: hsl(var(--ios-purple));
+}
+
+.ios-mini-node-header.conditional {
+  background-color: hsl(var(--ios-blue));
+}
+
+.ios-mini-node-header.delay {
+  background-color: hsl(var(--ios-orange));
+}
+
+.ios-mini-node-header.http_get,
+.ios-mini-node-header.http_post {
+  background-color: hsl(var(--ios-teal));
+}
+
+.ios-mini-node-header.email {
+  background-color: hsl(var(--ios-indigo));
+}
+
+.ios-mini-node-header.output {
+  background-color: hsl(var(--ios-red));
+}
 
 .ios-mini-node-body {
   display: flex;
@@ -1296,4 +1331,15 @@
 
 .ios-btn-secondary:active {
   transform: scale(0.97);
+}
+
+/* Subtle dot grid background similar to the image */
+.bg-dot-pattern {
+  background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Soft neumorphic/glassmorphism shadow style */
+.soft-shadow {
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05), 0 4px 10px rgba(0, 0, 0, 0.02);
 }
