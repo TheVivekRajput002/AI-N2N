@@ -74,7 +74,7 @@ export const Navbar = () => {
 
             {/* ================= Logo Section =========================*/}
             <div className="flex items-center justify-center mb-6">
-                <Link href="/home" className="ios-logo-container overflow-hidden relative group">
+                <Link href="/dashboard" className="ios-logo-container overflow-hidden relative group">
                     <img 
                         src="/icon.jpg" 
                         alt="AI N2N Logo" 
@@ -89,7 +89,7 @@ export const Navbar = () => {
             {/* ===================== Navigation Items Top Section ================= */}
             <div className="flex-1 flex flex-col items-center gap-3 w-full px-2">
                 {navItems.map((item) => {
-                    const isActive = pathname === item.href || (item.href !== '/home' && pathname?.startsWith(item.href));
+                    const isActive = pathname === item.href || (item.href !== '/templates' && pathname?.startsWith(item.href));
                     const Icon = item.icon;
 
                     return (

@@ -2,7 +2,7 @@ import React from 'react';
 import { auth } from '@clerk/nextjs/server';
 import { apiGet } from '@/utils/api';
 import { WorkspacesResponse } from '@/utils/store';
-import HomeClientPage from './HomeClientPage';
+import TemplatesClientPage from './TemplatesClientPage';
 
 const Page = async () => {
   const { getToken } = await auth();
@@ -17,7 +17,7 @@ const Page = async () => {
   }
 
   return (
-    <HomeClientPage initialWorkspaces={workspaces} />
+    <TemplatesClientPage initialWorkspaces={workspaces} />
   );
 };
 

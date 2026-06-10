@@ -184,7 +184,7 @@ export default function WorkflowDetails() {
                               <circle className="text-surface-container-highest" cx="64" cy="64" fill="transparent" r="56" stroke="currentColor" strokeWidth="8"></circle>
                               <circle className="text-primary-container" cx="64" cy="64" fill="transparent" r="56" stroke="currentColor" strokeDasharray="351.8" strokeDashoffset="80" strokeWidth="8"></circle>
                               <circle className="text-surface-container-highest" cx="64" cy="64" fill="transparent" r="44" stroke="currentColor" strokeWidth="8"></circle>
-                              <circle className="text-secondary-container" cx="64" cy="64" fill="transparent" r="44" stroke="currentColor" stroke-dasharray="276.4" stroke-dashoffset="100" stroke-width="8"></circle>
+                              <circle className="text-secondary-container" cx="64" cy="64" fill="transparent" r="44" stroke="currentColor" strokeDasharray="276.4" strokeDashoffset="100" strokeWidth="8"></circle>
                             </svg>
                             <div className="absolute inset-0 flex items-center justify-center font-bold text-xl">{workflowData.dashboard.activityValue}</div>
                           </div>

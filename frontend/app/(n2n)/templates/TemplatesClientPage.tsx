@@ -43,7 +43,7 @@ interface Template {
 }
 
 
-const HomeClientPage = ({ initialWorkspaces }: { initialWorkspaces: WorkspaceType[] }) => {
+const TemplatesClientPage = ({ initialWorkspaces }: { initialWorkspaces: WorkspaceType[] }) => {
   const router = useRouter();
   const { getToken } = useAuth();
   const { showToast } = useToast();
@@ -492,4 +492,4 @@ const HomeClientPage = ({ initialWorkspaces }: { initialWorkspaces: WorkspaceTyp
   );
 };
 
-export default HomeClientPage;
+export default TemplatesClientPage;
