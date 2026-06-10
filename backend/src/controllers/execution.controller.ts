@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import prisma from "../config/db";
 import { executeGraph } from "../lib/executeGraph";
+import { getAuth } from "@clerk/express";
+import { getOrCreateUser } from "./auth.controller";
 
 export async function executeWorkflow(req: Request, res: Response): Promise<void> {
   const { workflowId } = req.params as { workflowId: string };
@@ -176,6 +178,169 @@ export async function getExecutionDetails(req: Request, res: Response): Promise<
       success: false,
       message: "Failed to retrieve execution details.",
       error: error?.message || String(error),
+    });
+  }
+}
+
+export async function getDashboardStats(req: Request, res: Response): Promise<void> {
+  try {
+    const { userId } = getAuth(req);
+    if (!userId) {
+      res.status(401).json({ success: false, message: "Unauthorized" });
+      return;
+    }
+
+    const user = await getOrCreateUser(userId);
+
+    // 1. Get workspaces owned by user
+    const workspaces = await prisma.workspace.findMany({
+      where: { ownerId: user.id },
+      select: { id: true, name: true, color: true }
+    });
+    const workspaceIds = workspaces.map(w => w.id);
+
+    // 2. Get workflows in these workspaces
+    const workflows = await prisma.workflow.findMany({
+      where: { workspaceId: { in: workspaceIds } },
+      orderBy: { updatedAt: 'desc' },
+      include: {
+        workspace: {
+          select: { name: true, color: true }
+        }
+      }
+    });
+    const workflowIds = workflows.map(w => w.id);
+
+    // 3. Overall statistics
+    const totalWorkflows = workflows.length;
+    const activeWorkflowsCount = workflows.filter(w => w.isEnabled).length;
+
+    // Total executions
+    const totalExecutions = await prisma.execution.count({
+      where: { workflowId: { in: workflowIds } }
+    });
+
+    // Counts grouped by status
+    const statusGroups = await prisma.execution.groupBy({
+      by: ['status'],
+      where: { workflowId: { in: workflowIds } },
+      _count: { status: true }
+    });
+
+    const statusCounts = {
+      SUCCESS: 0,
+      FAILED: 0,
+      RUNNING: 0,
+      PENDING: 0,
+      CANCELLED: 0
+    };
+    statusGroups.forEach(g => {
+      if (g.status in statusCounts) {
+        statusCounts[g.status as keyof typeof statusCounts] = g._count.status;
+      }
+    });
+
+    // Average duration of success runs
+    const avgDurationResult = await prisma.execution.aggregate({
+      where: {
+        workflowId: { in: workflowIds },
+        status: 'SUCCESS',
+        totalDuration: { not: null }
+      },
+      _avg: {
+        totalDuration: true
+      }
+    });
+    const avgDuration = Math.round(avgDurationResult._avg.totalDuration || 0);
+
+    // 4. Executions in the last 7 days for the chart
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    sevenDaysAgo.setHours(0, 0, 0, 0); // start of day 7 days ago
+
+    const chartExecutions = await prisma.execution.findMany({
+      where: {
+        workflowId: { in: workflowIds },
+        startedAt: { gte: sevenDaysAgo }
+      },
+      select: {
+        status: true,
+        startedAt: true
+      }
+    });
+
+    // Group executions by day for chart (7 days: from 6 days ago until today)
+    const dailyStats: Record<string, { dateStr: string, SUCCESS: number, FAILED: number, total: number }> = {};
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      const key = d.toISOString().split('T')[0];
+      dailyStats[key] = { dateStr, SUCCESS: 0, FAILED: 0, total: 0 };
+    }
+
+    chartExecutions.forEach(exec => {
+      const key = exec.startedAt.toISOString().split('T')[0];
+      if (key in dailyStats) {
+        dailyStats[key].total += 1;
+        if (exec.status === 'SUCCESS') {
+          dailyStats[key].SUCCESS += 1;
+        } else if (exec.status === 'FAILED') {
+          dailyStats[key].FAILED += 1;
+        }
+      }
+    });
+
+    const chartData = Object.keys(dailyStats).sort().map(key => dailyStats[key]);
+
+    // 5. Recent 5 Workflows with workspace and last execution status
+    const recentWorkflows = await prisma.workflow.findMany({
+      where: { workspaceId: { in: workspaceIds } },
+      orderBy: { updatedAt: 'desc' },
+      take: 5,
+      include: {
+        workspace: {
+          select: { name: true, color: true }
+        },
+        executions: {
+          orderBy: { startedAt: 'desc' },
+          take: 1,
+          select: { status: true, startedAt: true }
+        }
+      }
+    });
+
+    // 6. Recent 10 executions
+    const recentExecutions = await prisma.execution.findMany({
+      where: { workflowId: { in: workflowIds } },
+      orderBy: { startedAt: 'desc' },
+      take: 10,
+      include: {
+        workflow: {
+          select: { name: true }
+        }
+      }
+    });
+
+    res.status(200).json({
+      success: true,
+      stats: {
+        totalWorkflows,
+        activeWorkflowsCount,
+        totalExecutions,
+        statusCounts,
+        avgDuration,
+      },
+      chartData,
+      recentWorkflows,
+      recentExecutions
+    });
+  } catch (error: any) {
+    console.error("Error in getDashboardStats:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to retrieve dashboard stats.",
+      error: error?.message || String(error)
     });
   }
 }
