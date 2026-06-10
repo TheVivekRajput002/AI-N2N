@@ -373,23 +373,23 @@ const PROVIDER_MODELS: Record<string, string[]> = {
   }
 
   return (
-    <div className="absolute right-4 top-16 bottom-4 w-[310px] bg-[var(--flowbar-bg)] border border-[var(--flowbar-border)] rounded-2xl shadow-xl backdrop-blur-md -webkit-backdrop-filter-md flex flex-col overflow-hidden z-45 select-none transition-all duration-300">
+    <div className="absolute right-4 top-16 bottom-4 w-[260px] bg-[var(--flowbar-bg)] border border-[var(--flowbar-border)] rounded-2xl shadow-xl backdrop-blur-md -webkit-backdrop-filter-md flex flex-col overflow-hidden z-45 select-none transition-all duration-300">
       
       {/* Sidebar Header */}
-      <div className="flex items-center justify-between px-4 py-3.5 border-b border-[var(--flowbar-border)]">
+      <div className="flex items-center justify-between px-3 py-3 border-b border-[var(--flowbar-border)]">
         <div className="flex items-center gap-2">
           {selectedNode ? (
             <>
               <div className={`flex items-center justify-center w-7 h-7 rounded-lg text-sm ${getNodeCategoryColorClass(selectedNode.data.label as string) || 'bg-[var(--icon-bg-color)] text-[var(--icon-text-color)]'}`}>
                 {nodeIconsMap[selectedNode.data.label as string] || <FiSliders />}
               </div>
-              <h2 className="text-[15px] font-bold text-[var(--flowbar-text-primary)] font-sans tracking-tight">
+              <h2 className="text-[14.5px] font-bold text-[var(--flowbar-text-primary)] font-sans tracking-tight">
                 {selectedNode.data.label as string} Node
               </h2>
             </>
           ) : (
             <>
-              <h2 className="text-[15.5px] font-bold text-[var(--flowbar-text-primary)] font-sans tracking-tight">
+              <h2 className="text-[15px] font-bold text-[var(--flowbar-text-primary)] font-sans tracking-tight">
                 Flow Details
               </h2>
               <span className={`px-2 py-0.5 text-[10px] font-bold rounded-full bg-[hsla(var(--ios-green),0.12)] text-[hsl(var(--ios-green))]`}>
@@ -423,7 +423,7 @@ const PROVIDER_MODELS: Record<string, string[]> = {
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 overflow-y-auto no-scrollbar px-4 py-1 divide-y divide-[var(--flowbar-section-border)]">
+      <div className="flex-1 overflow-y-auto no-scrollbar px-3 py-1 divide-y divide-[var(--flowbar-section-border)]">
         
         {selectedNode ? (
           /* ==============================================================

@@ -110,11 +110,11 @@ export const NodesLibrary = () => {
   }
 
   return (
-    <div className="absolute left-4 top-16 bottom-4 w-[310px] bg-[var(--nodes-bg)] border border-[var(--nodes-border)] rounded-2xl shadow-xl flex flex-col overflow-hidden z-45 select-none transition-all duration-300">
+    <div className="absolute left-4 top-16 bottom-4 w-[260px] bg-[var(--nodes-bg)] border border-[var(--nodes-border)] rounded-2xl shadow-xl flex flex-col overflow-hidden z-45 select-none transition-all duration-300">
 
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3.5 border-b border-[var(--nodes-header-border)]">
-        <h2 className="text-[15.5px] font-bold text-[var(--nodes-header-text)] font-sans tracking-tight">
+      <div className="flex items-center justify-between px-3 py-3 border-b border-[var(--nodes-header-border)]">
+        <h2 className="text-[15px] font-bold text-[var(--nodes-header-text)] font-sans tracking-tight">
           Nodes Library
         </h2>
         <button
@@ -127,19 +127,19 @@ export const NodesLibrary = () => {
       </div>
 
       {/* Search Input */}
-      <div className="px-4 pt-3.5 pb-2 relative">
+      <div className="px-3 pt-3 pb-2 relative">
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search nodes..."
-          className="w-full h-9 bg-[var(--nodes-search-bg)] border border-[var(--nodes-search-border)] rounded-xl px-3 pl-8 text-xs text-[var(--nodes-search-text)] placeholder-[var(--nodes-search-placeholder)] focus:outline-none focus:border-[var(--nodes-search-focus-border)] focus:bg-[var(--nodes-search-focus-bg)] transition-all font-sans"
+          className="w-full h-8.5 bg-[var(--nodes-search-bg)] border border-[var(--nodes-search-border)] rounded-xl px-2.5 pl-7.5 text-xs text-[var(--nodes-search-text)] placeholder-[var(--nodes-search-placeholder)] focus:outline-none focus:border-[var(--nodes-search-focus-border)] focus:bg-[var(--nodes-search-focus-bg)] transition-all font-sans"
         />
-        <FiSearch className="absolute left-7 top-1/2 -translate-y-1/2 text-[var(--nodes-search-icon)] w-4 h-4" />
+        <FiSearch className="absolute left-6 top-1/2 -translate-y-1/2 text-[var(--nodes-search-icon)] w-3.5 h-3.5" />
       </div>
 
       {/* Categories Content */}
-      <div className="flex-1 overflow-y-auto no-scrollbar px-4 py-2 flex flex-col gap-1">
+      <div className="flex-1 overflow-y-auto no-scrollbar px-3 py-1.5 flex flex-col gap-0.5">
         
         {categories.map((category) => {
           const categoryNodes = filteredNodes.filter(node => node.category === category);
@@ -149,16 +149,16 @@ export const NodesLibrary = () => {
           const isExpanded = expandedCategories[category] || hasSearch;
           
           return (
-            <div key={category} className="flex flex-col gap-2 mb-4">
+            <div key={category} className="flex flex-col gap-1.5 mb-3.5">
               {/* Category Header */}
               <div 
                 onClick={() => !hasSearch && toggleCategory(category)}
-                className="flex items-center justify-between py-1 text-[13px] font-semibold text-[var(--ios-text-primary)] tracking-tight cursor-pointer select-none hover:opacity-80 transition-opacity"
+                className="flex items-center justify-between py-0.5 text-[12.5px] font-semibold text-[var(--ios-text-primary)] tracking-tight cursor-pointer select-none hover:opacity-80 transition-opacity"
               >
                 <span>{category}</span>
                 {!hasSearch && (
                   <FiChevronDown 
-                    size={16} 
+                    size={14} 
                     className={`transition-transform duration-200 text-[var(--ios-text-muted)] ${!isExpanded ? '-rotate-90' : ''}`} 
                   />
                 )}
@@ -166,20 +166,20 @@ export const NodesLibrary = () => {
               
               {/* Nodes Grid */}
               {isExpanded && (
-                <div className="grid grid-cols-2 gap-2 transition-all duration-300">
+                <div className="grid grid-cols-2 gap-1.5 transition-all duration-300">
                   {categoryNodes.map((node) => (
                     <div
                       key={node.data.label}
                       draggable
                       onDragStart={(e) => onDragStart(e, node.type, node.data.label, node.data.description, node.data.nodeData)}
                       onDragEnd={onDragEnd}
-                      className="flex items-center gap-2 p-2 bg-[var(--nodes-item-bg)] border border-[var(--nodes-item-border)] rounded-xl cursor-grab select-none hover:-translate-y-0.5 hover:border-[var(--nodes-item-hover-border)] hover:bg-[var(--nodes-bg-hover)] active:scale-97 active:bg-[var(--nodes-item-active-bg)] transition-all duration-200 shadow-[0_1px_2px_rgba(0,0,0,0.02)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.04)] group"
+                      className="flex items-center gap-1.5 p-1.5 bg-[var(--nodes-item-bg)] border border-[var(--nodes-item-border)] rounded-xl cursor-grab select-none hover:-translate-y-0.5 hover:border-[var(--nodes-item-hover-border)] hover:bg-[var(--nodes-bg-hover)] active:scale-97 active:bg-[var(--nodes-item-active-bg)] transition-all duration-200 shadow-[0_1px_2px_rgba(0,0,0,0.02)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.04)] group"
                       title={node.data.description}
                     >
-                      <div className={`flex items-center justify-center w-7 h-7 rounded-lg shrink-0 transition-transform duration-200 group-hover:scale-105 ${getCategoryClass(category)}`}>
+                      <div className={`flex items-center justify-center w-6.5 h-6.5 rounded-lg shrink-0 transition-transform duration-200 group-hover:scale-105 ${getCategoryClass(category)}`}>
                         {node.icon}
                       </div>
-                      <span className="text-[12px] font-medium text-[var(--ios-text-primary)] leading-snug truncate">
+                      <span className="text-[11.5px] font-medium text-[var(--ios-text-primary)] leading-snug truncate">
                         {node.data.label}
                       </span>
                     </div>
@@ -193,16 +193,16 @@ export const NodesLibrary = () => {
         {/* Empty State */}
         {filteredNodes.length === 0 && (
           <div className="flex flex-col items-center justify-center py-12 px-2 text-center">
-            <FiSearch size={24} className="text-[var(--nodes-empty-icon)] mb-3" />
+            <FiSearch size={22} className="text-[var(--nodes-empty-icon)] mb-2.5" />
             <span className="text-xs font-semibold text-[var(--nodes-empty-title)]">No nodes found</span>
-            <span className="text-[10.5px] text-[var(--nodes-empty-desc)] mt-1">Try searching with a different term</span>
+            <span className="text-[10px] text-[var(--nodes-empty-desc)] mt-1">Try searching with a different term</span>
           </div>
         )}
 
       </div>
 
       {/* Footer Buttons */}
-      <div className="p-4 border-t border-[var(--nodes-footer-border)] bg-[var(--nodes-footer-bg)]">
+      <div className="p-3 border-t border-[var(--nodes-footer-border)] bg-[var(--nodes-footer-bg)]">
         <button
           className="w-full py-1.5 bg-[var(--nodes-footer-btn-bg)] hover:bg-[var(--nodes-footer-btn-bg-hover)] border border-[var(--nodes-footer-btn-border)] hover:border-[var(--nodes-footer-btn-border-hover)] text-[var(--nodes-footer-btn-text)] hover:text-[var(--nodes-footer-btn-text-hover)] rounded-lg text-xs font-bold transition-all duration-150 text-center shadow-sm cursor-pointer"
         >
