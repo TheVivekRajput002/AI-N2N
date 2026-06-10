@@ -137,13 +137,16 @@ function Flow() {
       onDragOver={onDragOver}
       onDrop={onDrop}
       colorMode={colorMode}
-      fitView                          // auto-fit nodes on first load
+      fitView                          
+      minZoom={0.3}
+      maxZoom={2}
+      proOptions={{ hideAttribution: true }}
     >
       {/* Grid background */}
       <Background variant={BackgroundVariant.Dots} gap={30} />
 
       {/* Zoom controls bottom-left */}
-      <Controls className='scale-110 border border-[var(--minimap-border-color)] shadow-xl rounded-md overflow-hidden backdrop-blur-md bg-opacity-80' />
+      <Controls />
 
       {/* Mini map bottom-right */}
 

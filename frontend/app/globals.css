@@ -573,6 +573,44 @@
   outline: none !important;
 }
 
+/* Custom React Flow Controls Styling */
+.react-flow__controls {
+  background-color: var(--node-bg-color) !important;
+  border: 1px solid var(--nodes-border) !important;
+  border-radius: 12px !important;
+  padding: 4px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.react-flow__controls-button {
+  background-color: transparent !important;
+  border: none !important;
+  border-radius: 8px !important;
+  color: var(--ios-text-primary) !important;
+  fill: var(--ios-text-primary) !important;
+  width: 32px !important;
+  height: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.react-flow__controls-button:hover {
+  background-color: var(--nodes-bg-hover) !important;
+  color: var(--nodes-text-hover) !important;
+}
+
+.react-flow__controls-button svg {
+  width: 16px !important;
+  height: 16px !important;
+  fill: currentColor !important;
+}
+
 /* iOS Node Library UI Styles */
 .ios-nodes-container {
   display: flex;
