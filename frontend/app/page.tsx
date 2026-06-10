@@ -7,7 +7,7 @@ export default function Home() {
     <div className="relative overflow-hidden min-h-screen bg-[#F8FAFC] text-[#1E293B] bg-dot-pattern">
       <Header />
       <Hero />
-      {/* <WorkflowDetails /> */}
+      <WorkflowDetails />
     </div>
   );
 }
