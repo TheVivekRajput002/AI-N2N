@@ -32,7 +32,7 @@ export default function Header() {
             </SignUpButton>
           </Show>
           <Show when="signed-in">
-            <Link href="/workspaces" className="border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 px-5 py-2 rounded-lg text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-all soft-shadow" style={{ marginRight: '0.5rem' }}>
+            <Link href="/workspaces" prefetch={true} className="border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 px-5 py-2 rounded-lg text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-all soft-shadow" style={{ marginRight: '0.5rem' }}>
               Go to Dashboard
             </Link>
             <UserButton />
