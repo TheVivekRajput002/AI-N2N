@@ -1,6 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+}
+
 @theme {
   --color-primary: var(--ct-primary);
   --color-secondary: var(--ct-secondary);
@@ -1543,4 +1547,200 @@
 
 .floating-shadow {
   box-shadow: 0px 20px 50px -12px rgba(0, 80, 203, 0.12);
+}
+
+/* Laptop/Desktop viewport height optimization for landing page Hero fold */
+@media (min-width: 1024px) {
+
+  /* Prevent scroll for first fold */
+  .hero-fold-container {
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+  }
+
+  /* Shrink central text/icon when screen height is shorter */
+  @media (max-height: 850px) {
+    .hero-title {
+      font-size: 3.25rem !important;
+    }
+
+    .hero-subtitle {
+      font-size: 1rem !important;
+      margin-bottom: 1.75rem !important;
+    }
+
+    .hero-icon-container {
+      margin-bottom: 1.25rem !important;
+    }
+  }
+
+  @media (max-height: 720px) {
+    .hero-title {
+      font-size: 2.75rem !important;
+    }
+
+    .hero-subtitle {
+      font-size: 0.95rem !important;
+      margin-bottom: 1.25rem !important;
+    }
+
+    .hero-icon-container {
+      margin-bottom: 1rem !important;
+    }
+  }
+
+  @media (max-height: 640px) {
+    .hero-title {
+      font-size: 2.25rem !important;
+    }
+
+    .hero-subtitle {
+      font-size: 0.875rem !important;
+      margin-bottom: 1rem !important;
+    }
+
+    .hero-icon-container {
+      margin-bottom: 0.75rem !important;
+      transform: scale(0.9);
+    }
+  }
+
+  /* Floating cards positioning and scaling for laptops to fit 100vh/100vw */
+  [data-purpose="sticky-note-widget"],
+  [data-purpose="reminders-widget"],
+  [data-purpose="tasks-widget"],
+  [data-purpose="integrations-widget"] {
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease !important;
+  }
+
+  /* Adjust positioning and scale based on height */
+  @media (max-height: 900px) {
+    [data-purpose="sticky-note-widget"] {
+      top: 6% !important;
+      left: 2% !important;
+      transform: scale(0.8) rotate(-3deg) !important;
+      transform-origin: top left;
+    }
+
+    [data-purpose="sticky-note-widget"]:hover {
+      transform: scale(0.8) rotate(0deg) !important;
+    }
+
+    [data-purpose="reminders-widget"] {
+      top: 6% !important;
+      right: 2% !important;
+      transform: scale(0.8) rotate(2deg) !important;
+      transform-origin: top right;
+    }
+
+    [data-purpose="tasks-widget"] {
+      bottom: 6% !important;
+      left: 2% !important;
+      transform: scale(0.8) !important;
+      transform-origin: bottom left;
+    }
+
+    [data-purpose="integrations-widget"] {
+      bottom: 6% !important;
+      right: 2% !important;
+      transform: scale(0.8) !important;
+      transform-origin: bottom right;
+    }
+  }
+
+  @media (max-height: 768px) {
+    [data-purpose="sticky-note-widget"] {
+      top: 4% !important;
+      left: 1.5% !important;
+      transform: scale(0.7) rotate(-3deg) !important;
+    }
+
+    [data-purpose="sticky-note-widget"]:hover {
+      transform: scale(0.7) rotate(0deg) !important;
+    }
+
+    [data-purpose="reminders-widget"] {
+      top: 4% !important;
+      right: 1.5% !important;
+      transform: scale(0.7) rotate(2deg) !important;
+    }
+
+    [data-purpose="tasks-widget"] {
+      bottom: 4% !important;
+      left: 1.5% !important;
+      transform: scale(0.7) !important;
+    }
+
+    [data-purpose="integrations-widget"] {
+      bottom: 4% !important;
+      right: 1.5% !important;
+      transform: scale(0.7) !important;
+    }
+  }
+
+  @media (max-height: 660px) {
+    [data-purpose="sticky-note-widget"] {
+      top: 3% !important;
+      left: 1% !important;
+      transform: scale(0.55) rotate(-3deg) !important;
+    }
+
+    [data-purpose="sticky-note-widget"]:hover {
+      transform: scale(0.55) rotate(0deg) !important;
+    }
+
+    [data-purpose="reminders-widget"] {
+      top: 3% !important;
+      right: 1% !important;
+      transform: scale(0.55) rotate(2deg) !important;
+    }
+
+    [data-purpose="tasks-widget"] {
+      bottom: 3% !important;
+      left: 1% !important;
+      transform: scale(0.55) !important;
+    }
+
+    [data-purpose="integrations-widget"] {
+      bottom: 3% !important;
+      right: 1% !important;
+      transform: scale(0.55) !important;
+    }
+  }
+
+  /* Make sure widths are restricted to fit 100vw and prevent horizontal scroll */
+  @media (max-width: 1440px) {
+    [data-purpose="sticky-note-widget"] {
+      left: 1.5% !important;
+    }
+
+    [data-purpose="reminders-widget"] {
+      right: 1.5% !important;
+    }
+
+    [data-purpose="tasks-widget"] {
+      left: 1.5% !important;
+    }
+
+    [data-purpose="integrations-widget"] {
+      right: 1.5% !important;
+    }
+  }
+
+  @media (max-width: 1280px) {
+    [data-purpose="tasks-widget"] {
+      left: 1% !important;
+      transform: scale(0.7) !important;
+    }
+
+    [data-purpose="integrations-widget"] {
+      right: 1% !important;
+      transform: scale(0.7) !important;
+    }
+  }
 }

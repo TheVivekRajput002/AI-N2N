@@ -5,8 +5,11 @@ import WorkflowDetails from '@/components/landing-page/WorkflowDetails';
 export default function Home() {
   return (
     <div className="relative overflow-hidden min-h-screen bg-[#F8FAFC] text-[#1E293B] bg-dot-pattern">
-      <Header />
-      <Hero />
+      {/* First Fold: Fits exactly 100vh on every laptop screen */}
+      <div className="h-screen flex flex-col relative w-full overflow-hidden hero-fold-container">
+        <Header />
+        <Hero />
+      </div>
       <WorkflowDetails />
     </div>
   );

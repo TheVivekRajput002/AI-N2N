@@ -10,16 +10,16 @@ export default function Header() {
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-2" data-purpose="brand-logo">
           <img src="/icon.jpg" alt="N2N Ai Logo" className="logo-img" style={{ width: '2.15rem', height: '2.15rem', borderRadius: '0.375rem' }} />
-          <span className="text-xl font-bold tracking-tight text-slate-800 dark:text-slate-200">N2N Ai</span>
+          <span className="text-xl font-bold tracking-tight text-slate-800 dark:text-slate-600">N2N Ai</span>
         </Link>
 
         {/* Nav Links (Desktop) */}
         <div className="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-600 dark:text-slate-400">
+          <a className="hover:text-blue-600 transition-colors" href="#">Home</a>
+          <a className="hover:text-blue-600 transition-colors" href="#problems">Problems</a>
           <a className="hover:text-blue-600 transition-colors" href="#features">Features</a>
-          <a className="hover:text-blue-600 transition-colors" href="#solutions">Solutions</a>
-          <a className="hover:text-blue-600 transition-colors" href="#resources">Resources</a>
-          <a className="hover:text-blue-600 transition-colors" href="#pricing">Pricing</a>
         </div>
+
 
         {/* Auth Buttons */}
         <div className="flex items-center space-x-4">

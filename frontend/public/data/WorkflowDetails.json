@@ -1,33 +1,45 @@
 {
   "solutions": {
-    "badge": "Solutions",
-    "title": "Solve your team's biggest challenges",
+    "badge": "Problems",
+    "title": "What slows down your AI development",
     "challenges": [
       {
-        "icon": "diversity_3",
+        "icon": "code_off",
         "colorClass": "text-tertiary",
-        "text": "Ensure your team is always on the same page with task-sharing and transparent updates."
+        "text": "Hardcoding LLM chains means every change requires a redeploy and breaks other parts of your pipeline."
       },
       {
         "icon": "list_alt",
         "colorClass": "text-primary",
-        "text": "Prioritize and manage tasks effectively so your team can focus on what matters most."
+        "text": "Juggling prompt versions, model configs, and API keys across files makes pipelines impossible to maintain."
       },
       {
         "icon": "person_check",
         "colorClass": "text-secondary",
-        "text": "Hold everyone accountable without the need for constant check-ins."
+        "text": "There's no visibility into what each node ran, what it returned, or where your pipeline actually failed."
       }
     ]
   },
   "dashboard": {
     "sidebar": {
-      "brand": "ChronoTask",
-      "createBtn": "Create",
+      "brand": "AI-N2N",
+      "createBtn": "New Pipeline",
       "menu": [
-        { "icon": "home", "label": "Home", "active": true },
-        { "icon": "check_circle", "label": "My Tasks", "active": false },
-        { "icon": "inbox", "label": "Inbox", "active": false }
+        {
+          "icon": "home",
+          "label": "Home",
+          "active": true
+        },
+        {
+          "icon": "check_circle",
+          "label": "My Pipelines",
+          "active": false
+        },
+        {
+          "icon": "inbox",
+          "label": "Run Logs",
+          "active": false
+        }
       ]
     },
     "header": {
@@ -35,30 +47,52 @@
       "profileImg": "https://lh3.googleusercontent.com/aida/AP1WRLuZ5aIMyffohgil0pXEHpVr40IKFRNAZnqIpf-YVHsqMwHDyRw4Wb3bCYnUsR-J1T36VHPRBJ4y_rPiP2kpsZSmA8KGAmxJm2Aun3ePdfCrhUsNngtxtcbZe1EBnaWOGTIB0ivq1EaUOQvzLGK0cONzyGZMVcu7467yCpWt3Th2x7oJYWKBDN78ADijk7nTE8S23QhEnaEoyOsAXg-WC69U4Ye82AUH7TMDl75z0xkBz9dqJvjoJ_Qfdz8"
     },
     "greeting": "Good morning,",
-    "username": "Amanda",
-    "todoTitle": "To do list",
+    "username": "Vivek",
+    "todoTitle": "Active pipelines",
     "todoTasks": [
-      { "id": 1, "text": "Finish the sales presentation 🔥 for the client meeting at 2:00 PM", "checked": false },
-      { "id": 2, "text": "Send follow-up emails to potential leads", "checked": true },
-      { "id": 3, "text": "Review and approve the marketing budget 📅", "checked": false }
+      {
+        "id": 1,
+        "text": "Research Agent 🔥 — web search → summarize → route to Slack",
+        "checked": false
+      },
+      {
+        "id": 2,
+        "text": "Send enriched lead data to CRM via webhook",
+        "checked": true
+      },
+      {
+        "id": 3,
+        "text": "Review and trigger the content generation pipeline 📅",
+        "checked": false
+      }
     ],
-    "timerTitle": "Time tracker",
-    "timerValue": "04:21:58",
-    "activityTitle": "Activity",
-    "activityValue": "82%",
+    "timerTitle": "Avg run time",
+    "timerValue": "00:03:42",
+    "activityTitle": "Success rate",
+    "activityValue": "94%",
     "activityLegend": [
-      { "colorClass": "bg-primary-container", "label": "Working hrs" },
-      { "colorClass": "bg-secondary-container", "label": "Tasks done" }
+      {
+        "colorClass": "bg-primary-container",
+        "label": "Successful runs"
+      },
+      {
+        "colorClass": "bg-secondary-container",
+        "label": "Nodes executed"
+      }
     ],
-    "assignedTitle": "Tasks I've assigned",
-    "assignedTabs": ["Upcoming", "Overdue", "Completed"],
+    "assignedTitle": "Pipelines I've deployed",
+    "assignedTabs": [
+      "Upcoming",
+      "Overdue",
+      "Completed"
+    ],
     "assignedTasks": [
       {
         "id": 1,
         "badge": 8,
         "badgeBg": "bg-orange-100",
         "badgeText": "text-orange-600",
-        "text": "New ideas for campaign",
+        "text": "GPT-4o summarizer flow",
         "progress": "60%",
         "avatars": [
           "https://lh3.googleusercontent.com/aida/AP1WRLv8ZXsrh-9eUuyfxqzt9ugkdRo8xIoY1CORaow3R3aLTCLb1gX6_y9ePAPFNoDBOUeaJD4c69wqtqjB7ixD-OwFNmUAK2BFcdAVrkSn94iKEUP7Hy6l0x0IusMnLEIkM7DblEKXvImRiKWFI-Izl5sbJ4aZNv0tdDCPPtjtlg3YEm-aNbLeGzTY0buXt-VfvXVxvBAl7TrFX--tM7aGf_6CxKg6cvjMjMPDKaQGEpYDO7YXhMbTVMTUtPE",
@@ -70,7 +104,7 @@
         "badge": 7,
         "badgeBg": "bg-blue-100",
         "badgeText": "text-blue-600",
-        "text": "Change button",
+        "text": "Webhook trigger pipeline",
         "progress": "27%",
         "avatars": [
           "https://lh3.googleusercontent.com/aida/AP1WRLtpoOiUe76zIsu-klgKk8k3PS1djFgLR8hZqkdHWtKLcqf3sNdE6orrD2ZZj7w18JEVioMaiA-QNKOkZJe1ypdcQUh7I3a26vr5AIJAqQhCsJlKFtV8wLBy6sbAo972YdaljiUmlrD7ZOFXs_dUhCEE8GHGGJV4wZFT4bs_LMtBi0mHpirAe4wL5k846GVVAAU-03KiKMcTmjPE4f2Aw9JgtRy7z6Ai8ugA6ldD_Z9dqi25LHP9gqXNahs"
@@ -80,67 +114,90 @@
   },
   "featuresSection": {
     "badge": "Features",
-    "title": "Keep everything in one place",
-    "subtitle": "Forget complex project management tools.",
-    "collaborationCard": {
-      "title": "Seamless Collaboration",
-      "text": "Work together with your team effortlessly, share tasks, and update progress in real-time.",
-      "teamName": "Marketing Team",
+    "title": "Everything wired in one canvas",
+    "subtitle": "Forget tangled LLM spaghetti code.",
+    "timeManagementCard": {
+      "title": "Workflow Versioning",
+      "text": "Every save creates an immutable snapshot. Roll back to any prior version with a single click, no data lost.",
+      "teamName": "Pipeline: Research Agent",
       "members": [
         {
-          "name": "Amanda Peterson",
-          "img": "https://lh3.googleusercontent.com/aida/AP1WRLuvnkPx8EypuN6UM3rg28GXe7wYKLJjLK1m0Omz0q7_AAFwQQ9OGL-VsgU9ShbLvvCSHLOnlIVDeD0FY36tI3KfAfEta8nSokGRd68UVfwqYXPDOFnPfmbpuu4ZNlmbHl4k6QR_z1GI1mxAcr3sL3D2OIoUPXknVgYENXJ3KMsOqF3jqM_sxIMYtkvyXEN0b0SUvo5BurL1F0OxlM1Bq1tG71PIvG6VB_yOUR-65D7YdFzBkxw5L1ktAA"
+          "name": "v3 — current",
+          "img": "..."
         },
         {
-          "name": "Jane Fox",
-          "img": "https://lh3.googleusercontent.com/aida/AP1WRLu5ID_hhyF6i_xaAT4etwW1as-N2SDhCY79PlSR4pWRI2ckdsPtRvJHVi8RXkb6Wg3J6DFXjTzUaAu0s_pDrkIROgkjp7uNg0Zd0DfxS0WtsqMwb4l_PcuXjzWHwtKJ-d6pXyMIH1DQk6wXYVKm7V6JvehUlukLxhDKHhlBlqhRAuinnjTemqm0SLzgI9eas8b02LJEpn1wVirk59TvCF7tcmrsauQIeZTFgH8vmnBQF4DwJgCcOPRgjBY"
+          "name": "v2 — yesterday",
+          "img": "..."
         }
       ],
-      "inviteText": "Invite members"
+      "inviteText": "Restore version"
     },
-    "timeManagementCard": {
-      "title": "Time Management Tools",
-      "text": "Optimize your time with integrated tools like timers, reminders, and schedules.",
-      "scheduleTitle": "Weekly Schedule",
-      "items": [
-        { "colorClass": "border-primary bg-primary/5", "text": "Meeting with marketing team", "time": "13:00 - 13:45" },
-        { "colorClass": "border-secondary bg-secondary/5", "text": "Meeting with new client", "time": "15:00 - 15:45" }
-      ]
+    "collaborationCard": {
+      "title": "HTTP Request Node",
+      "text": "Hit any external API mid-pipeline. Pass node outputs as headers, params, or request body downstream.",
+      "teamName": "POST → api.example.com",
+      "members": [
+        {
+          "name": "Headers",
+          "img": "..."
+        },
+        {
+          "name": "Body",
+          "img": "..."
+        }
+      ],
+      "inviteText": "Add HTTP node"
     },
     "workloadCard": {
-      "title": "Team Workload",
-      "text": "Visualize team capacity and redistribute tasks to prevent burnout and ensure efficiency.",
+      "title": "Execution Load",
+      "text": "Monitor active node usage and execution concurrency to keep pipelines running efficiently.",
       "percentage": "75%",
-      "label": "Team workload"
+      "label": "Pipeline load"
     },
     "trackingCard": {
-      "title": "Advanced task tracking",
-      "text": "A bird's eye view of your entire behaviour and productivity.",
+      "title": "Live run tracking",
+      "text": "A node-by-node view of every execution, input, output, and failure in your pipeline.",
       "activeCard": {
-        "team": "Marketing team",
-        "title": "New Ideas for the campaign",
+        "team": "Research pipeline",
+        "title": "GPT-4o summarizer flow",
         "comments": 5,
         "attachments": 2
       },
       "secondaryCard": {
-        "title": "Review budget 2024"
+        "title": "Webhook trigger #4"
       }
     },
     "workspaceCard": {
-      "title": "Customizable Workspaces",
-      "tabs": ["Themes", "Widgets", "Tasks View"],
-      "timer": "04:21"
+      "title": "Customizable Canvas",
+      "tabs": [
+        "Node Types",
+        "Triggers",
+        "Run History"
+      ],
+      "timer": "00:03"
     },
-    "footerNotice": "and a lot more features..."
+    "footerNotice": "and a lot more nodes..."
   },
   "footer": {
-    "brand": "ChronoTask",
-    "copyright": "© 2024 ChronoTask Inc. All rights reserved.",
+    "brand": "AI-N2N",
+    "copyright": "© 2026 AI-N2N. All rights reserved.",
     "links": [
-      { "label": "Privacy Policy", "href": "#" },
-      { "label": "Terms of Service", "href": "#" },
-      { "label": "Security", "href": "#" },
-      { "label": "Contact", "href": "#" }
+      {
+        "label": "Privacy Policy",
+        "href": "#"
+      },
+      {
+        "label": "Terms of Service",
+        "href": "#"
+      },
+      {
+        "label": "Security",
+        "href": "#"
+      },
+      {
+        "label": "Contact",
+        "href": "#"
+      }
     ]
   }
 }
