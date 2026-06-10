@@ -1,6 +1,7 @@
 import Header from '@/components/landing-page/Header';
 import Hero from '@/components/landing-page/Hero';
 import WorkflowDetails from '@/components/landing-page/WorkflowDetails';
+import Footer from '@/components/landing-page/Footer';
 
 export default function Home() {
   return (
@@ -11,6 +12,7 @@ export default function Home() {
         <Hero />
       </div>
       <WorkflowDetails />
+      <Footer />
     </div>
   );
 }

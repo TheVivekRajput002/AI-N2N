@@ -232,23 +232,6 @@ export default function WorkflowDetails() {
           </div>
         </section>
       </main>
-
-      {/* Footer (Shared Component) */}
-      <footer className="w-full py-stack-lg px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-stack-md bg-surface-container-low border-t border-outline-variant">
-        <div className="flex flex-col items-center md:items-start gap-4">
-          <span className="font-headline-md text-headline-md font-bold text-on-surface">{workflowData.footer.brand}</span>
-          <p className="font-body-md text-body-md text-on-surface-variant">
-            {workflowData.footer.copyright}
-          </p>
-        </div>
-        <div className="flex gap-8">
-          {workflowData.footer.links.map((link, idx) => (
-            <a key={idx} className="font-label-sm text-label-sm text-on-surface-variant hover:underline text-primary transition-colors" href={link.href}>
-              {link.label}
-            </a>
-          ))}
-        </div>
-      </footer>
     </div>
   );
 }
