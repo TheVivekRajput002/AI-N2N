@@ -23,6 +23,8 @@ function AiNode({ data, selected, type }: { data: { label: string; description?:
 
   const iconMap: Record<string, React.ReactNode> = {
     llm: <IoHardwareChipOutline />,
+    llm_free: <IoHardwareChipOutline />,
+    'llm free': <IoHardwareChipOutline />,
   };
 
   const categoryColorClass = 'ios-icon-bg-ai';

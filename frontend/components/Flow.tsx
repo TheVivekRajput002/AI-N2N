@@ -48,6 +48,7 @@ const nodeTypes = {
   merge: LogicNode,
   exception: CustomNode,
   llm: AiNode,
+  llm_free: AiNode,
   output: OutputNode,
 }
 

@@ -67,7 +67,7 @@ export default function FlowBar({ nodes, setNodes, onSave }: FlowBarProps) {
 
   const getSuggestedProperties = (nodeType: string) => {
     const type = (nodeType || '').toLowerCase();
-    if (type === 'llm') return ['output', 'model', 'provider'];
+    if (type === 'llm' || type === 'llm_free') return ['output', 'model', 'provider'];
     if (type === 'http_get' || type === 'http_post') return ['output', 'status'];
     if (type === 'input') return ['output'];
     if (type === 'conditional') return ['output', 'conditionMet'];
@@ -310,7 +310,7 @@ export default function FlowBar({ nodes, setNodes, onSave }: FlowBarProps) {
   const getNodeCategoryColorClass = (label: string) => {
     const inputs = ['Input'];
     const logics = ['Conditional', 'Merge'];
-    const ais = ['LLM'];
+    const ais = ['LLM', 'LLM free'];
     const transforms = ['Text', 'Delay'];
     const integrations = ['HTTP GET', 'HTTP POST'];
     const outputs = ['Output', 'Email', 'Notification'];
@@ -329,6 +329,7 @@ export default function FlowBar({ nodes, setNodes, onSave }: FlowBarProps) {
     Conditional: <FiList />,
     Merge: <FiGitCommit />,
     LLM: <IoHardwareChipOutline />,
+    'LLM free': <IoHardwareChipOutline />,
     Text: <RxText />,
     Delay: <FiClock />,
     'HTTP GET': <FiGlobe />,
@@ -689,6 +690,7 @@ const PROVIDER_MODELS: Record<string, string[]> = {
                         return Object.entries(nodeDataObj);
                       })().map(([key, val]) => {
                         if (key === 'type') return null;
+                        if (selectedNode.type === 'llm_free' && (key === 'api key' || key === 'apiKey' || key === 'api_key')) return null;
                         const isProviderKey = key === "ai provider" || key === "company";
                         const currentNodeData = (selectedNode.data as any).nodeData || {};
                         return (
@@ -718,6 +720,7 @@ const PROVIDER_MODELS: Record<string, string[]> = {
                               </div>
                             ) : isProviderKey ? (
                               <select
+                                disabled={selectedNode.type === 'llm_free'}
                                 value={val || 'gemini'}
                                 onChange={(e) => {
                                   const newProvider = e.target.value;
@@ -748,22 +751,21 @@ const PROVIDER_MODELS: Record<string, string[]> = {
                                     });
                                   }
                                 }}
-                                className="w-full bg-[var(--node-bg-color)] border border-[var(--flowbar-input-border)] rounded-md px-2 py-1 text-2xs font-mono text-[var(--flowbar-text-primary)] focus:outline-none focus:border-[var(--flowbar-input-focus)] cursor-pointer"
+                                className={`w-full bg-[var(--node-bg-color)] border border-[var(--flowbar-input-border)] rounded-md px-2 py-1 text-2xs font-mono text-[var(--flowbar-text-primary)] focus:outline-none focus:border-[var(--flowbar-input-focus)] ${selectedNode.type === 'llm_free' ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
                               >
                                 <option value="gemini">Gemini (Google)</option>
                                 <option value="openai">OpenAI</option>
                                 <option value="groq">Groq</option>
                               </select>
                             ) : key === "model" ? (
-                              <select
-                                value={val || ''}
+                              <input
+                                type="text"
+                                readOnly={selectedNode.type === 'llm_free'}
+                                value={val === null || val === undefined ? '' : typeof val === 'object' ? JSON.stringify(val) : val}
                                 onChange={(e) => updateNodeDataField("model", e.target.value)}
-                                className="w-full bg-[var(--node-bg-color)] border border-[var(--flowbar-input-border)] rounded-md px-2 py-1 text-2xs font-mono text-[var(--flowbar-text-primary)] focus:outline-none focus:border-[var(--flowbar-input-focus)] cursor-pointer"
-                              >
-                                {(PROVIDER_MODELS[currentNodeData["ai provider"] || currentNodeData.provider || currentNodeData.company || "gemini"] || []).map((m) => (
-                                  <option key={m} value={m}>{m}</option>
-                                ))}
-                              </select>
+                                className={`w-full bg-[var(--node-bg-color)] border border-[var(--flowbar-input-border)] rounded-md px-2 py-1 text-2xs font-mono text-[var(--flowbar-text-primary)] focus:outline-none focus:border-[var(--flowbar-input-focus)] ${selectedNode.type === 'llm_free' ? 'opacity-60 cursor-not-allowed' : ''}`}
+                                placeholder="e.g. gemini-2.5-flash"
+                              />
                             ) : (
                               <input
                                 type={key === "api key" ? "password" : "text"}

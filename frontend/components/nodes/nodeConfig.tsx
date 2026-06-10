@@ -52,6 +52,22 @@ export const AllNodes: NodeConfigItem[] = [
     },
     icon: <IoHardwareChipOutline className="w-5 h-5 text-[var(--nodes-item-icon-color)]" />
   },
+  {
+    type: 'llm_free',
+    category: 'AI / Prompt',
+    data: {
+      label: 'LLM free',
+      description: 'Execute free LLM prompt via Groq',
+      nodeData: {
+        "api key": "Using System Free Key",
+        "ai provider": "groq",
+        model: "llama-3.1-8b-instant",
+        output: "",
+        "system prompt": "answer in less than 100 words"
+      }
+    },
+    icon: <IoHardwareChipOutline className="w-5 h-5 text-[var(--nodes-item-icon-color)]" />
+  },
 
   // === Logic ===
   {

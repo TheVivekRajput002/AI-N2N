@@ -10,7 +10,7 @@ export async function executeAiPrompt(
 ): Promise<any> {
   const nodeType = (node.type || "").toLowerCase() || (node.data?.label || "").toLowerCase();
 
-  if (nodeType !== "llm") {
+  if (nodeType !== "llm" && nodeType !== "llm_free" && nodeType !== "llm free") {
     throw new Error(`Node type "${node.type}" is not supported by AiPrompt`);
   }
 
@@ -20,15 +20,21 @@ export async function executeAiPrompt(
     node.data?.nodeData?.company ||
     "gemini";
 
-  const apiKey =
+  let apiKey =
     node.data?.nodeData?.["api key"] ||
     node.data?.nodeData?.apiKey ||
-    node.data?.nodeData?.api_key ||
-    (provider === "openai"
-      ? process.env.OPENAI_API_KEY
-      : provider === "groq"
-      ? process.env.GROQ_API_KEY
-      : process.env.GEMINI_API_KEY);
+    node.data?.nodeData?.api_key;
+
+  if (apiKey === "Using System Free Key") {
+    apiKey = process.env.GROQ_FREE_API_KEY || process.env.GROQ_API_KEY;
+  } else if (!apiKey) {
+    apiKey =
+      provider === "openai"
+        ? process.env.OPENAI_API_KEY
+        : provider === "groq"
+        ? process.env.GROQ_API_KEY
+        : process.env.GEMINI_API_KEY;
+  }
 
   if (!apiKey) {
     throw new Error(`${provider.toUpperCase()} API Key is missing for LLM Node (ID: ${node.id}).`);

@@ -124,7 +124,7 @@ export async function executeGraph({
 
       if (nodeType === "input") {
         output = await executeInputStarter(node, resolvedInput, globalInput);
-      } else if (nodeType === "llm") {
+      } else if (nodeType === "llm" || nodeType === "llm_free" || nodeType === "llm free") {
         output = await executeAiPrompt(node, resolvedInput);
       } else if (nodeType === "conditional") {
         output = await executeLogic(node, resolvedInput, nodeOutputs, nodes);
