@@ -1,29 +1,37 @@
-"use client"
+import React from 'react';
+import { auth } from '@clerk/nextjs/server';
+import { apiGet } from '@/utils/api';
+import ProfileClient from './ProfileClient';
 
-import React from 'react'
-import { useEffect } from 'react'
-import axios from 'axios'
+const Page = async () => {
+  const { getToken } = await auth();
+  const token = await getToken();
 
-const page = () => {
-  // useEffect(() => {
-  //   axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth`,
-  //     {
-  //       withCredentials: true
-  //     }
-  //   )
-  //     .then(response => {
-  //       console.log('Auth check successful:', response.data)
-  //     })
-  //     .catch(error => {
-  //       console.error('Auth check failed:', error)
-  //     })
-  // }, [])
+  let userData = null;
+  let workspacesData = null;
+  let error = null;
+
+  try {
+    // Attempt to fetch profile info and workspaces concurrently
+    const [userRes, workspacesRes] = await Promise.all([
+      apiGet<any>('/auth', token),
+      apiGet<any>('/workspaces', token)
+    ]);
+    
+    userData = userRes?.user || null;
+    workspacesData = workspacesRes?.workspaces || null;
+  } catch (err: any) {
+    console.error("Error fetching user profile server-side:", err);
+    error = err?.message || String(err);
+  }
 
   return (
-    <div>
-      heyyy, I am the user
-    </div>
-  )
-}
+    <ProfileClient 
+      initialUser={userData} 
+      initialWorkspaces={workspacesData} 
+      error={error} 
+    />
+  );
+};
 
-export default page
+export default Page;
