@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { useCallback } from 'react';
 import { usePathname } from 'next/navigation';
 import { TbGridScan } from "react-icons/tb";
+import { useThemeStore } from '@/utils/store';
 
 // Custom high-fidelity AI N2N brand logo SVG
 const N2NLogo = ({ className = "w-[24px] h-[24px]" }) => (
@@ -32,7 +33,7 @@ const N2NLogo = ({ className = "w-[24px] h-[24px]" }) => (
 
 export const Navbar = () => {
     const pathname = usePathname();
-    const [isDark, setIsDark] = useState(false);
+    const { isDark, setIsDark } = useThemeStore();
 
     useEffect(() => {
         const savedTheme = localStorage.getItem('theme')
@@ -43,7 +44,7 @@ export const Navbar = () => {
 
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
         setIsDark(prefersDark)
-    }, [])
+    }, [setIsDark])
 
     useEffect(() => {
         const themeName = isDark ? 'dark' : 'light'
@@ -53,8 +54,8 @@ export const Navbar = () => {
     }, [isDark])
 
     const toggleTheme = useCallback(() => {
-        setIsDark((prev) => !prev)
-    }, [])
+        setIsDark(!isDark)
+    }, [isDark, setIsDark])
 
     const navItems = [
         { id: 'flow', icon: FiGitBranch, label: 'Pipelines', href: '/workspaces' },

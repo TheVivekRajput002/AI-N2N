@@ -1,5 +1,5 @@
 import express from 'express'
-import {kuch} from '../controllers/auth.controller'
+import {kuch, markWelcomeSeen} from '../controllers/auth.controller'
 const router = express.Router()
 
 router.get('/hi', (req,res)=>{
@@ -9,5 +9,6 @@ router.get('/hi', (req,res)=>{
 })
 
 router.get('/', kuch)
+router.post('/welcome-seen', markWelcomeSeen)
 
 export default router

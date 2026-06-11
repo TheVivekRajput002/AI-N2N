@@ -52,3 +52,32 @@ export async function getOrCreateUser(clerkId: string) {
 
 }
 
+export async function markWelcomeSeen(req: any, res: any) {
+    try {
+        const { userId } = getAuth(req)
+        if (!userId) {
+            return res.status(401).json({ message: 'Unauthorized' })
+        }
+
+        const user = await prisma.user.update({
+            where: {
+                clerkId: userId
+            },
+            data: {
+                hasSeenWelcome: true
+            }
+        })
+
+        return res.status(200).json({
+            success: true,
+            user
+        })
+    } catch (error) {
+        console.log("error in markWelcomeSeen", error)
+        return res.status(500).json({
+            message: "Internal Server Error"
+        })
+    }
+}
+
+

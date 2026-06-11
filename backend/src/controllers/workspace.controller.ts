@@ -19,7 +19,8 @@ export async function getWorkspaces(req: Request, res: Response) {
         })
 
         return res.status(200).json({
-            workspaces: workspaces
+            workspaces: workspaces,
+            hasSeenWelcome: user.hasSeenWelcome
         })
     } catch (error) {
         console.log("error in getWorkspace", error)

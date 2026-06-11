@@ -7,11 +7,14 @@ const Page = async () => {
 
   const { getToken } = await auth()
   const token = await getToken()
-  const response = await apiGet<WorkspacesResponse>('/workspaces', token)
+  const response = await apiGet<any>('/workspaces', token)
 
   return (
     <div>
-      <WorkspacePage initialWorkspaces={response.workspaces} />
+      <WorkspacePage 
+        initialWorkspaces={response.workspaces} 
+        initialHasSeenWelcome={response.hasSeenWelcome} 
+      />
     </div>
   )
 }

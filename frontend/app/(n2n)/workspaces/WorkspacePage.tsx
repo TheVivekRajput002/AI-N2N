@@ -1,15 +1,25 @@
 "use client"
 
 import React, { useState } from 'react';
-import { FiPlus, FiSearch, FiFolder, FiClock, FiX, FiCheck, FiTrash2, FiArrowRight, FiSliders } from 'react-icons/fi';
+import { FiPlus, FiSearch, FiFolder, FiClock, FiX, FiCheck, FiTrash2, FiArrowRight, FiSliders, FiPlay, FiChevronRight } from 'react-icons/fi';
 import Link from 'next/link';
-import { useWorkspace } from '@/utils/store';
+import { useRouter } from 'next/navigation';
+import { useWorkspace, useThemeStore } from '@/utils/store';
 import { apiDelete, apiPost } from '@/utils/api';
 import { useAuth } from '@clerk/nextjs';
 import { WorkspaceType } from '@/utils/store';
 
-const WorkspacePage = ({ initialWorkspaces }: { initialWorkspaces: WorkspaceType[] }) => {
+const WorkspacePage = ({ 
+  initialWorkspaces, 
+  initialHasSeenWelcome 
+}: { 
+  initialWorkspaces: WorkspaceType[]; 
+  initialHasSeenWelcome?: boolean; 
+}) => {
   const { getToken } = useAuth();
+  const router = useRouter();
+  const { isDark } = useThemeStore();
+
 
   const isInitialized = React.useRef(false);
   if (!isInitialized.current) {
@@ -18,6 +28,25 @@ const WorkspacePage = ({ initialWorkspaces }: { initialWorkspaces: WorkspaceType
   }
 
   const { workspaces, addWorkspace, deleteWorkspace } = useWorkspace();
+
+  // Welcome modal state
+  const [isWelcomeModalOpen, setIsWelcomeModalOpen] = useState(initialHasSeenWelcome === false);
+
+  const handleWelcomeDismiss = async (action: 'tutorial' | 'template' | 'skip') => {
+    try {
+      const token = await getToken();
+      await apiPost('/auth/welcome-seen', {}, token);
+    } catch (err) {
+      console.error("Error marking welcome as seen:", err);
+    }
+    setIsWelcomeModalOpen(false);
+
+    if (action === 'tutorial') {
+      window.open('https://youtu.be/hTfnxPJTjyo', '_blank');
+    } else if (action === 'template') {
+      router.push('/templates');
+    }
+  };
 
   // Search filter state
   const [searchQuery, setSearchQuery] = useState('');
@@ -333,6 +362,100 @@ const WorkspacePage = ({ initialWorkspaces }: { initialWorkspaces: WorkspaceType
           </div>
         )}
       </div>
+
+      {/* Welcome Onboarding Modal */}
+      {isWelcomeModalOpen && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 animate-fade-in">
+          {/* Backdrop Blur Overlay */}
+          <div 
+            onClick={() => handleWelcomeDismiss('skip')}
+            className={`absolute inset-0 backdrop-blur-[8px] transition-colors duration-300 ${isDark ? 'bg-black/40' : 'bg-black/15'}`} 
+          />
+
+          {/* Modal Container */}
+          <div className={`relative w-full max-w-[380px] border rounded-[28px] flex flex-col z-10 animate-scale-up select-none p-6 backdrop-saturate-150 transition-all duration-300 ${
+            isDark 
+              ? 'bg-[#1c1c1e]/95 border-slate-800/60 shadow-[0_24px_50px_rgba(0,0,0,0.4)]' 
+              : 'bg-[#f9f9f9]/95 border-slate-200/50 shadow-[0_24px_50px_rgba(0,0,0,0.12)]'
+          }`}>
+            
+            {/* Header Content */}
+            <div className="flex flex-col items-center text-center mb-6 mt-2">
+              <img 
+                src="/icon.jpg" 
+                alt="N2N Ai Logo" 
+                className={`w-12 h-12 rounded-[14px] shadow-sm mb-4 border ${isDark ? 'border-white/5' : 'border-black/5'}`} 
+              />
+              <h1 className={`text-xl font-bold tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                Welcome to N2N Ai
+              </h1>
+              <p className={`text-[13px] mt-1.5 px-4 leading-normal font-normal ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                Choose how you would like to set up your workflow workspace.
+              </p>
+            </div>
+
+            {/* iOS Style Action Group */}
+            <div className={`flex flex-col border rounded-2xl overflow-hidden divide-y mb-6 shadow-sm transition-all duration-300 ${
+              isDark 
+                ? 'bg-[#2c2c2e] border-slate-800/40 divide-slate-800/50' 
+                : 'bg-white border-slate-200/40 divide-slate-100'
+            }`}>
+              {/* Option 1: Watch Tutorial */}
+              <button
+                onClick={() => handleWelcomeDismiss('tutorial')}
+                className={`flex items-center gap-3.5 p-3.5 text-left w-full transition-colors cursor-pointer active:opacity-70 ${
+                  isDark ? 'hover:bg-[#3a3a3c]' : 'hover:bg-slate-50'
+                }`}
+              >
+                <div className="w-9 h-9 rounded-[10px] bg-[#ff3b30] text-white flex items-center justify-center flex-shrink-0 animate-none">
+                  <FiPlay size={16} className="fill-current stroke-[3]" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className={`text-[14px] font-semibold leading-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                    Watch Tutorial
+                  </h3>
+                  <p className={`text-[11px] truncate mt-0.5 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
+                    5-minute video guide
+                  </p>
+                </div>
+                <FiChevronRight className={`flex-shrink-0 ${isDark ? 'text-slate-600' : 'text-slate-300'}`} size={16} />
+              </button>
+
+              {/* Option 2: Explore Templates */}
+              <button
+                onClick={() => handleWelcomeDismiss('template')}
+                className={`flex items-center gap-3.5 p-3.5 text-left w-full transition-colors cursor-pointer active:opacity-70 ${
+                  isDark ? 'hover:bg-[#3a3a3c]' : 'hover:bg-slate-50'
+                }`}
+              >
+                <div className="w-9 h-9 rounded-[10px] bg-[#007aff] text-white flex items-center justify-center flex-shrink-0">
+                  <FiSliders size={15} className="stroke-[3]" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className={`text-[14px] font-semibold leading-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                    Use a Template
+                  </h3>
+                  <p className={`text-[11px] truncate mt-0.5 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
+                    Pre-built integration pipelines
+                  </p>
+                </div>
+                <FiChevronRight className={`flex-shrink-0 ${isDark ? 'text-slate-600' : 'text-slate-300'}`} size={16} />
+              </button>
+            </div>
+
+            {/* iOS Action Button Link */}
+            <div className={`flex flex-col border-t pt-3 transition-colors duration-300 ${isDark ? 'border-slate-800/60' : 'border-slate-200/50'}`}>
+              <button
+                onClick={() => handleWelcomeDismiss('skip')}
+                className="text-[14px] font-semibold text-[#007aff] hover:opacity-80 transition-opacity py-2 w-full text-center cursor-pointer active:scale-[0.98]"
+              >
+                Skip Onboarding
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
     </div>
   );
 };

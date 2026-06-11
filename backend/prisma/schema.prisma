@@ -15,6 +15,7 @@ model user {
   createdAt         DateTime           @default(now())
   workspaces        workspace[]
   workflowTemplates workflowTemplate[]
+  hasSeenWelcome    Boolean            @default(false)
 
   @@index([clerkId])
 }

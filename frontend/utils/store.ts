@@ -13,7 +13,8 @@ import {
 import { apiPost } from "./api";
 
 export interface WorkspacesResponse {
-  workspaces: any[]
+  workspaces: any[];
+  hasSeenWelcome?: boolean;
 }
 
 export interface WorkspaceType {
@@ -210,4 +211,14 @@ export const useExecutionStore = create<ExecutionState>((set) => ({
     lastExecutionDuration: null,
     lastExecutionStatus: null,
     setExecutionDetails: (duration, status) => set({ lastExecutionDuration: duration, lastExecutionStatus: status }),
+}));
+
+export interface ThemeState {
+    isDark: boolean;
+    setIsDark: (isDark: boolean) => void;
+}
+
+export const useThemeStore = create<ThemeState>((set) => ({
+    isDark: false,
+    setIsDark: (isDark) => set({ isDark }),
 }));
