@@ -4,17 +4,17 @@
     "title": "What slows down your AI development",
     "challenges": [
       {
-        "icon": "code_off",
+        "icon": "< GoWorkflow />",
         "colorClass": "text-tertiary",
         "text": "Hardcoding LLM chains means every change requires a redeploy and breaks other parts of your pipeline."
       },
       {
-        "icon": "list_alt",
+        "icon": "< TbAutomaticGearbox />",
         "colorClass": "text-primary",
         "text": "Juggling prompt versions, model configs, and API keys across files makes pipelines impossible to maintain."
       },
       {
-        "icon": "person_check",
+        "icon": "<FiCheckCircle />",
         "colorClass": "text-secondary",
         "text": "There's no visibility into what each node ran, what it returned, or where your pipeline actually failed."
       }

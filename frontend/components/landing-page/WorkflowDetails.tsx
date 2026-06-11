@@ -2,6 +2,10 @@
 
 import React, { useState } from 'react';
 import workflowData from '@/public/data/WorkflowDetails.json';
+import { TbAutomaticGearbox } from "react-icons/tb";
+import { FiCheckCircle } from "react-icons/fi";
+import { GoWorkflow } from "react-icons/go";
+import { FaListCheck } from "react-icons/fa6";
 
 export default function WorkflowDetails() {
   // Simple state for checkboxes to match original micro-interactions
@@ -11,7 +15,7 @@ export default function WorkflowDetails() {
 
   return (
     <div className="bg-surface font-body-md text-on-surface antialiased">
-      <main className="dot-grid pb-32 pt-4">
+      <main className="dot-grid  pt-4">
         {/* Section 1: Challenges */}
         <section id="problems" className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop mb-stack-lg">
           <div className="text-center mb-16">
@@ -62,6 +66,7 @@ export default function WorkflowDetails() {
               {/* Seamless Collaboration */}
               <div className="bg-white p-8 rounded-3xl ambient-shadow flex flex-col h-full border border-outline-variant/30">
                 <div className="bg-surface-container-high rounded-2xl p-6 mb-8 relative flex-1 overflow-hidden min-h-[220px]">
+                  
                   {/* <div className="bg-white rounded-xl shadow-lg p-4 w-5/6 mx-auto mt-4 border border-slate-105">
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-2 font-bold text-sm">
@@ -154,7 +159,7 @@ export default function WorkflowDetails() {
               <div className="bg-white rounded-3xl ambient-shadow border border-outline-variant/30 overflow-hidden flex flex-col md:flex-row">
                 <div className="p-8 flex-1">
                   <div className="w-12 h-12 bg-tertiary-fixed rounded-2xl flex items-center justify-center text-tertiary mb-6">
-                    <span className="material-symbols-outlined text-2xl">double_arrow</span>
+                    <span className="material-symbols-outlined text-2xl"><FaListCheck size={20} /></span>
                   </div>
                   <h3 className="font-headline-md text-headline-md mb-4">{workflowData.featuresSection.trackingCard.title}</h3>
                   <p className="font-body-md text-on-surface-variant mb-6">
@@ -166,7 +171,7 @@ export default function WorkflowDetails() {
                     <div className="bg-white p-4 rounded-xl shadow-sm border border-outline-variant/20">
                       <div className="flex justify-between items-center mb-2">
                         <span className="text-[10px] font-bold text-primary">{workflowData.featuresSection.trackingCard.activeCard.team}</span>
-                        <span className="material-symbols-outlined text-xs">more_horiz</span>
+                        {/* <span className="material-symbols-outlined text-xs">more_horiz</span> */}
                       </div>
                       <div className="font-semibold text-xs mb-3">{workflowData.featuresSection.trackingCard.activeCard.title}</div>
                       <div className="flex justify-between items-center">
@@ -175,8 +180,8 @@ export default function WorkflowDetails() {
                           <div className="w-5 h-5 rounded-full bg-surface-dim"></div>
                         </div>
                         <div className="text-[10px] text-on-surface-variant flex items-center gap-1">
-                          <span className="material-symbols-outlined text-xs">chat_bubble</span> {workflowData.featuresSection.trackingCard.activeCard.comments}
-                          <span className="material-symbols-outlined text-xs">attach_file</span> {workflowData.featuresSection.trackingCard.activeCard.attachments}
+                          {/* <span className="material-symbols-outlined text-xs">chat_bubble</span> {workflowData.featuresSection.trackingCard.activeCard.comments} */}
+                          {/* <span className="material-symbols-outlined text-xs">attach_file</span> {workflowData.featuresSection.trackingCard.activeCard.attachments} */}
                         </div>
                       </div>
                     </div>
@@ -215,7 +220,7 @@ export default function WorkflowDetails() {
                     </div>
                     <div className="grid grid-cols-2 gap-2">
                       <div className="h-8 bg-surface border border-outline-variant rounded flex items-center justify-center">
-                        <span className="material-symbols-outlined text-xs">grid_view</span>
+                        <span className="material-symbols-outlined text-xs">view</span>
                       </div>
                       <div className="h-8 bg-surface border border-outline-variant rounded flex items-center justify-center">
                         <span className="material-symbols-outlined text-xs">list</span>

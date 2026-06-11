@@ -18,6 +18,8 @@ import {
 import { useWorkspace, useWorkflow, WorkflowType } from '@/utils/store';
 import { apiDelete, apiPost } from '@/utils/api';
 import { useFlowState } from '@/hooks/useFlowState';
+import { useAuth } from '@clerk/nextjs';
+import { useToast } from '@/hooks/useToast';
 
 
 const WorkflowPage = ({ initialWorkflows }: { initialWorkflows: WorkflowType[] }) => {
@@ -30,6 +32,8 @@ const WorkflowPage = ({ initialWorkflows }: { initialWorkflows: WorkflowType[] }
   }
 
   const { workspaceId } = useParams() as { workspaceId: string };
+  const { getToken } = useAuth();
+  const { showToast } = useToast();
 
   // Fetch workspaces & workflows state
   const { workspaces } = useWorkspace();
@@ -54,6 +58,56 @@ const WorkflowPage = ({ initialWorkflows }: { initialWorkflows: WorkflowType[] }
     name: '',
     description: '',
   });
+
+  // Template submission state
+  const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
+  const [selectedWorkflowForTemplate, setSelectedWorkflowForTemplate] = useState<WorkflowType | null>(null);
+  const [templateForm, setTemplateForm] = useState({
+    name: '',
+    description: '',
+    category: 'AI Agent',
+    tagsString: ''
+  });
+  const [isSubmittingTemplate, setIsSubmittingTemplate] = useState(false);
+
+  const handleOpenSubmitTemplate = (workflow: WorkflowType) => {
+    setSelectedWorkflowForTemplate(workflow);
+    setTemplateForm({
+      name: workflow.name,
+      description: workflow.description || '',
+      category: 'AI Agent',
+      tagsString: ''
+    });
+    setIsSubmitModalOpen(true);
+  };
+
+  const handleSubmitTemplate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedWorkflowForTemplate) return;
+    setIsSubmittingTemplate(true);
+    try {
+      const token = await getToken();
+      const tags = templateForm.tagsString
+        ? templateForm.tagsString.split(',').map(t => t.trim()).filter(Boolean)
+        : [];
+      
+      await apiPost('/templates/submit', {
+        workflowId: selectedWorkflowForTemplate.id,
+        description: templateForm.description,
+        category: templateForm.category,
+        tags
+      }, token);
+
+      showToast('Template submitted successfully!', 'success');
+      setIsSubmitModalOpen(false);
+      setSelectedWorkflowForTemplate(null);
+    } catch (error) {
+      console.error('Failed to submit template:', error);
+      showToast(error instanceof Error ? error.message : 'Failed to submit template', 'error');
+    } finally {
+      setIsSubmittingTemplate(false);
+    }
+  };
 
   // Filter workflows based on search query
   const filteredWorkflows = useMemo(() => {
@@ -276,10 +330,17 @@ const WorkflowPage = ({ initialWorkflows }: { initialWorkflows: WorkflowType[] }
 
                 {/* Bottom Section: Icon Indicator & Date */}
                 <div className="flex items-center justify-between mt-6 pt-4 border-t border-[var(--ios-card-border)]">
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-black/5 dark:bg-white/5 text-[var(--ios-text-primary)]">
-                    <FiSliders className="rotate-90" size={10} />
-                    <span>Visual Builder</span>
-                  </span>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleOpenSubmitTemplate(workflow);
+                    }}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-[hsl(var(--ios-blue))]/10 hover:bg-[hsl(var(--ios-blue))]/20 text-[hsl(var(--ios-blue))] transition-all active:scale-95 cursor-pointer z-10"
+                  >
+                    <FiPlus className="stroke-[3]" size={10} />
+                    <span>Submit Template</span>
+                  </button>
 
                   <span className="inline-flex items-center gap-1 text-[11px] text-[var(--ios-text-muted)] font-medium">
                     <FiClock size={11} />
@@ -404,6 +465,123 @@ const WorkflowPage = ({ initialWorkflows }: { initialWorkflows: WorkflowType[] }
                     className="flex-1 justify-center items-center py-3 text-sm font-semibold rounded-xl bg-[hsl(var(--ios-blue))] text-white hover:brightness-105 disabled:opacity-50 disabled:pointer-events-none active:scale-[0.98] transition-all shadow-md cursor-pointer"
                   >
                     Create
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Modal: Slide Up Action Sheet (Submit Template) */}
+        {isSubmitModalOpen && selectedWorkflowForTemplate && (
+          <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fade-in">
+            {/* Backdrop Blur Overlay */}
+            <div
+              onClick={() => !isSubmittingTemplate && setIsSubmitModalOpen(false)}
+              className="absolute inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-sm"
+            />
+
+            {/* Sheet/Modal Container */}
+            <div className="relative w-full sm:max-w-md bg-[var(--node-bg-color)] border-t sm:border border-[var(--ios-card-border)] rounded-t-3xl sm:rounded-3xl shadow-2xl flex flex-col overflow-hidden max-h-[90vh] sm:max-h-none z-10 animate-slide-up select-none">
+
+              {/* iOS Touch Bar Handle (Mobile View) */}
+              <div className="flex sm:hidden justify-center py-2.5">
+                <div className="w-9 h-1 rounded-full bg-black/10 dark:bg-white/10" />
+              </div>
+
+              {/* Modal Header */}
+              <div className="flex items-center justify-between px-6 pt-4 pb-3 border-b border-[var(--ios-card-border)]">
+                <div className="flex flex-col">
+                  <h2 className="text-lg font-bold text-[var(--ios-text-primary)]">Submit as Template</h2>
+                  <span className="text-xs text-[var(--ios-text-muted)] truncate max-w-[250px]">{selectedWorkflowForTemplate.name}</span>
+                </div>
+                <button
+                  disabled={isSubmittingTemplate}
+                  onClick={() => setIsSubmitModalOpen(false)}
+                  className="w-7 h-7 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center text-[var(--ios-text-muted)] hover:text-[var(--ios-text-primary)] transition-colors active:scale-95 disabled:opacity-50"
+                >
+                  <FiX size={14} />
+                </button>
+              </div>
+
+              {/* Form Input Body */}
+              <form onSubmit={handleSubmitTemplate} className="flex-1 overflow-y-auto px-6 py-5 flex flex-col gap-5">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold uppercase tracking-wider text-[var(--ios-text-muted)]">
+                    Template Name
+                  </label>
+                  <input
+                    type="text"
+                    disabled
+                    value={templateForm.name}
+                    className="w-full bg-black/5 dark:bg-white/5 text-[var(--ios-text-muted)] border border-[var(--ios-card-border)] rounded-xl px-4 py-3 text-sm cursor-not-allowed"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold uppercase tracking-wider text-[var(--ios-text-muted)]">
+                    Description
+                  </label>
+                  <textarea
+                    placeholder="Write a description for this template..."
+                    value={templateForm.description}
+                    onChange={(e) => setTemplateForm({ ...templateForm, description: e.target.value })}
+                    className="w-full min-h-[80px] bg-[var(--ios-input-bg)] text-[var(--ios-text-primary)] placeholder-[var(--ios-text-muted)] border border-[var(--ios-card-border)] rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[hsl(var(--ios-blue))] focus:bg-[var(--node-bg-color)] transition-all resize-none"
+                    maxLength={200}
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold uppercase tracking-wider text-[var(--ios-text-muted)]">
+                    Category
+                  </label>
+                  <select
+                    value={templateForm.category}
+                    onChange={(e) => setTemplateForm({ ...templateForm, category: e.target.value })}
+                    className="w-full bg-[var(--ios-input-bg)] text-[var(--ios-text-primary)] border border-[var(--ios-card-border)] rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[hsl(var(--ios-blue))] focus:bg-[var(--node-bg-color)] transition-all"
+                  >
+                    <option value="AI Agent">AI Agent</option>
+                    <option value="Integrations">Integrations</option>
+                    <option value="Logic & Utility">Logic & Utility</option>
+                  </select>
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold uppercase tracking-wider text-[var(--ios-text-muted)]">
+                    Tags (comma separated)
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. outreach, logic, gemini"
+                    value={templateForm.tagsString}
+                    onChange={(e) => setTemplateForm({ ...templateForm, tagsString: e.target.value })}
+                    className="w-full bg-[var(--ios-input-bg)] text-[var(--ios-text-primary)] placeholder-[var(--ios-text-muted)] border border-[var(--ios-card-border)] rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[hsl(var(--ios-blue))] focus:bg-[var(--node-bg-color)] transition-all"
+                  />
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex items-center gap-3 pt-4 mt-2">
+                  <button
+                    type="button"
+                    disabled={isSubmittingTemplate}
+                    onClick={() => setIsSubmitModalOpen(false)}
+                    className="flex-1 justify-center items-center py-3 text-sm font-semibold rounded-xl border border-[var(--ios-card-border)] text-[var(--ios-text-primary)] hover:bg-black/5 dark:hover:bg-white/5 active:scale-95 transition-all cursor-pointer disabled:opacity-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSubmittingTemplate}
+                    className="flex-1 justify-center items-center py-3 text-sm font-semibold rounded-xl bg-[hsl(var(--ios-blue))] text-white hover:brightness-105 disabled:opacity-50 disabled:pointer-events-none active:scale-[0.98] transition-all shadow-md cursor-pointer flex items-center justify-center gap-2"
+                  >
+                    {isSubmittingTemplate ? (
+                      <>
+                        <div className="w-4 h-4 rounded-full border-2 border-white/25 border-t-white animate-spin" />
+                        <span>Submitting...</span>
+                      </>
+                    ) : (
+                      <span>Submit</span>
+                    )}
                   </button>
                 </div>
               </form>

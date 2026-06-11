@@ -1,8 +1,9 @@
 import React from 'react'
+import ComingSoonSettings from '@/components/ComingSoonSettings'
 
 const Settings = () => {
   return (
-    <div>Settings</div>
+    <ComingSoonSettings />
   )
 }
 
