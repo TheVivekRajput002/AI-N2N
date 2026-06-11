@@ -1,0 +1,55 @@
+{
+  "brand": {
+    "name": "AI N2N",
+    "description": "Visually orchestrate your AI workflows without writing a single line of glue code."
+  },
+  "socials": [
+    {
+      "platform": "instagram",
+      "label": "Instagram",
+      "href": "https://www.instagram.com/tvr002/"
+    },
+    {
+      "platform": "linkedin",
+      "label": "Linkedin",
+      "href": "https://www.linkedin.com/in/thevivekrajput002/"
+    },
+    {
+      "platform": "twitter",
+      "label": "X (Twitter)",
+      "href": "https://x.com/tvr002"
+    },
+    {
+      "platform": "website",
+      "label": "Website",
+      "href": "https://www.thevivekrajput.in"
+    }
+  ],
+  "extraLinksTitle": "Extra links",
+  "extraLinks": [
+    {
+      "label": "Home",
+      "href": "#"
+    },
+    {
+      "label": "Problems",
+      "href": "#problems"
+    },
+    {
+      "label": "Solutions",
+      "href": "#features"
+    },
+    {
+      "label": "About Me",
+      "href": "https://www.thevivekrajput.in"
+    }
+  ],
+  "contactTitle": "Contact",
+  "contact": {
+    "address": [
+      "Jabalpur",
+      "Madhya Pradesh"
+    ],
+    "email": "work.tvivekrajput@gmail.com"
+  }
+}

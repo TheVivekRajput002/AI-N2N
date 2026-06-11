@@ -33,7 +33,9 @@ export default function WorkflowDetails() {
                   className={`space-y-3 ${i > 0 ? 'border-l-0 md:border-l border-outline-variant md:pl-8' : ''}`}
                 >
                   <div className={challenge.colorClass}>
-                    <span className="material-symbols-outlined text-3xl">{challenge.icon}</span>
+                    {challenge.icon === 'GoWorkflow' && <GoWorkflow size={32} />}
+                    {challenge.icon === 'TbAutomaticGearbox' && <TbAutomaticGearbox size={32} />}
+                    {challenge.icon === 'FiCheckCircle' && <FiCheckCircle size={32} />}
                   </div>
                   <p className="font-body-md text-on-surface-variant leading-relaxed">
                     {challenge.text}
@@ -44,7 +46,7 @@ export default function WorkflowDetails() {
           </div>
 
           {/* Dashboard Hero Card */}
-        <img src="/AIN2NSS.png" alt="Workflow Details" className='w-[70vw] -pt-3 rounded-3xl mx-auto object-cover' />
+        <img src="/AIN2NSS.png" alt="Workflow Details" className='w-[70vw] -pt-3 rounded-3xl mx-auto object-cover max-md:w-[90vw]' />
         </section>
 
         {/* Section 2: Features Grid */}
